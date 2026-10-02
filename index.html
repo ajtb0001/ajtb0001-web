@@ -1,0 +1,962 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Álvaro José Torres Baeza. Ingeniería de datos e integración SAP en Valencia: SAP Datasphere, SQL Server, ETL, calidad del dato y Microsoft Fabric.">
+<meta name="author" content="Álvaro José Torres Baeza">
+<meta name="theme-color" content="#121619">
+<link rel="canonical" href="https://alvarotorresbaeza.com/">
+<meta property="og:type" content="profile">
+<meta property="og:locale" content="es_ES">
+<meta property="og:url" content="https://alvarotorresbaeza.com/">
+<meta property="og:title" content="Álvaro Torres Baeza · Datos con propósito">
+<meta property="og:description" content="Ingeniería de datos e integración SAP. Del dato operativo a la decisión.">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='16' height='16' fill='%23d4ec8e'/%3E%3Crect x='16' width='16' height='16' fill='%2320282c'/%3E%3Crect y='16' width='16' height='16' fill='%2320282c'/%3E%3Crect x='16' y='16' width='16' height='16' fill='%23d4ec8e'/%3E%3C/svg%3E">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Person","name":"Álvaro José Torres Baeza","url":"https://alvarotorresbaeza.com/","jobTitle":"Ingeniería de datos","worksFor":{"@type":"Organization","name":"RNB Cosméticos"},"address":{"@type":"PostalAddress","addressLocality":"Valencia","addressCountry":"ES"},"alumniOf":[{"@type":"CollegeOrUniversity","name":"Universidad de Jaén"},{"@type":"CollegeOrUniversity","name":"Universidad de Nebrija"},{"@type":"CollegeOrUniversity","name":"Universitat Politècnica de València"}],"knowsAbout":["Ingeniería de datos","SAP","SAP Datasphere","SQL Server","ETL","Calidad del dato","Microsoft Fabric","Power BI"]}
+</script><title>Álvaro Torres Baeza · Datos con propósito</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Schibsted+Grotesk:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: grafito y tablero de ajedrez. Columnas editoriales amplias, una sola pieza protagonista (el stack 3D)
+   y el motivo de tablero como marca: monograma en la cabecera, sombra en el hero y pie de página. */
+:root{
+  --bg:#121619;
+  --bg-deep:#0e1214;
+  --bg-glass:rgba(18,22,25,.8);
+  --surface:#192024;
+  --surface-2:#20282c;
+  --line:#2c3539;
+  --line-strong:#465257;
+  --text:#edeee7;
+  --muted:#a1aba7;
+  --faint:#6f7a76;
+  --accent:#d4ec8e;
+  --accent-soft:rgba(212,236,142,.13);
+  --accent-glow:rgba(212,236,142,.32);
+  --accent-ink:#141a12;
+  --accent-ink-2:#3e4d2c;
+  --copper:#d4a37b;
+  --sq-light:#23282e;
+  --sq-dark:#1a1e23;
+  --grid:rgba(237,238,231,.05);
+  --plate-a:#283135;
+  --plate-b:#1b2225;
+  --plate-edge:#414c50;
+  --side-s:#151a1c;
+  --side-e:#0f1315;
+  --side-on-s:#5f6d3a;
+  --side-on-e:#48532c;
+  --book-1:#2b3337;
+  --book-2:#6a4e39;
+  --book-3:#3a4728;
+  --book-4:#d9d4c3;
+  --book-5:#33404a;
+
+  --f-display:'Newsreader','Iowan Old Style',Georgia,serif;
+  --f-body:'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+
+  --t-hero:clamp(50px,8.4vw,120px);
+  --t-h2:clamp(38px,5.2vw,68px);
+  --t-h3:clamp(24px,2.3vw,32px);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--f-body);font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%}
+a{color:inherit}
+p{margin:0}
+ul{margin:0;padding:0;list-style:none}
+h1,h2,h3{margin:0;font-weight:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+::selection{background:var(--accent);color:var(--accent-ink)}
+
+.wrap{max-width:1240px;margin-inline:auto;padding-inline:clamp(16px,4vw,40px)}
+.mono{font-family:var(--f-mono)}
+.label{display:flex;align-items:center;gap:12px;font:500 12px/1 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.label::before{content:"";width:8px;height:8px;background:currentColor;flex:none}
+.h2{font-family:var(--f-display);font-weight:350;font-size:var(--t-h2);line-height:1.03;letter-spacing:-.02em;text-wrap:balance;margin-top:22px}
+.h2 em,.h1 em{font-style:italic;font-weight:300;color:var(--accent)}
+
+/* Botones */
+.btn{display:inline-flex;align-items:center;gap:12px;padding:15px 22px;font:600 15px/1 var(--f-body);text-decoration:none;border:1px solid transparent;cursor:pointer;transition:background .25s var(--ease),color .25s var(--ease),border-color .25s var(--ease),transform .25s var(--ease)}
+.btn svg{width:16px;height:16px;flex:none;transition:transform .25s var(--ease)}
+.btn:hover svg{transform:translate(2px,-2px)}
+.btn--primary{background:var(--accent);color:var(--accent-ink)}
+.btn--primary:hover{background:var(--text);color:var(--accent-ink)}
+.btn--ghost{border-color:var(--line-strong);color:var(--text);background:transparent}
+.btn--ghost:hover{border-color:var(--accent);color:var(--accent)}
+
+/* Cabecera */
+.site-header{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--bg-glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.header-row{display:flex;align-items:center;justify-content:space-between;gap:24px;height:70px}
+.brand{display:flex;align-items:center;gap:14px;text-decoration:none}
+.mark{display:grid;grid-template-columns:repeat(2,19px);grid-template-rows:repeat(2,19px);font:500 11px/19px var(--f-mono);text-align:center;flex:none}
+.mark span:nth-child(1),.mark span:nth-child(4){background:var(--accent);color:var(--accent-ink)}
+.mark span:nth-child(2),.mark span:nth-child(3){background:var(--surface-2);color:var(--accent)}
+.brand-name{display:flex;flex-direction:column;line-height:1.2}
+.brand-name strong{font-weight:600;font-size:15px}
+.brand-name small{font:400 11px/1.3 var(--f-mono);color:var(--faint);letter-spacing:.06em}
+.nav{display:flex;align-items:center;gap:28px}
+.nav a{font-size:14px;color:var(--muted);text-decoration:none;position:relative;padding-block:6px;transition:color .2s}
+.nav a:hover,.nav a[aria-current="true"]{color:var(--text)}
+.nav a[aria-current="true"]::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--accent)}
+.nav .btn{padding:11px 16px;font-size:14px;color:var(--accent-ink)}
+.nav .btn:hover{color:var(--accent-ink)}
+.menu-btn{display:none;background:none;border:1px solid var(--line-strong);color:var(--text);font:500 13px/1 var(--f-mono);padding:10px 14px;cursor:pointer}
+
+/* Hero */
+.hero{position:relative;overflow:hidden;padding-block:clamp(64px,10vw,140px) clamp(64px,9vw,120px)}
+.hero::before{content:"";position:absolute;right:-12%;top:-30%;width:min(820px,80vw);aspect-ratio:1;background:conic-gradient(var(--sq-light) 0 25%,transparent 0 50%,var(--sq-light) 0 75%,transparent 0) 0 0/150px 150px;-webkit-mask-image:radial-gradient(closest-side,#000 15%,transparent 100%);mask-image:radial-gradient(closest-side,#000 15%,transparent 100%);opacity:.7;pointer-events:none}
+.hero .wrap{position:relative}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,.85fr);gap:clamp(40px,6vw,96px);align-items:end}
+.h1{font-family:var(--f-display);font-weight:330;font-size:var(--t-hero);line-height:.97;letter-spacing:-.03em;margin-top:30px;text-wrap:balance}
+.hero-lead{max-width:54ch;color:var(--muted);font-size:clamp(17px,1.4vw,19px);margin-top:30px}
+.hero-lead strong{color:var(--text);font-weight:500}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:40px}
+.rise{animation:rise .9s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+.ficha{border:1px solid var(--line);background:var(--surface);font-family:var(--f-mono);font-size:13px;min-width:0}
+.ficha-bar{display:flex;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);color:var(--faint);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.ficha-bar span:first-child{color:var(--accent)}
+.ficha dl{margin:0}
+.ficha dl div{display:grid;grid-template-columns:104px minmax(0,1fr);gap:12px;padding:11px 16px;border-top:1px solid var(--line)}
+.ficha dl div:first-child{border-top:0}
+.ficha dt{color:var(--faint)}
+.ficha dd{margin:0;color:var(--text);overflow-wrap:anywhere}
+.live{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-right:8px;vertical-align:1px;box-shadow:0 0 0 0 var(--accent-glow);animation:pulse 2.4s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 var(--accent-glow)}70%{box-shadow:0 0 0 9px transparent}100%{box-shadow:0 0 0 0 transparent}}
+
+/* Secciones */
+.section{padding-block:clamp(84px,11vw,150px);border-top:1px solid var(--line)}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.62fr);gap:32px 64px;align-items:end;margin-bottom:clamp(44px,6vw,76px)}
+.sec-head p{color:var(--muted);max-width:46ch}
+
+/* Trayectoria */
+.roles{border-bottom:1px solid var(--line)}
+.role{display:grid;grid-template-columns:210px minmax(0,1fr) minmax(0,.75fr);gap:20px 48px;padding-block:40px;border-top:1px solid var(--line)}
+.role-when{font:500 13px/1.5 var(--f-mono);color:var(--muted);display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.pill{display:inline-flex;align-items:center;font:500 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent-soft);background:var(--accent-soft);padding:7px 10px}
+.role h3{font-family:var(--f-display);font-weight:400;font-size:var(--t-h3);line-height:1.1}
+.role-sub{color:var(--copper);font-size:15px;margin-top:8px}
+.role-desc{color:var(--muted);margin-top:16px;max-width:60ch}
+.ticks{display:grid;gap:10px;margin-top:4px}
+.ticks li{position:relative;padding-left:20px;font-size:15px;color:var(--text);line-height:1.5}
+.ticks li::before{content:"";position:absolute;left:0;top:.6em;width:6px;height:6px;background:var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:500 12px/1 var(--f-mono);padding:8px 10px;border:1px solid var(--line-strong);color:var(--text);white-space:nowrap}
+.role .chips{margin-top:22px}
+
+/* Sistema 3D */
+.section--stack{background:radial-gradient(ellipse 60% 50% at 35% 55%,var(--accent-soft),transparent 70%),var(--bg-deep)}
+.stack-grid{display:grid;grid-template-columns:minmax(0,1.42fr) minmax(0,.9fr);gap:16px}
+.viz{position:relative;display:flex;flex-direction:column;border:1px solid var(--line);background:var(--bg);min-width:0;--stage-h:560px}
+.viz-stage{position:relative;height:var(--stage-h);overflow:hidden;cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.viz-stage.is-dragging{cursor:grabbing}
+.scene{position:absolute;inset:0;perspective:1700px;display:grid;place-items:center}
+.stack-pos{transform-style:preserve-3d;transform:translate(70px,40px) scale(var(--zoom,1));transition:transform .45s var(--ease)}
+.stack{position:relative;width:250px;height:250px;transform-style:preserve-3d;transform:rotateX(var(--rx,58deg)) rotateZ(var(--rz,45deg)) translateZ(var(--lift,-162px))}
+.floor{position:absolute;inset:-70%;transform:translateZ(-30px);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:25px 25px;-webkit-mask-image:radial-gradient(closest-side,#000 25%,transparent 100%);mask-image:radial-gradient(closest-side,#000 25%,transparent 100%)}
+.floor::after{content:"";position:absolute;inset:34%;background:radial-gradient(closest-side,rgba(0,0,0,.55),transparent)}
+.plate{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .75s var(--ease)}
+.plate-side{position:absolute;transition:background .4s,opacity .4s}
+.plate-side--s{left:0;bottom:0;width:100%;height:12px;transform-origin:bottom;transform:rotateX(90deg);background:var(--side-s)}
+.plate-side--e{top:0;right:0;width:12px;height:100%;transform-origin:right;transform:rotateY(-90deg);background:var(--side-e)}
+.plate-side--n{left:0;top:0;width:100%;height:12px;transform-origin:top;transform:rotateX(-90deg);background:var(--side-e)}
+.plate-side--w{top:0;left:0;width:12px;height:100%;transform-origin:left;transform:rotateY(90deg);background:var(--side-s)}
+.plate-top{position:absolute;inset:0;padding:18px 20px;display:flex;flex-direction:column;justify-content:space-between;border:1px solid var(--plate-edge);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px),linear-gradient(135deg,var(--plate-a),var(--plate-b));background-size:25px 25px,25px 25px,auto;transition:border-color .4s,box-shadow .4s,opacity .4s,background-color .4s;cursor:pointer}
+.plate-top::after{content:"";position:absolute;inset:9px;border:1px dashed var(--grid);pointer-events:none}
+.pt-head{display:flex;justify-content:space-between;align-items:center;font:500 11px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.pt-code{color:var(--accent)}
+.pt-title{font-family:var(--f-display);font-size:30px;line-height:1;color:var(--text);letter-spacing:-.01em}
+.pt-sub{display:block;font:400 11px/1.4 var(--f-mono);color:var(--muted);margin-top:8px}
+.plate:hover .plate-top,.plate.is-hover .plate-top{border-color:var(--copper)}
+.plate.is-active .plate-top{border-color:var(--accent);background-color:var(--accent-soft);background-image:linear-gradient(rgba(212,236,142,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(212,236,142,.09) 1px,transparent 1px),linear-gradient(135deg,rgba(212,236,142,.26),rgba(212,236,142,.08));box-shadow:0 0 70px var(--accent-glow)}
+.plate.is-active .plate-side--s,.plate.is-active .plate-side--w{background:var(--side-on-s)}
+.plate.is-active .plate-side--e,.plate.is-active .plate-side--n{background:var(--side-on-e)}
+.plate.is-active .pt-head{color:var(--accent)}
+.stack .plate:not(.is-active) .plate-top{opacity:.78}
+.pillar{position:absolute;width:1px;transform-origin:top;transform:rotateX(90deg);background:repeating-linear-gradient(to bottom,var(--line-strong) 0 4px,transparent 4px 9px);pointer-events:none}
+.particle{position:absolute;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent);opacity:0;pointer-events:none;animation:flow 3.8s linear infinite}
+@keyframes flow{0%{transform:translateZ(0);opacity:0}12%{opacity:1}86%{opacity:1}100%{transform:translateZ(var(--h,324px));opacity:0}}
+
+.viz-hint{position:absolute;left:20px;bottom:16px;font:400 11px/1.6 var(--f-mono);color:var(--faint);letter-spacing:.04em;pointer-events:none}
+.viz-hint b{color:var(--muted);font-weight:500}
+.viz-readout{position:absolute;right:20px;bottom:16px;font:500 11px/1 var(--f-mono);color:var(--faint);letter-spacing:.06em;font-variant-numeric:tabular-nums;pointer-events:none}
+.viz-readout b{color:var(--accent);font-weight:500}
+.viz-tools{position:absolute;top:14px;right:14px;z-index:3;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px}
+.tool-group{display:flex;border:1px solid var(--line-strong);background:var(--bg-glass);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.tool-group + .tool-group{margin-left:4px}
+.tool-btn{display:grid;place-items:center;min-width:36px;height:36px;padding:0 10px;background:none;border:0;border-left:1px solid var(--line);color:var(--muted);font:500 11px/1 var(--f-mono);letter-spacing:.06em;cursor:pointer;transition:color .2s,background .2s}
+.tool-btn:first-child{border-left:0}
+.tool-btn svg{width:15px;height:15px}
+.tool-btn:hover{color:var(--text);background:var(--surface-2)}
+.tool-btn[aria-pressed="true"]{color:var(--accent-ink);background:var(--accent)}
+.tool-btn:disabled{opacity:.35;cursor:default;background:none}
+.viz-stage.is-dragging .viz-hint{opacity:0}
+.layer-index{position:absolute;left:20px;top:calc(var(--stage-h)/2);transform:translateY(-50%);display:flex;flex-direction:column;gap:2px;z-index:2}
+.layer-index-title{font:500 10px/1 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--faint);padding:0 12px 12px;display:flex;align-items:center;gap:8px}
+.li-btn{display:grid;grid-template-columns:30px minmax(0,1fr);align-items:center;gap:6px;background:none;border:0;border-left:1px solid var(--line);color:var(--muted);text-align:left;padding:10px 14px 10px 12px;font:500 14px/1.2 var(--f-body);cursor:pointer;transition:color .25s,border-color .25s,background .25s}
+.li-btn .li-code{font:500 11px/1 var(--f-mono);color:var(--faint);transition:color .25s}
+.li-btn:hover{color:var(--text);border-left-color:var(--copper)}
+.li-btn[aria-pressed="true"]{color:var(--accent);border-left-color:var(--accent);background:linear-gradient(90deg,var(--accent-soft),transparent)}
+.li-btn[aria-pressed="true"] .li-code{color:var(--accent)}
+
+.viz-controls{display:flex;align-items:center;gap:10px;padding:12px 14px;border-top:1px solid var(--line);flex-wrap:wrap}
+.icon-btn{display:grid;place-items:center;width:42px;height:42px;background:none;border:1px solid var(--line-strong);color:var(--text);cursor:pointer;transition:border-color .2s,color .2s}
+.icon-btn:hover{border-color:var(--accent);color:var(--accent)}
+.icon-btn svg{width:16px;height:16px}
+.play-btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:10px;height:42px;padding:0 16px;background:none;border:1px solid var(--line-strong);color:var(--text);font:500 13px/1 var(--f-body);cursor:pointer;transition:border-color .2s,color .2s}
+.play-btn:hover{border-color:var(--accent);color:var(--accent)}
+.play-btn svg{width:13px;height:13px}
+.play-btn[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.play-bar{position:absolute;left:0;bottom:0;height:2px;width:100%;background:var(--accent);transform-origin:left;transform:scaleX(0)}
+@keyframes fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.viz-count{margin-left:auto;font:500 12px/1 var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums;letter-spacing:.06em}
+.viz-count b{color:var(--accent);font-weight:500}
+
+.detail{border:1px solid var(--line);background:var(--surface);padding:clamp(26px,3vw,40px);min-width:0}
+.detail-body{display:flex;flex-direction:column;gap:26px}
+.d-kicker{display:flex;justify-content:space-between;gap:12px;font:500 12px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.d-kicker span:last-child{color:var(--faint)}
+.d-title{font-family:var(--f-display);font-weight:380;font-size:clamp(32px,3.2vw,44px);line-height:1.02;letter-spacing:-.02em;text-wrap:balance}
+.d-lead{color:var(--muted);margin-top:-8px}
+.d-q{border-top:1px dashed var(--line-strong);border-bottom:1px dashed var(--line-strong);padding-block:18px}
+.d-label{font:500 11px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:12px}
+.d-question{font-family:var(--f-display);font-style:italic;font-weight:350;font-size:clamp(22px,2vw,27px);line-height:1.2;color:var(--copper)}
+
+/* Método */
+.method-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(48px,7vw,110px);align-items:start}
+.method-text{color:var(--muted);margin-top:28px;max-width:56ch;font-size:18px;line-height:1.75}
+.principles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:48px}
+.principles h3{font-family:var(--f-display);font-size:22px;font-weight:400}
+.principles p{color:var(--muted);font-size:15px;margin-top:8px;line-height:1.55}
+.principles div{border-top:1px solid var(--line-strong);padding-top:16px}
+.ladder{counter-reset:rung}
+.rung{display:grid;grid-template-columns:44px minmax(0,1fr);gap:18px;padding-block:26px;border-top:1px solid var(--line);margin-left:calc(var(--i) * clamp(0px,3.4vw,52px));transition:border-color .3s}
+.rung:last-child{border-bottom:1px solid var(--line)}
+.rung-n{font:500 12px/2.4 var(--f-mono);color:var(--faint)}
+.rung h3{font-family:var(--f-display);font-weight:350;font-size:clamp(30px,3.4vw,46px);line-height:1;letter-spacing:-.02em;transition:color .3s}
+.rung p{color:var(--muted);font-size:15px;margin-top:10px;max-width:42ch}
+.rung:hover{border-top-color:var(--copper)}
+.rung:hover h3{color:var(--copper)}
+.rung--goal h3{color:var(--accent);font-style:italic}
+.rung--goal{border-top-color:var(--accent)}
+.rung--goal:hover h3{color:var(--accent)}
+
+/* Sobre mí */
+.section--about{background:var(--surface)}
+.route{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px}
+.route::before{content:"";position:absolute;left:0;right:0;top:5px;border-top:1px dashed var(--line-strong)}
+.stop{position:relative;padding-top:36px}
+.stop::before{content:"";position:absolute;left:0;top:0;width:11px;height:11px;background:var(--copper)}
+.stop--now::before{background:var(--accent);box-shadow:0 0 0 6px var(--accent-soft)}
+.stop-meta{display:flex;justify-content:space-between;gap:12px;font:500 11px/1.4 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.stop-meta span:first-child{color:var(--copper)}
+.stop--now .stop-meta span:first-child{color:var(--accent)}
+.stop h3{font-family:var(--f-display);font-weight:380;font-size:clamp(34px,3.6vw,48px);line-height:1;margin-top:18px;letter-spacing:-.02em}
+.stop p{color:var(--muted);margin-top:12px;max-width:34ch}
+
+.shelf-grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:48px 80px;align-items:end;margin-top:clamp(72px,9vw,120px);padding-top:clamp(48px,6vw,72px);border-top:1px solid var(--line)}
+.shelf-grid h3{font-family:var(--f-display);font-weight:380;font-size:var(--t-h3)}
+.shelf-grid > div > p{color:var(--muted);margin-top:16px;max-width:46ch}
+.shelf{display:flex;align-items:flex-end;gap:6px;height:280px;border-bottom:3px solid var(--line-strong);padding-inline:6px;overflow-x:auto;overflow-y:hidden}
+.book{flex:none;writing-mode:vertical-rl;transform:rotate(180deg);height:var(--h);width:var(--w);background:var(--c);color:var(--text);display:flex;align-items:center;justify-content:space-between;padding:16px 0;transition:transform .35s var(--ease);box-shadow:inset -3px 0 0 rgba(0,0,0,.18),inset 3px 0 0 rgba(255,255,255,.04)}
+.book:hover{transform:rotate(180deg) translateY(12px)}
+.book b{font-family:var(--f-display);font-weight:450;font-size:17px;letter-spacing:.01em}
+.book i{font:normal 500 9px/1 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;opacity:.7}
+.book--light{color:var(--accent-ink)}
+.bookend{flex:none;align-self:flex-end;font-family:'Segoe UI Symbol','Noto Sans Symbols 2','DejaVu Sans',serif;font-size:96px;line-height:.9;color:var(--accent);margin-left:14px;transform:translateY(4px)}
+
+/* Formación */
+.degrees{border-bottom:1px solid var(--line)}
+.degree{display:grid;grid-template-columns:110px minmax(0,1.2fr) minmax(0,1fr);gap:8px 40px;align-items:baseline;padding-block:28px;border-top:1px solid var(--line)}
+.degree-type{font:500 12px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--copper)}
+.degree h3{font-family:var(--f-display);font-weight:380;font-size:clamp(24px,2.4vw,32px);line-height:1.1}
+.degree p{color:var(--muted)}
+.certs-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-top:clamp(56px,7vw,88px);margin-bottom:20px}
+.certs-head h3{font-family:var(--f-display);font-weight:380;font-size:var(--t-h3)}
+.certs-head p{font:500 12px/1 var(--f-mono);color:var(--faint);letter-spacing:.08em;text-transform:uppercase}
+.certs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.cert{border:1px solid var(--line);background:var(--surface);padding:22px 20px;display:flex;flex-direction:column;gap:12px;min-height:170px;transition:border-color .25s,transform .25s var(--ease)}
+.cert:hover{border-color:var(--line-strong);transform:translateY(-3px)}
+.cert-code{font:500 22px/1 var(--f-mono);color:var(--accent);letter-spacing:.02em}
+.cert-name{font-size:15px;line-height:1.35;color:var(--text)}
+.cert-level{margin-top:auto;font:500 10px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.cert--feature{background:var(--accent-soft);border-color:var(--accent)}
+.cert--feature .cert-level{color:var(--accent)}
+
+/* Contacto */
+.section--contact{background:var(--accent);color:var(--accent-ink);border-top:0}
+.section--contact .label{color:var(--accent-ink-2)}
+.section--contact :focus-visible{outline-color:var(--accent-ink)}
+.section--contact ::selection{background:var(--accent-ink);color:var(--accent)}
+.contact-title{font-family:var(--f-display);font-weight:330;font-size:clamp(46px,7.4vw,104px);line-height:.98;letter-spacing:-.03em;margin-top:26px;max-width:14ch;text-wrap:balance}
+.contact-title em{font-style:italic;font-weight:300}
+.contact-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px 80px;align-items:end;margin-top:48px}
+.contact-grid > p{max-width:44ch;color:var(--accent-ink-2);font-size:18px}
+.contact-ctas{display:flex;flex-wrap:wrap;gap:12px}
+.btn--ink{background:var(--accent-ink);color:var(--accent);border-color:var(--accent-ink)}
+.btn--ink:hover{background:var(--bg);color:var(--text);border-color:var(--bg)}
+.btn--lg{padding:20px 28px;font-size:17px}
+
+/* Pie: tablero de ajedrez */
+.site-footer{position:relative;isolation:isolate;background-color:var(--sq-dark);background-image:conic-gradient(var(--sq-dark) 0 25%,var(--sq-light) 0 50%,var(--sq-dark) 0 75%,var(--sq-light) 0);background-size:240px 240px;padding-block:72px 40px}
+.site-footer::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.09;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E")}
+.footer-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) auto;gap:40px;align-items:start}
+.footer-brand p{color:var(--muted);font-size:15px;margin-top:18px;max-width:34ch}
+.footer-nav{display:grid;grid-template-columns:repeat(2,minmax(0,max-content));gap:10px 36px}
+.footer-nav a{color:var(--muted);text-decoration:none;font-size:14px;transition:color .2s}
+.footer-nav a:hover{color:var(--accent)}
+.to-top{display:inline-flex;align-items:center;gap:10px;color:var(--accent);text-decoration:none;font:500 13px/1 var(--f-mono);border:1px solid var(--line-strong);background:var(--sq-dark);padding:12px 14px;transition:border-color .2s}
+.to-top:hover{border-color:var(--accent)}
+.footer-base{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:64px;padding-top:22px;border-top:1px solid var(--line-strong);font:400 12px/1.4 var(--f-mono);color:var(--faint);letter-spacing:.04em}
+
+/* Responsive */
+@media (max-width:1060px){
+  .hero-grid,.sec-head,.stack-grid,.method-grid,.shelf-grid,.contact-grid{grid-template-columns:minmax(0,1fr)}
+  .role{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .role-when{grid-column:1/-1;flex-direction:row;align-items:center}
+  .certs{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .cert--feature{grid-column:span 2}
+  .footer-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .footer-grid .to-top{grid-column:1/-1;justify-self:start}
+}
+@media (max-width:860px){
+  .menu-btn{display:block}
+  .nav{display:none;position:absolute;left:0;right:0;top:70px;flex-direction:column;align-items:stretch;gap:0;background:var(--bg);border-bottom:1px solid var(--line);padding:8px clamp(16px,4vw,40px) 20px}
+  .nav.is-open{display:flex}
+  .nav a{padding-block:14px;border-bottom:1px solid var(--line);font-size:16px}
+  .nav a[aria-current="true"]::after{display:none}
+  .nav .btn{margin-top:14px;justify-content:center;border-bottom:0}
+}
+@media (max-width:720px){
+  .viz{--stage-h:400px}
+  .stack-pos{transform:translate(0,20px) scale(calc(var(--zoom,1) * .64))}
+  .viz-tools{position:static;order:0;justify-content:flex-start;padding:10px;border-bottom:1px solid var(--line)}
+  .viz-readout{display:none}
+  .layer-index{position:static;transform:none;flex-direction:row-reverse;justify-content:flex-start;overflow-x:auto;gap:0;border-top:1px solid var(--line);order:2;padding:4px 6px}
+  .layer-index-title{display:none}
+  .li-btn{border-left:0;border-bottom:2px solid transparent;grid-template-columns:auto auto;padding:12px 10px;font-size:13px;white-space:nowrap}
+  .li-btn:hover{border-left:0}
+  .li-btn[aria-pressed="true"]{border-bottom-color:var(--accent);background:none}
+  .viz-stage{order:1}
+  .viz-controls{order:3}
+  .viz-hint{left:16px;right:16px}
+  .role{grid-template-columns:minmax(0,1fr)}
+  .principles{grid-template-columns:minmax(0,1fr);gap:18px}
+  .route{grid-template-columns:minmax(0,1fr);gap:0;padding-left:28px}
+  .route::before{left:5px;right:auto;top:0;bottom:0;border-top:0;border-left:1px dashed var(--line-strong)}
+  .stop{padding-top:0;padding-bottom:40px}
+  .stop::before{left:-28px;top:3px}
+  .degree{grid-template-columns:minmax(0,1fr)}
+  .certs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .footer-grid{grid-template-columns:minmax(0,1fr)}
+  .site-footer{background-size:160px 160px}
+  .shelf{height:250px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
+  .particle{display:none}
+}
+</style>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="wrap header-row">
+    <a class="brand" href="#inicio" aria-label="Álvaro José Torres Baeza, volver al inicio">
+      <span class="mark" aria-hidden="true"><span>A</span><span>J</span><span>T</span><span>B</span></span>
+      <span class="brand-name"><strong>Álvaro Torres Baeza</strong><small>Datos con propósito</small></span>
+    </a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav">Menú</button>
+    <nav class="nav" id="site-nav" aria-label="Navegación principal">
+      <a href="#trayectoria">Trayectoria</a>
+      <a href="#sistema">Sistema</a>
+      <a href="#metodo">Método</a>
+      <a href="#sobre-mi">Sobre mí</a>
+      <a href="#formacion">Formación</a>
+      <a class="btn btn--primary" href="#contacto">Hablemos</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="inicio">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="label rise">Ingeniería de datos · Transformación digital</p>
+        <h1 class="h1 rise" style="animation-delay:.08s">Hacer que los datos <em>signifiquen</em> algo.</h1>
+        <p class="hero-lead rise" style="animation-delay:.16s">Soy <strong>Álvaro José Torres Baeza</strong>. Conecto sistemas como SAP, SQL Server y Microsoft Fabric para que la información llegue limpia, coherente y a tiempo a quien tiene que decidir. Ingeniería rigurosa, mirada estratégica y curiosidad por lo que hay detrás de cada dato.</p>
+        <div class="hero-ctas rise" style="animation-delay:.24s">
+          <a class="btn btn--primary" href="#sistema">Explorar mi sistema de trabajo
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12 12 4M5 4h7v7"/></svg></a>
+          <a class="btn btn--ghost" href="#contacto">Hablemos</a>
+        </div>
+      </div>
+      <div class="ficha rise" style="animation-delay:.3s" aria-label="Ficha profesional">
+        <div class="ficha-bar"><span>ficha_profesional</span><span>1 registro</span></div>
+        <dl>
+          <div><dt>nombre</dt><dd>Álvaro José Torres Baeza</dd></div>
+          <div><dt>rol</dt><dd>Ingeniería de datos · Integración SAP</dd></div>
+          <div><dt>empresa</dt><dd>RNB Cosméticos</dd></div>
+          <div><dt>base</dt><dd>Valencia, España</dd></div>
+          <div><dt>ecosistema</dt><dd>SAP · SQL Server · Microsoft Fabric</dd></div>
+          <div><dt>formación</dt><dd>Ing. Informática · Máster Big Data &amp; BI · MBA</dd></div>
+          <div><dt>estado</dt><dd><span class="live" aria-hidden="true"></span>Abierto a conversar</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="trayectoria">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="label">Trayectoria</p>
+          <h2 class="h2">De soluciones a medida a <em>ecosistemas</em> de datos.</h2>
+        </div>
+        <p>Seis años construyendo bases de datos, integraciones y analítica. Primero muy cerca del cliente; ahora conectando las distintas áreas de negocio de una misma empresa.</p>
+      </div>
+      <div class="roles">
+        <article class="role">
+          <div class="role-when"><span>2024 — hoy</span><span class="pill">Actualidad</span></div>
+          <div>
+            <h3>RNB Cosméticos</h3>
+            <p class="role-sub">Ingeniería de datos e integración SAP</p>
+            <p class="role-desc">Integro los datos que nacen en SAP y los convierto en una base fiable para el análisis. Trabajo el modelado en SAP Datasphere y SQL Server, los procesos ETL, la calidad del dato y la analítica que usan distintas áreas de negocio.</p>
+            <div class="chips"><span class="chip">SAP</span><span class="chip">Datasphere</span><span class="chip">SQL Server</span><span class="chip">ETL</span><span class="chip">Qlik</span><span class="chip">SSRS</span><span class="chip">Data Quality</span></div>
+          </div>
+          <ul class="ticks">
+            <li>Integración de datos desde SAP hacia capas analíticas</li>
+            <li>Modelado en SAP Datasphere y SQL Server</li>
+            <li>Procesos ETL y control de calidad del dato</li>
+            <li>Informes y cuadros de mando con Qlik y SSRS</li>
+          </ul>
+        </article>
+        <article class="role">
+          <div class="role-when"><span>2020 — 2024</span></div>
+          <div>
+            <h3>Preference</h3>
+            <p class="role-sub">Bases de datos y desarrollo a medida</p>
+            <p class="role-desc">Bases de datos y proyectos a medida para clientes del sector del cerramiento. Una etapa decisiva para desarrollar autonomía, criterio técnico y cercanía con el negocio.</p>
+            <div class="chips"><span class="chip">Bases de datos</span><span class="chip">SQL</span><span class="chip">Desarrollo a medida</span></div>
+          </div>
+          <ul class="ticks">
+            <li>Diseño y mantenimiento de bases de datos</li>
+            <li>Proyectos a medida de principio a fin</li>
+            <li>Trato directo con el cliente y su forma de trabajar</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--stack" id="sistema">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="label">Sistema de trabajo</p>
+          <h2 class="h2">Cinco capas. <em>Una misma</em> conversación.</h2>
+        </div>
+        <p>Así viaja un dato desde la operación hasta la decisión. Gira el modelo, recorre el flujo o elige una capa para ver qué hago en ella y con qué herramientas.</p>
+      </div>
+      <div class="stack-grid">
+        <div class="viz" id="viz">
+          <div class="viz-stage" id="viz-stage" aria-hidden="true">
+            <div class="scene">
+              <div class="stack-pos">
+                <div class="stack" id="stack">
+                  <div class="floor"></div>
+                </div>
+              </div>
+            </div>
+            <p class="viz-hint"><b>Arrastra</b> para girar · <b>Doble clic</b> para centrar</p>
+            <p class="viz-readout" id="viz-readout"></p>
+          </div>
+          <div class="viz-tools" role="toolbar" aria-label="Controles de vista">
+            <div class="tool-group" role="group" aria-label="Vistas predefinidas">
+              <button class="tool-btn" type="button" data-view="iso" aria-pressed="true">ISO</button>
+              <button class="tool-btn" type="button" data-view="front" aria-pressed="false">Alzado</button>
+              <button class="tool-btn" type="button" data-view="top" aria-pressed="false">Planta</button>
+            </div>
+            <div class="tool-group" role="group" aria-label="Girar">
+              <button class="tool-btn" type="button" data-rotate="-45" aria-label="Girar a la izquierda"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 7a5 5 0 1 1 1.5 4.2M3 3v4h4"/></svg></button>
+              <button class="tool-btn" type="button" data-rotate="45" aria-label="Girar a la derecha"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M13 7a5 5 0 1 0-1.5 4.2M13 3v4H9"/></svg></button>
+            </div>
+            <div class="tool-group" role="group" aria-label="Zoom">
+              <button class="tool-btn" type="button" data-zoom="-1" aria-label="Alejar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 8h10"/></svg></button>
+              <button class="tool-btn" type="button" data-zoom="1" aria-label="Acercar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 8h10M8 3v10"/></svg></button>
+            </div>
+          </div>
+          <div class="layer-index" id="layer-index" aria-label="Capas del sistema">
+            <p class="layer-index-title">Flujo del dato ↑</p>
+          </div>
+          <div class="viz-controls">
+            <button class="icon-btn" type="button" id="prev-layer" aria-label="Capa anterior"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg></button>
+            <button class="icon-btn" type="button" id="next-layer" aria-label="Capa siguiente"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m6 3 5 5-5 5"/></svg></button>
+            <button class="play-btn" type="button" id="play-tour" aria-pressed="false">
+              <svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true" id="play-icon"><path d="M2 1v10l9-5z"/></svg>
+              <span id="play-label">Recorrer el flujo</span>
+              <span class="play-bar" id="play-bar"></span>
+            </button>
+            <p class="viz-count" id="viz-count" aria-hidden="true"></p>
+          </div>
+        </div>
+        <aside class="detail" id="layer-detail" aria-live="polite">
+          <div class="detail-body" id="detail-body"></div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="metodo">
+    <div class="wrap method-grid">
+      <div>
+        <p class="label">Método</p>
+        <h2 class="h2">La técnica necesita una <em>intención</em>.</h2>
+        <p class="method-text">Sea cual sea la era, Big Data, IA o la que venga, la utilidad empieza con una pregunta: ¿para qué? Me interesan el arte, la filosofía y los libros porque ayudan a formular preguntas mejores. Crear con intención también es una forma de ingeniería.</p>
+        <div class="principles">
+          <div><h3>Rigor</h3><p>Procesos que se pueden explicar, repetir y auditar.</p></div>
+          <div><h3>Estrategia</h3><p>Cada modelo responde a una pregunta de negocio concreta.</p></div>
+          <div><h3>Curiosidad</h3><p>Entender el contexto antes de tocar una sola tabla.</p></div>
+        </div>
+      </div>
+      <ol class="ladder" aria-label="De los datos al propósito" style="margin:0;padding:0;list-style:none">
+        <li class="rung" style="--i:0"><span class="rung-n">01</span><div><h3>Datos</h3><p>Registros de lo que ocurrió. Abundantes, precisos y, por sí solos, mudos.</p></div></li>
+        <li class="rung" style="--i:1"><span class="rung-n">02</span><div><h3>Información</h3><p>Datos con contexto: quién, cuándo, dónde. Empiezan a decir algo.</p></div></li>
+        <li class="rung" style="--i:2"><span class="rung-n">03</span><div><h3>Conocimiento</h3><p>Patrones que se repiten y se explican. Permiten anticipar.</p></div></li>
+        <li class="rung rung--goal" style="--i:3"><span class="rung-n">04</span><div><h3>Propósito</h3><p>La decisión que justifica todo lo anterior. La respuesta al ¿para qué?</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--about" id="sobre-mi">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="label">Sobre mí</p>
+          <h2 class="h2">Tres lugares. <em>Una mirada.</em></h2>
+        </div>
+        <p>Cada sitio me dejó una forma de mirar. De los viñedos, la paciencia del proceso. De los olivos, la calma para observar. De Valencia, el impulso para construir.</p>
+      </div>
+      <ol class="route" style="margin:0;list-style:none">
+        <li class="stop">
+          <p class="stop-meta"><span>Origen</span><span>42.47° N · 2.45° O</span></p>
+          <h3>La Rioja</h3>
+          <p>Nací entre viñedos, huertos y bodegas.</p>
+        </li>
+        <li class="stop">
+          <p class="stop-meta"><span>Raíces</span><span>37.78° N · 3.79° O</span></p>
+          <h3>Jaén</h3>
+          <p>Crecí entre olivos y aprendí a observar con calma.</p>
+        </li>
+        <li class="stop stop--now">
+          <p class="stop-meta"><span>Presente</span><span>39.47° N · 0.38° O</span></p>
+          <h3>Valencia</h3>
+          <p>Encontré el lugar donde dar forma a mi carrera.</p>
+        </li>
+      </ol>
+
+      <div class="shelf-grid">
+        <div>
+          <p class="label">En mi estantería</p>
+          <h3 style="margin-top:20px">Leer también conecta disciplinas.</h3>
+          <p>Nietzsche, Platón y los estoicos comparten balda con <em>Fundamentos de ingeniería de datos</em> y el DAMA-DMBOK. La filosofía ayuda a preguntar; la ingeniería, a responder bien.</p>
+        </div>
+        <div class="shelf" aria-label="Libros de mi estantería">
+          <span class="book" style="--h:212px;--w:46px;--c:var(--book-1)"><b>Nietzsche</b><i>Filosofía</i></span>
+          <span class="book" style="--h:188px;--w:40px;--c:var(--book-2)"><b>Platón</b><i>Filosofía</i></span>
+          <span class="book" style="--h:232px;--w:52px;--c:var(--book-5)"><b>Los estoicos</b><i>Filosofía</i></span>
+          <span class="book book--light" style="--h:256px;--w:62px;--c:var(--book-4)"><b>Fundamentos de ingeniería de datos</b><i>Ingeniería</i></span>
+          <span class="book" style="--h:244px;--w:70px;--c:var(--book-3)"><b>DAMA-DMBOK</b><i>Gobierno del dato</i></span>
+          <span class="bookend" aria-hidden="true">&#x265E;&#xFE0E;</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="formacion">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="label">Formación</p>
+          <h2 class="h2">Aprender para <em>construir</em> mejor.</h2>
+        </div>
+        <p>Una base de ingeniería del software, especialización en datos y una visión de negocio para que la tecnología tenga sentido dentro de la empresa.</p>
+      </div>
+      <div class="degrees">
+        <div class="degree"><span class="degree-type">Grado</span><h3>Ingeniería Informática</h3><p>Universidad de Jaén · Ingeniería del Software</p></div>
+        <div class="degree"><span class="degree-type">Máster</span><h3>Big Data &amp; Business Intelligence</h3><p>INESEM · Universidad de Nebrija</p></div>
+        <div class="degree"><span class="degree-type">MBA</span><h3>Transformación Digital</h3><p>Universitat Politècnica de València</p></div>
+      </div>
+      <div class="certs-head">
+        <h3>Certificaciones Microsoft</h3>
+        <p>5 certificaciones</p>
+      </div>
+      <div class="certs">
+        <div class="cert cert--feature"><span class="cert-code">DP-700</span><span class="cert-name">Fabric Data Engineer</span><span class="cert-level">Associate</span></div>
+        <div class="cert"><span class="cert-code">DP-900</span><span class="cert-name">Azure Data Fundamentals</span><span class="cert-level">Fundamentals</span></div>
+        <div class="cert"><span class="cert-code">AZ-900</span><span class="cert-name">Azure Fundamentals</span><span class="cert-level">Fundamentals</span></div>
+        <div class="cert"><span class="cert-code">PL-900</span><span class="cert-name">Power Platform Fundamentals</span><span class="cert-level">Fundamentals</span></div>
+        <div class="cert"><span class="cert-code">MOS-200</span><span class="cert-name">Microsoft Office Specialist</span><span class="cert-level">Specialist</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--contact" id="contacto">
+    <div class="wrap">
+      <p class="label">Contacto</p>
+      <h2 class="contact-title">¿Tienes un problema de datos? <em>Hablemos.</em></h2>
+      <div class="contact-grid">
+        <p>Una buena conversación puede ser el primer paso hacia una solución más clara. Integraciones con SAP, modelos de datos, calidad o analítica: cuéntame qué pregunta quieres responder.</p>
+        <div class="contact-ctas">
+          <!-- Sustituye por la URL de tu perfil: https://www.linkedin.com/in/tu-usuario -->
+          <a class="btn btn--ink btn--lg" href="https://www.linkedin.com/search/results/people/?keywords=%C3%81lvaro%20Jos%C3%A9%20Torres%20Baeza" target="_blank" rel="noopener noreferrer">Escríbeme en LinkedIn
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12 12 4M5 4h7v7"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="mark" aria-hidden="true"><span>A</span><span>J</span><span>T</span><span>B</span></span>
+        <p>Álvaro José Torres Baeza. Ingeniería de datos con propósito, desde Valencia.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Navegación del pie">
+        <a href="#trayectoria">Trayectoria</a>
+        <a href="#sistema">Sistema</a>
+        <a href="#metodo">Método</a>
+        <a href="#sobre-mi">Sobre mí</a>
+        <a href="#formacion">Formación</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+      <a class="to-top" href="#inicio">Volver arriba ↑</a>
+    </div>
+    <div class="footer-base">
+      <span>© 2026 Álvaro José Torres Baeza</span>
+      <span>alvarotorresbaeza.com</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const LAYERS = [
+    { code:'01', name:'Origen', title:'Ecosistema SAP', short:'SAP', sub:'CDS Views · BAPIs · Fiori',
+      lead:'El dato nace en la operación: pedidos, materiales, clientes, producción. Entender cómo se genera es el primer paso para poder confiar en él.',
+      question:'¿Dónde nace realmente este dato?',
+      does:['Extracción e integración desde SAP con CDS Views y BAPIs','Lectura de la lógica de negocio que hay detrás de cada tabla','Apoyo a procesos y aplicaciones Fiori','Identificación de la fuente fiable de cada indicador'],
+      tools:['SAP','CDS Views','BAPIs','Fiori'] },
+    { code:'02', name:'Integración', title:'ETL y pipelines', short:'ETL', sub:'SQL · Pipelines',
+      lead:'Mover datos entre sistemas sin que pierdan su contexto por el camino. Procesos que se ejecutan solos y avisan cuando algo falla.',
+      question:'¿Llega completo, a tiempo y con su contexto?',
+      does:['Diseño y mantenimiento de procesos ETL','Cargas automatizadas y planificadas','Control de errores y trazabilidad de cada carga','Validaciones desde el origen'],
+      tools:['SQL','ETL','Pipelines','SQL Server'] },
+    { code:'03', name:'Modelo', title:'Datasphere y SQL Server', short:'Modelo', sub:'Datasphere · SQL Server',
+      lead:'Un modelo común para que ventas, operaciones y finanzas hablen de lo mismo cuando dicen «pedido» o «margen».',
+      question:'¿Significa lo mismo para todas las áreas?',
+      does:['Modelado de datos en SAP Datasphere y SQL Server','Definiciones de negocio compartidas entre áreas','Calidad del dato: completitud, coherencia, duplicados','Documentación pensada para que el modelo dure'],
+      tools:['SAP Datasphere','SQL Server','Data Modeling','Data Quality'] },
+    { code:'04', name:'Plataforma', title:'Microsoft Fabric', short:'Fabric', sub:'OneLake · Azure',
+      lead:'Una plataforma unificada donde almacenamiento, ingeniería y analítica comparten espacio. Respaldado por la certificación Fabric Data Engineer (DP-700).',
+      question:'¿Puede crecer sin volverse frágil?',
+      does:['Almacenamiento centralizado en OneLake','Ingeniería de datos dentro de Fabric','Arquitectura preparada para nuevos orígenes y usos','Integración con el ecosistema Azure'],
+      tools:['Microsoft Fabric','OneLake','Azure','Power BI'] },
+    { code:'05', name:'Decisión', title:'Analítica', short:'Analítica', sub:'Power BI · Qlik · SSRS',
+      lead:'Informes y cuadros de mando que responden preguntas concretas de negocio. Es la última capa del flujo, y la única que la mayoría de la gente ve.',
+      question:'¿Qué decisión cambia con esta información?',
+      does:['Cuadros de mando para distintas áreas de negocio','Informes operativos con SSRS','Análisis y exploración con Qlik y Power BI','Traducción de necesidades de negocio a métricas'],
+      tools:['Power BI','Qlik','SSRS'] }
+  ];
+  const N = LAYERS.length, GAP = 64, EXPLODE = 58, LIFT = 10;
+  const H = (N - 1) * GAP + EXPLODE + LIFT;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const viz = document.getElementById('viz');
+  const stage = document.getElementById('viz-stage');
+  const stack = document.getElementById('stack');
+  const index = document.getElementById('layer-index');
+  const detail = document.getElementById('detail-body');
+  const count = document.getElementById('viz-count');
+  const playBtn = document.getElementById('play-tour');
+  const playLabel = document.getElementById('play-label');
+  const playIcon = document.getElementById('play-icon');
+  const playBar = document.getElementById('play-bar');
+
+  stack.style.setProperty('--lift', (-H / 2) + 'px');
+  stack.style.setProperty('--h', H + 'px');
+
+  // Pilares y partículas: el flujo del dato subiendo por el stack
+  [[0.1,0.1],[0.9,0.1],[0.1,0.9],[0.9,0.9]].forEach(([x,y]) => {
+    const p = document.createElement('div');
+    p.className = 'pillar';
+    p.style.cssText = `left:${x*100}%;top:${y*100}%;height:${H}px`;
+    stack.appendChild(p);
+  });
+  [[0.1,0.1,0],[0.9,0.9,1.3],[0.1,0.9,2.5],[0.9,0.1,0.7],[0.5,0.5,1.9],[0.3,0.7,3.1]].forEach(([x,y,d]) => {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `left:${x*100}%;top:${y*100}%;animation-delay:${d}s`;
+    stack.appendChild(p);
+  });
+
+  const plates = LAYERS.map((L, i) => {
+    const p = document.createElement('div');
+    p.className = 'plate';
+    p.dataset.i = i;
+    p.innerHTML = `<div class="plate-side plate-side--s"></div><div class="plate-side plate-side--e"></div><div class="plate-side plate-side--n"></div><div class="plate-side plate-side--w"></div>
+      <div class="plate-top"><div class="pt-head"><span class="pt-code">${L.code}</span><span>${L.name}</span></div>
+      <div><span class="pt-title">${L.short}</span><span class="pt-sub">${L.sub}</span></div></div>`;
+    stack.appendChild(p);
+    return p;
+  });
+
+  const buttons = LAYERS.map((L, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'li-btn';
+    b.dataset.i = i;
+    b.setAttribute('aria-pressed', 'false');
+    b.setAttribute('aria-controls', 'layer-detail');
+    b.innerHTML = `<span class="li-code">${L.code}</span><span>${L.name}</span>`;
+    b.addEventListener('click', () => select(i));
+    b.addEventListener('mouseenter', () => plates[i].classList.add('is-hover'));
+    b.addEventListener('mouseleave', () => plates[i].classList.remove('is-hover'));
+    return b;
+  });
+  [...buttons].reverse().forEach(b => index.appendChild(b));
+
+  let selected = 0, shown = -1;
+
+  function detailHTML(L) {
+    return `<p class="d-kicker"><span>Capa ${L.code} / 0${N}</span><span>${L.name}</span></p>
+      <h3 class="d-title">${L.title}</h3>
+      <p class="d-lead">${L.lead}</p>
+      <div class="d-q"><p class="d-label">Pregunta clave</p><p class="d-question">${L.question}</p></div>
+      <div><p class="d-label">Qué hago</p><ul class="ticks">${L.does.map(d => `<li>${d}</li>`).join('')}</ul></div>
+      <div><p class="d-label">Herramientas</p><div class="chips">${L.tools.map(t => `<span class="chip">${t}</span>`).join('')}</div></div>`;
+  }
+
+  function render() {
+    plates.forEach((p, i) => {
+      const z = i * GAP + (i > selected ? EXPLODE : 0) + (i === selected ? LIFT : 0);
+      p.style.transform = `translateZ(${z}px)`;
+      p.classList.toggle('is-active', i === selected);
+    });
+    buttons.forEach((b, i) => b.setAttribute('aria-pressed', String(i === selected)));
+    count.innerHTML = `Capa <b>${LAYERS[selected].code}</b> de 0${N}`;
+    if (shown !== selected) {
+      shown = selected;
+      detail.innerHTML = detailHTML(LAYERS[selected]);
+      if (!reduce && detail.animate) {
+        detail.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: 'cubic-bezier(.2,.8,.2,1)' });
+      }
+    }
+  }
+
+  function select(i, fromTour = false) {
+    selected = (i + N) % N;
+    if (!fromTour) stopTour();
+    render();
+  }
+
+  // Recorrido automático 01 → 05
+  const STEP = 3200;
+  let tourTimer = null;
+  function restartBar() {
+    playBar.style.animation = 'none';
+    void playBar.offsetWidth;
+    playBar.style.animation = `fill ${STEP}ms linear forwards`;
+  }
+  function tourStep() {
+    restartBar();
+    tourTimer = setTimeout(() => {
+      if (selected < N - 1) { select(selected + 1, true); tourStep(); }
+      else stopTour();
+    }, STEP);
+  }
+  function startTour() {
+    playBtn.setAttribute('aria-pressed', 'true');
+    playLabel.textContent = 'Pausar recorrido';
+    playIcon.innerHTML = '<path d="M2 1h3v10H2zM7 1h3v10H7z"/>';
+    select(0, true);
+    tourStep();
+  }
+  function stopTour() {
+    if (tourTimer === null && playBtn.getAttribute('aria-pressed') === 'false') return;
+    clearTimeout(tourTimer);
+    tourTimer = null;
+    playBtn.setAttribute('aria-pressed', 'false');
+    playLabel.textContent = 'Recorrer el flujo';
+    playIcon.innerHTML = '<path d="M2 1v10l9-5z"/>';
+    playBar.style.animation = 'none';
+  }
+  playBtn.addEventListener('click', () => tourTimer ? stopTour() : startTour());
+  document.getElementById('prev-layer').addEventListener('click', () => select(selected - 1));
+  document.getElementById('next-layer').addEventListener('click', () => select(selected + 1));
+
+  viz.addEventListener('keydown', e => {
+    const up = e.key === 'ArrowUp' || e.key === 'ArrowRight';
+    const down = e.key === 'ArrowDown' || e.key === 'ArrowLeft';
+    if (!up && !down) return;
+    e.preventDefault();
+    select(selected + (up ? 1 : -1));
+    if (document.activeElement && document.activeElement.classList.contains('li-btn')) buttons[selected].focus();
+  });
+
+  // Vista: giro libre de 360° con inercia, vistas predefinidas, zoom y balanceo solo hasta la primera interacción
+  const VIEWS = { iso: { rx: 58, rz: 45 }, front: { rx: 80, rz: 0 }, top: { rx: 24, rz: 45 } };
+  const ZOOMS = [0.7, 0.85, 1, 1.15, 1.3, 1.45];
+  const view = { rx: 58, rz: 45 }, cur = { rx: 58, rz: 45 };
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+  const norm = d => ((Math.round(d) % 360) + 360) % 360;
+  const stackPos = stack.parentElement;
+  const readout = document.getElementById('viz-readout');
+  const viewBtns = [...document.querySelectorAll('[data-view]')];
+  const zoomBtns = [...document.querySelectorAll('[data-zoom]')];
+  let zi = 2, vel = 0, drag = null, interacted = false, visible = false, raf = 0, lastReadout = '';
+
+  function apply() {
+    stack.style.setProperty('--rx', cur.rx.toFixed(2) + 'deg');
+    stack.style.setProperty('--rz', cur.rz.toFixed(2) + 'deg');
+    const txt = `Giro <b>${norm(cur.rz)}°</b> · Inclinación <b>${Math.round(cur.rx)}°</b>`;
+    if (txt !== lastReadout) { readout.innerHTML = txt; lastReadout = txt; }
+  }
+  function markView() {
+    viewBtns.forEach(b => {
+      const v = VIEWS[b.dataset.view];
+      const on = Math.abs(v.rx - view.rx) < 1 && Math.abs(norm(v.rz) - norm(view.rz)) < 1;
+      b.setAttribute('aria-pressed', String(on));
+    });
+  }
+  function tick(t) {
+    if (!drag) {
+      if (Math.abs(vel) > 0.02) { view.rz += vel; vel *= 0.93; markView(); }
+      else vel = 0;
+    }
+    let trz = view.rz, trx = view.rx;
+    if (!interacted) { trz += Math.sin(t / 2800) * 6; trx += Math.sin(t / 3700) * 2; }
+    const k = drag ? 0.35 : 0.1;
+    cur.rx += (trx - cur.rx) * k;
+    cur.rz += (trz - cur.rz) * k;
+    apply();
+    raf = visible ? requestAnimationFrame(tick) : 0;
+  }
+  function settle() {
+    markView();
+    if (reduce) { cur.rx = view.rx; cur.rz = view.rz; apply(); }
+  }
+  function setView(rx, rz) {
+    interacted = true; vel = 0;
+    view.rx = rx;
+    view.rz = rz + 360 * Math.round((view.rz - rz) / 360); // el camino más corto
+    settle();
+  }
+  function setZoom(i) {
+    zi = clamp(i, 0, ZOOMS.length - 1);
+    stackPos.style.setProperty('--zoom', ZOOMS[zi]);
+    zoomBtns[0].disabled = zi === 0;
+    zoomBtns[1].disabled = zi === ZOOMS.length - 1;
+  }
+
+  viewBtns.forEach(b => b.addEventListener('click', () => { const v = VIEWS[b.dataset.view]; setView(v.rx, v.rz); }));
+  document.querySelectorAll('[data-rotate]').forEach(b => b.addEventListener('click', () => {
+    interacted = true; vel = 0;
+    view.rz += +b.dataset.rotate;
+    settle();
+  }));
+  zoomBtns.forEach(b => b.addEventListener('click', () => setZoom(zi + +b.dataset.zoom)));
+  stage.addEventListener('wheel', e => {
+    if (!e.ctrlKey) return; // Ctrl + rueda o pellizco en el trackpad
+    e.preventDefault();
+    setZoom(zi + (e.deltaY < 0 ? 1 : -1));
+  }, { passive: false });
+  stage.addEventListener('dblclick', () => setView(VIEWS.iso.rx, VIEWS.iso.rz));
+
+  stage.addEventListener('pointerdown', e => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    const plate = e.target.closest('.plate');
+    vel = 0;
+    drag = { x: e.clientX, y: e.clientY, lastX: e.clientX, lastT: performance.now(), rx: view.rx, rz: view.rz, moved: false, plate: plate ? +plate.dataset.i : null, id: e.pointerId };
+  });
+  stage.addEventListener('pointermove', e => {
+    if (!drag) return;
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    if (!drag.moved && Math.abs(dx) + Math.abs(dy) > 4) {
+      drag.moved = true;
+      interacted = true;
+      stage.classList.add('is-dragging');
+      try { stage.setPointerCapture(drag.id); } catch (_) {}
+    }
+    if (!drag.moved) return;
+    view.rz = drag.rz + dx * 0.5;
+    view.rx = clamp(drag.rx - dy * 0.3, 10, 85);
+    vel = vel * 0.5 + (e.clientX - drag.lastX) * 0.5 * 0.5;
+    drag.lastX = e.clientX;
+    drag.lastT = performance.now();
+    settle();
+  });
+  function endDrag() {
+    if (!drag) return;
+    if (!drag.moved && drag.plate !== null) select(drag.plate);
+    if (performance.now() - drag.lastT > 90 || reduce) vel = 0; // se detuvo antes de soltar
+    vel = clamp(vel, -12, 12);
+    stage.classList.remove('is-dragging');
+    drag = null;
+  }
+  stage.addEventListener('pointerup', endDrag);
+  stage.addEventListener('pointercancel', () => { if (drag) { drag.plate = null; endDrag(); } });
+  setZoom(zi);
+
+  if (reduce) apply();
+  else if ('IntersectionObserver' in window) {
+    new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (visible && !raf) raf = requestAnimationFrame(tick);
+    }).observe(stage);
+  } else { visible = true; raf = requestAnimationFrame(tick); }
+
+  render();
+
+  // Menú móvil
+  const menuBtn = document.querySelector('.menu-btn');
+  const nav = document.getElementById('site-nav');
+  menuBtn.addEventListener('click', () => {
+    const open = nav.classList.toggle('is-open');
+    menuBtn.setAttribute('aria-expanded', String(open));
+    menuBtn.textContent = open ? 'Cerrar' : 'Menú';
+  });
+  nav.addEventListener('click', e => {
+    if (e.target.closest('a')) { nav.classList.remove('is-open'); menuBtn.setAttribute('aria-expanded', 'false'); menuBtn.textContent = 'Menú'; }
+  });
+
+  // Sección activa en la navegación
+  const links = [...nav.querySelectorAll('a[href^="#"]:not(.btn)')];
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if (!en.isIntersecting) return;
+        links.forEach(a => a.setAttribute('aria-current', String(a.getAttribute('href') === '#' + en.target.id)));
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    links.forEach(a => { const s = document.querySelector(a.getAttribute('href')); if (s) io.observe(s); });
+  }
+})();
+</script>
+
+</body>
+</html>

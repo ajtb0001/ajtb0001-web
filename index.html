@@ -15,7 +15,7 @@
 <meta name="twitter:card" content="summary">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='16' height='16' fill='%23d4ec8e'/%3E%3Crect x='16' width='16' height='16' fill='%2320282c'/%3E%3Crect y='16' width='16' height='16' fill='%2320282c'/%3E%3Crect x='16' y='16' width='16' height='16' fill='%23d4ec8e'/%3E%3C/svg%3E">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Person","name":"Álvaro José Torres Baeza","url":"https://alvarotorresbaeza.com/","jobTitle":"Ingeniería de datos","worksFor":{"@type":"Organization","name":"RNB Cosméticos"},"address":{"@type":"PostalAddress","addressLocality":"Valencia","addressCountry":"ES"},"alumniOf":[{"@type":"CollegeOrUniversity","name":"Universidad de Jaén"},{"@type":"CollegeOrUniversity","name":"Universidad de Nebrija"},{"@type":"CollegeOrUniversity","name":"Universitat Politècnica de València"}],"knowsAbout":["Ingeniería de datos","SAP","SAP Datasphere","SQL Server","ETL","Calidad del dato","Microsoft Fabric","Power BI"]}
+{"@context":"https://schema.org","@type":"Person","name":"Álvaro José Torres Baeza","url":"https://alvarotorresbaeza.com/","jobTitle":"Ingeniería de datos","email":"mailto:alvarotorresbaeza@gmail.com","sameAs":["https://www.linkedin.com/in/ajtb"],"worksFor":{"@type":"Organization","name":"RNB Cosméticos"},"address":{"@type":"PostalAddress","addressLocality":"Valencia","addressCountry":"ES"},"alumniOf":[{"@type":"CollegeOrUniversity","name":"Universidad de Jaén"},{"@type":"CollegeOrUniversity","name":"Universidad de Nebrija"},{"@type":"CollegeOrUniversity","name":"Universitat Politècnica de València"}],"knowsAbout":["Ingeniería de datos","SAP","SAP Datasphere","SQL Server","ETL","Calidad del dato","Microsoft Fabric","Power BI"]}
 </script><title>Álvaro Torres Baeza · Datos con propósito</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -55,6 +55,7 @@
   --book-3:#3a4728;
   --book-4:#d9d4c3;
   --book-5:#33404a;
+  --frame-bg:#ffffff;
 
   --f-display:'Newsreader','Iowan Old Style',Georgia,serif;
   --f-body:'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif;
@@ -293,6 +294,47 @@ h1,h2,h3{margin:0;font-weight:inherit}
 .cert--feature{background:var(--accent-soft);border-color:var(--accent)}
 .cert--feature .cert-level{color:var(--accent)}
 
+/* Proyecto destacado */
+.role-more{grid-column:2/-1;display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:32px 48px;margin-top:16px;padding-top:32px;border-top:1px dashed var(--line)}
+.sub-label{font:500 11px/1.4 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:18px}
+.project{border:1px solid var(--line-strong);background:var(--surface);padding:clamp(22px,2.6vw,32px);display:flex;flex-direction:column;gap:20px;min-width:0}
+.project-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.project-kicker{display:flex;align-items:center;gap:10px;font:500 11px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.project-kicker::before{content:"";width:7px;height:7px;background:var(--accent)}
+.project-tool{font:500 11px/1 var(--f-mono);letter-spacing:.08em;color:var(--muted);border:1px solid var(--line-strong);padding:6px 8px}
+.project h4{margin:0;font-family:var(--f-display);font-weight:380;font-size:clamp(28px,2.6vw,36px);line-height:1.04;letter-spacing:-.015em}
+.project > p{color:var(--muted);font-size:15px;line-height:1.6;margin-top:-6px}
+.project-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.project-stats div{padding:16px 14px;border-left:1px solid var(--line);min-width:0}
+.project-stats div:first-child{border-left:0;padding-left:0}
+.stat-n{display:block;font-family:var(--f-display);font-size:clamp(26px,2.4vw,32px);line-height:1;color:var(--text);font-variant-numeric:tabular-nums}
+.stat-l{display:block;font:500 10px/1.35 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-top:10px}
+.budget{display:flex;flex-direction:column;gap:12px}
+.budget-track{display:flex;height:16px;border:1px solid var(--line-strong);background:var(--bg)}
+.b-real{width:48%;background:var(--accent)}
+.b-comp{width:21%;background:repeating-linear-gradient(135deg,var(--copper) 0 3px,transparent 3px 7px);border-left:1px solid var(--bg)}
+.budget-legend{display:flex;flex-wrap:wrap;gap:8px 20px;font:500 11px/1.3 var(--f-mono);color:var(--muted)}
+.budget-legend span{display:inline-flex;align-items:center;gap:8px}
+.budget-legend span::before{content:"";width:10px;height:10px;flex:none}
+.lg-real::before{background:var(--accent)}
+.lg-comp::before{background:repeating-linear-gradient(135deg,var(--copper) 0 2px,transparent 2px 4px);outline:1px solid var(--copper)}
+.lg-free::before{border:1px solid var(--line-strong);background:var(--bg)}
+.budget-note{font-size:13px;color:var(--faint);line-height:1.5}
+
+/* Agenda */
+.section--agenda{background:var(--bg-deep)}
+.agenda-grid{display:grid;grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr);gap:clamp(40px,6vw,88px);align-items:start}
+.agenda-lead{color:var(--muted);margin-top:26px;max-width:44ch;font-size:18px}
+.steps{list-style:none;margin:40px 0 0;padding:0;border-bottom:1px solid var(--line)}
+.steps li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;padding-block:18px;border-top:1px solid var(--line)}
+.steps span{font:500 12px/1.9 var(--f-mono);color:var(--accent)}
+.steps p{color:var(--text);font-size:16px}
+.agenda-frame{border:1px solid var(--line-strong);background:var(--surface);min-width:0}
+.agenda-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--line-strong);font:500 11px/1.3 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.agenda-bar a{color:var(--accent);text-decoration:none;letter-spacing:.04em;text-transform:none;font-size:12px}
+.agenda-bar a:hover{text-decoration:underline;text-underline-offset:3px}
+.agenda-frame iframe{display:block;width:100%;height:720px;border:0;background:var(--frame-bg)}
+
 /* Contacto */
 .section--contact{background:var(--accent);color:var(--accent-ink);border-top:0}
 .section--contact .label{color:var(--accent-ink-2)}
@@ -302,10 +344,14 @@ h1,h2,h3{margin:0;font-weight:inherit}
 .contact-title em{font-style:italic;font-weight:300}
 .contact-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px 80px;align-items:end;margin-top:48px}
 .contact-grid > p{max-width:44ch;color:var(--accent-ink-2);font-size:18px}
-.contact-ctas{display:flex;flex-wrap:wrap;gap:12px}
-.btn--ink{background:var(--accent-ink);color:var(--accent);border-color:var(--accent-ink)}
-.btn--ink:hover{background:var(--bg);color:var(--text);border-color:var(--bg)}
-.btn--lg{padding:20px 28px;font-size:17px}
+.contact-list{border-top:1px solid var(--accent-ink)}
+.contact-list li{display:grid;grid-template-columns:96px minmax(0,1fr) auto;gap:8px 16px;align-items:center;padding-block:18px;border-bottom:1px solid var(--accent-ink)}
+.cl-k{font:500 11px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink-2)}
+.cl-v{font:500 clamp(17px,1.7vw,21px)/1.3 var(--f-body);color:var(--accent-ink);text-decoration:none;overflow-wrap:anywhere;text-underline-offset:4px}
+.cl-v:hover{text-decoration:underline}
+.cl-btn{background:none;border:1px solid var(--accent-ink);color:var(--accent-ink);font:500 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;padding:9px 12px;cursor:pointer;transition:background .2s,color .2s}
+.cl-btn:hover{background:var(--accent-ink);color:var(--accent)}
+.cl-arrow{font-size:18px;color:var(--accent-ink);justify-self:end;padding-right:6px}
 
 /* Pie: tablero de ajedrez */
 .site-footer{position:relative;isolation:isolate;background-color:var(--sq-dark);background-image:conic-gradient(var(--sq-dark) 0 25%,var(--sq-light) 0 50%,var(--sq-dark) 0 75%,var(--sq-light) 0);background-size:240px 240px;padding-block:72px 40px}
@@ -324,6 +370,8 @@ h1,h2,h3{margin:0;font-weight:inherit}
   .hero-grid,.sec-head,.stack-grid,.method-grid,.shelf-grid,.contact-grid{grid-template-columns:minmax(0,1fr)}
   .role{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
   .role-when{grid-column:1/-1;flex-direction:row;align-items:center}
+  .role-more{grid-column:1/-1}
+  .agenda-grid{grid-template-columns:minmax(0,1fr)}
   .certs{grid-template-columns:repeat(3,minmax(0,1fr))}
   .cert--feature{grid-column:span 2}
   .footer-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
@@ -351,6 +399,14 @@ h1,h2,h3{margin:0;font-weight:inherit}
   .viz-controls{order:3}
   .viz-hint{left:16px;right:16px}
   .role{grid-template-columns:minmax(0,1fr)}
+  .role-more{grid-template-columns:minmax(0,1fr)}
+  .project-stats{grid-template-columns:minmax(0,1fr)}
+  .project-stats div{border-left:0;border-top:1px solid var(--line);padding:14px 0;display:flex;align-items:baseline;gap:14px}
+  .project-stats div:first-child{border-top:0}
+  .stat-l{margin-top:0}
+  .agenda-frame iframe{height:820px}
+  .contact-list li{grid-template-columns:minmax(0,1fr) auto}
+  .cl-k{grid-column:1/-1}
   .principles{grid-template-columns:minmax(0,1fr);gap:18px}
   .route{grid-template-columns:minmax(0,1fr);gap:0;padding-left:28px}
   .route::before{left:5px;right:auto;top:0;bottom:0;border-top:0;border-left:1px dashed var(--line-strong)}
@@ -385,7 +441,7 @@ h1,h2,h3{margin:0;font-weight:inherit}
       <a href="#metodo">Método</a>
       <a href="#sobre-mi">Sobre mí</a>
       <a href="#formacion">Formación</a>
-      <a class="btn btn--primary" href="#contacto">Hablemos</a>
+      <a class="btn btn--primary" href="#agenda">Agendar cita</a>
     </nav>
   </div>
 </header>
@@ -442,6 +498,34 @@ h1,h2,h3{margin:0;font-weight:inherit}
             <li>Procesos ETL y control de calidad del dato</li>
             <li>Informes y cuadros de mando con Qlik y SSRS</li>
           </ul>
+          <div class="role-more">
+            <div>
+              <p class="sub-label">Trabajo con negocio y gestión de proyectos</p>
+              <ul class="ticks">
+                <li>Trabajo directo con usuarios y responsables de cada área para identificar necesidades, definir requisitos y desarrollar soluciones de datos y reporting.</li>
+                <li>Gestión prácticamente autónoma de los proyectos: desde la obtención y el modelado de los datos hasta el desarrollo y la puesta en funcionamiento.</li>
+              </ul>
+            </div>
+            <article class="project" aria-labelledby="project-budget">
+              <div class="project-head">
+                <span class="project-kicker">Proyecto destacado</span>
+                <span class="project-tool">Qlik Sense</span>
+              </div>
+              <h4 id="project-budget">Control presupuestario</h4>
+              <p>Soluciones Qlik Sense para todas las áreas y departamentos de la compañía. Gestión integral del proyecto: definición de necesidades con cada área, obtención y modelado de los datos, desarrollo de las visualizaciones y puesta en funcionamiento.</p>
+              <div class="project-stats">
+                <div><span class="stat-n">≈30</span><span class="stat-l">Usuarios</span></div>
+                <div><span class="stat-n">Todas</span><span class="stat-l">Las áreas de la compañía</span></div>
+                <div><span class="stat-n">3</span><span class="stat-l">Medidas de control</span></div>
+              </div>
+              <div class="budget" aria-label="Esquema de lectura: gasto real, gasto comprometido y presupuesto disponible">
+                <div class="budget-track" aria-hidden="true"><span class="b-real"></span><span class="b-comp"></span></div>
+                <div class="budget-legend"><span class="lg-real">Gasto real</span><span class="lg-comp">Gasto comprometido</span><span class="lg-free">Presupuesto</span></div>
+                <p class="budget-note">Seguimiento detallado del gasto frente al presupuesto, analizando por separado lo ya gastado y lo comprometido. Esquema ilustrativo.</p>
+              </div>
+              <div class="chips"><span class="chip">Finanzas</span><span class="chip">Marketing</span><span class="chip">Operaciones</span><span class="chip">Desarrollo de Producto</span><span class="chip">Calidad</span><span class="chip">RRHH</span><span class="chip">PRL</span></div>
+            </article>
+          </div>
         </article>
         <article class="role">
           <div class="role-when"><span>2020 — 2024</span></div>
@@ -613,17 +697,51 @@ h1,h2,h3{margin:0;font-weight:inherit}
     </div>
   </section>
 
+  <section class="section section--agenda" id="agenda">
+    <div class="wrap agenda-grid">
+      <div>
+        <p class="label">Agenda</p>
+        <h2 class="h2">Reserva <em>una conversación</em>.</h2>
+        <p class="agenda-lead">Si prefieres ir al grano, elige directamente un hueco en mi calendario. Es la forma más rápida de empezar a hablar de tu proyecto de datos.</p>
+        <ol class="steps">
+          <li><span>01</span><p>Elige el día y la hora que mejor te encajen.</p></li>
+          <li><span>02</span><p>Indica tu nombre y tu correo electrónico.</p></li>
+          <li><span>03</span><p>Recibirás la confirmación con los detalles de la reunión.</p></li>
+        </ol>
+      </div>
+      <div class="agenda-frame">
+        <div class="agenda-bar">
+          <span>Calendario de citas</span>
+          <a href="https://calendar.app.google/GBQnZjNTuM5PKpZM6" target="_blank" rel="noopener noreferrer">Abrir en Google Calendar ↗</a>
+        </div>
+        <iframe src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1s6ptyri2asZHZZk9AP50Jnpwl2AYf9bF7XTBEsRX5JPis95iz-2ga89dyuzbdo6k3arj6xxml?gv=true" title="Calendario de citas de Álvaro José Torres Baeza" loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+
   <section class="section section--contact" id="contacto">
     <div class="wrap">
       <p class="label">Contacto</p>
       <h2 class="contact-title">¿Tienes un problema de datos? <em>Hablemos.</em></h2>
       <div class="contact-grid">
         <p>Una buena conversación puede ser el primer paso hacia una solución más clara. Integraciones con SAP, modelos de datos, calidad o analítica: cuéntame qué pregunta quieres responder.</p>
-        <div class="contact-ctas">
-          <!-- Sustituye por la URL de tu perfil: https://www.linkedin.com/in/tu-usuario -->
-          <a class="btn btn--ink btn--lg" href="https://www.linkedin.com/search/results/people/?keywords=%C3%81lvaro%20Jos%C3%A9%20Torres%20Baeza" target="_blank" rel="noopener noreferrer">Escríbeme en LinkedIn
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12 12 4M5 4h7v7"/></svg></a>
-        </div>
+        <ul class="contact-list">
+          <li>
+            <span class="cl-k">Correo</span>
+            <a class="cl-v" id="mail-addr" href="mailto:alvarotorresbaeza@gmail.com?subject=Conversaci%C3%B3n%20sobre%20datos">alvarotorresbaeza@gmail.com</a>
+            <button class="cl-btn" type="button" id="copy-mail">Copiar</button>
+          </li>
+          <li>
+            <span class="cl-k">LinkedIn</span>
+            <a class="cl-v" href="https://www.linkedin.com/in/ajtb" target="_blank" rel="noopener noreferrer me">linkedin.com/in/ajtb</a>
+            <span class="cl-arrow" aria-hidden="true">↗</span>
+          </li>
+          <li>
+            <span class="cl-k">Agenda</span>
+            <a class="cl-v" href="#agenda">Reservar una cita</a>
+            <span class="cl-arrow" aria-hidden="true">↑</span>
+          </li>
+        </ul>
       </div>
     </div>
   </section>
@@ -642,6 +760,7 @@ h1,h2,h3{margin:0;font-weight:inherit}
         <a href="#metodo">Método</a>
         <a href="#sobre-mi">Sobre mí</a>
         <a href="#formacion">Formación</a>
+        <a href="#agenda">Agenda</a>
         <a href="#contacto">Contacto</a>
       </nav>
       <a class="to-top" href="#inicio">Volver arriba ↑</a>
@@ -931,6 +1050,20 @@ h1,h2,h3{margin:0;font-weight:inherit}
   } else { visible = true; raf = requestAnimationFrame(tick); }
 
   render();
+
+  // Copiar correo
+  const copyBtn = document.getElementById('copy-mail');
+  const addr = document.getElementById('mail-addr');
+  copyBtn.addEventListener('click', () => {
+    const flash = txt => { copyBtn.textContent = txt; setTimeout(() => { copyBtn.textContent = 'Copiar'; }, 1800); };
+    const fallback = () => {
+      const range = document.createRange();
+      range.selectNodeContents(addr);
+      const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range);
+      flash('Seleccionado');
+    };
+    try { navigator.clipboard.writeText(addr.textContent.trim()).then(() => flash('Copiado'), fallback); } catch (_) { fallback(); }
+  });
 
   // Menú móvil
   const menuBtn = document.querySelector('.menu-btn');

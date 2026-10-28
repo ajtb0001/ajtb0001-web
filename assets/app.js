@@ -104,7 +104,10 @@
       local.set('logros', [...got]);
       render();
       toast(`<b>Logro ${got.size}/${ACH.length}</b><span>${a.name}</span>`);
-      if (got.size === ACH.length) toast('<b>Completado</b><span>Has desbloqueado todos los logros</span>');
+      if (got.size === ACH.length) {
+        toast('<b>Completado</b><span>Has desbloqueado todos los logros</span>');
+        setTimeout(() => emit('logros-completos'), 2400);
+      }
     }
     function setOpen(open) {
       panel.hidden = !open;
@@ -830,14 +833,49 @@
     };
     const INFO_ALIAS = { help: 'ayuda', '?': 'ayuda', comandos: 'ayuda', fetch: 'neofetch', exp: 'experiencia', certificaciones: 'certs', correo: 'email', mail: 'email', linkedin: 'email', instagram: 'email', redes: 'email', coffee: 'cafe', chess: 'ajedrez', date: 'hora' };
 
-    let introAt = 0, acc = 0;
+    let introAt = 0, acc = 0, trophyPending = false;
     on('enter', key => {
       if (key !== 'intro') return;
       introAt = now(); acc = 0;
       out.innerHTML = '';
       screen.classList.remove('is-session');
+      if (trophyPending) { trophyPending = false; setTimeout(showTrophy, reduce ? 0 : 900); return; }
       if (fine) setTimeout(() => { if (current === 'intro') input.focus({ preventScroll: true }); }, 1600);
     });
+
+    // Trofeo final: al completar los 8 logros
+    const TROPHY = [
+      '      ___________',
+      '     (___________)',
+      '    /|    ATB    |\\',
+      '   ( |   8 / 8   | )',
+      '    \\|           |/',
+      '      \\         /',
+      "       '._   _.'",
+      '          | |',
+      '        __|_|__',
+      '       |_______|'
+    ];
+    function showTrophy() {
+      out.innerHTML = '';
+      print(TROPHY, 'art');
+      print(['¡Todos los logros desbloqueados!']);
+      const p = document.createElement('p');
+      p.className = 'crt-talk';
+      p.innerHTML = '<button type="button">Háblame</button>';
+      $('button', p).addEventListener('click', () => enter('contacto'));
+      out.appendChild(p);
+      print(['Pulsa «Háblame» o escribe «abrir contacto».']);
+    }
+    function goTrophy() {
+      if (current === 'intro') { showTrophy(); return; }
+      if (busy) { setTimeout(goTrophy, 400); return; }
+      if (menu.isOpen()) menu.close(true);
+      ach.setOpen(false);
+      trophyPending = true;
+      go('intro', 'curtain');
+    }
+    on('logros-completos', goTrophy);
     const settled = () => now() - introAt > 1200;
     function print(lines, cls) {
       screen.classList.add('is-session');
@@ -851,6 +889,11 @@
       if (['entrar', 'inicio', 'start', 'enter', 'login', 'salir', 'exit'].includes(c)) { ach.unlock('terminal'); enter('inicio'); return; }
       if (c === 'limpiar' || c === 'clear' || c === 'cls') { out.innerHTML = ''; screen.classList.remove('is-session'); return; }
       if (c === 'terminal') { print(['Ya estás en el terminal. Escribe «entrar» para volver a la web.']); return; }
+      if (c === 'trofeo' || c === 'trophy') {
+        const left = ACH.length - ach.size();
+        if (left <= 0) showTrophy(); else print([`Te ${left === 1 ? 'falta 1 logro' : `faltan ${left} logros`} para el trofeo.`]);
+        return;
+      }
       if (c.startsWith('sudo')) { print(['Permiso denegado. Prueba con «abrir contacto».']); return; }
       const nav = c.match(/^select\s+.+\s+from\s+([\w-]+)/) || c.match(/^(?:abrir|open|cd|ir)\s+(.+)$/);
       const info = INFO[INFO_ALIAS[c] || c];
@@ -962,6 +1005,93 @@
       });
     }, { passive: true });
   }
+
+  /* ================= Ojo (detalle sutil en la cabecera de cada sección) ================= */
+  const EYE = '<svg viewBox="0 0 44 26" aria-hidden="true"><g class="lid"><path class="almond" d="M2 13Q22-3 42 13 22 29 2 13Z"/><circle class="iris" cx="22" cy="13" r="6.4"/><circle class="pupil" cx="22" cy="13" r="2.7"/><circle class="glint" cx="24.2" cy="10.8" r="1.1"/></g></svg>';
+  $$('.view--page .page-hero').forEach(h => {
+    const s = document.createElement('span');
+    s.className = 'eye-mark';
+    s.innerHTML = EYE;
+    h.appendChild(s);
+  });
+  if (fine && !reduce) {
+    let eq = false, ex = 0, ey = 0;
+    window.addEventListener('pointermove', e => {
+      ex = e.clientX; ey = e.clientY;
+      if (eq) return;
+      eq = true;
+      requestAnimationFrame(() => {
+        eq = false;
+        const v = views[current], eye = v && $('.eye-mark', v);
+        if (!eye) return;
+        const r = eye.getBoundingClientRect();
+        if (r.bottom < 0) return;
+        const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+        const a = Math.atan2(ey - cy, ex - cx), d = Math.min(4.5, Math.hypot(ex - cx, ey - cy) / 60);
+        const t = `translate(${(Math.cos(a) * d * 1.3).toFixed(2)}px,${(Math.sin(a) * d * 0.7).toFixed(2)}px)`;
+        $$('.iris, .pupil, .glint', eye).forEach(c => { c.style.transform = t; });
+      });
+    }, { passive: true });
+  }
+
+  /* ================= Cursor propio (solo con ratón): triángulo con punto y estela ================= */
+  if (fine) (function cursor() {
+    const root = document.documentElement;
+    const el = document.createElement('div');
+    el.className = 'cursor';
+    el.setAttribute('aria-hidden', 'true');
+    el.innerHTML = '<svg viewBox="-14 -14 28 28"><path class="c-out" d="M0-9.5 8.2 4.75H-8.2Z"/><path class="c-in" d="M0-9.5 8.2 4.75H-8.2Z"/><circle class="c-dot" r="1.8"/></svg>';
+    const cv = document.createElement('canvas');
+    cv.className = 'cursor-trail';
+    cv.setAttribute('aria-hidden', 'true');
+    document.body.append(cv, el);
+    const ctx = cv.getContext('2d');
+    const LIFE = 420;
+    const INTERACTIVE = 'a, button, input, textarea, label, select, [role="button"], .tile, .plate-top, .crt-screen';
+    let pts = [], looping = false, shown = false;
+    const size = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cv.width = Math.round(innerWidth * dpr); cv.height = Math.round(innerHeight * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    size();
+    window.addEventListener('resize', size);
+    function hide() { shown = false; root.classList.remove('cursor-on'); el.style.opacity = 0; }
+    function draw() {
+      const t0 = now();
+      while (pts.length && t0 - pts[0].t > LIFE) pts.shift();
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      ctx.fillStyle = '#d4ec8e';
+      for (let i = 0; i < pts.length; i++) {
+        const p = pts[i], k = 1 - (t0 - p.t) / LIFE, s = 1.2 + k * 3.6;
+        ctx.globalAlpha = k * 0.42;
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y - s);
+        ctx.lineTo(p.x + s * 0.87, p.y + s * 0.5);
+        ctx.lineTo(p.x - s * 0.87, p.y + s * 0.5);
+        ctx.closePath();
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      if (pts.length) requestAnimationFrame(draw); else looping = false;
+    }
+    window.addEventListener('pointermove', e => {
+      if (e.pointerType !== 'mouse') { if (shown) hide(); return; }
+      const x = e.clientX, y = e.clientY;
+      el.style.transform = `translate3d(${x}px,${y}px,0)`;
+      if (!shown) { shown = true; root.classList.add('cursor-on'); el.style.opacity = 1; }
+      el.classList.toggle('is-hover', !!(e.target.closest && e.target.closest(INTERACTIVE)));
+      if (reduce) return;
+      const last = pts[pts.length - 1];
+      if (!last || Math.hypot(x - last.x, y - last.y) > 6) pts.push({ x, y, t: now() });
+      if (!looping) { looping = true; requestAnimationFrame(draw); }
+    }, { passive: true });
+    window.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse') el.classList.add('is-down'); }, { passive: true });
+    window.addEventListener('pointerup', () => el.classList.remove('is-down'), { passive: true });
+    root.addEventListener('mouseleave', () => { el.style.opacity = 0; });
+    root.addEventListener('mouseenter', () => { if (shown) el.style.opacity = 1; });
+    window.addEventListener('blur', () => { el.style.opacity = 0; });
+  })();
 
   /* ================= Estantería ================= */
   (function shelf() {

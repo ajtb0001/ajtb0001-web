@@ -32,7 +32,7 @@
   const SECTIONS = [
     { key: 'perfil', n: '01', title: 'Perfil', sub: 'Hacer que los datos signifiquen algo', tag: 'Ingeniería de datos' },
     { key: 'trayectoria', n: '02', title: 'Trayectoria', sub: '2020 — hoy', tag: 'RNB · Preference' },
-    { key: 'sistema', n: '03', title: 'Sistema', sub: 'Cinco capas · modelo 3D', tag: 'SAP → Fabric' },
+    { key: 'sap', n: '03', title: 'SAP', sub: 'Metodología · del dato a la decisión', tag: 'Metodología' },
     { key: 'metodo', n: '04', title: 'Método', sub: 'Del dato al propósito', tag: 'D · I · C · P' },
     { key: 'sobre-mi', n: '05', title: 'Sobre mí', sub: 'Tres lugares, una mirada', tag: 'Rioja · Jaén · Valencia' },
     { key: 'formacion', n: '06', title: 'Formación', sub: 'Grado · Máster · MBA', tag: '5 certificaciones' },
@@ -43,13 +43,14 @@
   const LABELS = { intro: { n: '>_', title: 'Terminal' }, inicio: { n: '00', title: 'Inicio' }, privacidad: { n: '§', title: 'Privacidad' } };
   // La vista de entrada (intro) se publica en la dirección #terminal
   const hashFor = k => (k === 'intro' ? 'terminal' : k);
-  const keyForHash = h => (h === 'terminal' ? 'intro' : h === 'agenda' ? 'contacto' : h === 'intro' ? null : h);
+  const HASH_ALIAS = { terminal: 'intro', agenda: 'contacto', sistema: 'sap', intro: null };
+  const keyForHash = h => (Object.prototype.hasOwnProperty.call(HASH_ALIAS, h) ? HASH_ALIAS[h] : h);
   const labelFor = k => byKey[k] || LABELS[k] || { n: '', title: k };
 
   const MOTIF = {
     perfil: '<div class="m"></div>',
     trayectoria: '<div class="m"><i data-y="2020"></i><i data-y="2024"></i><i data-y="hoy"></i></div>',
-    sistema: '<div class="m">' + [4, 3, 2, 1, 0].map(k => `<i style="--k:${k}"></i>`).join('') + '</div>',
+    sap: '<div class="m">' + [4, 3, 2, 1, 0].map(k => `<i style="--k:${k}"></i>`).join('') + '</div>',
     metodo: '<div class="m">' + [0, 1, 2, 3].map(k => `<i style="--k:${k}"></i>`).join('') + '</div>',
     'sobre-mi': '<div class="m">&#x265E;&#xFE0E;</div>',
     formacion: '<div class="m"><i>DP-700</i><i>DP-900</i><i>AZ-900</i><i>PL-900</i><i>MOS-200</i></div>',
@@ -63,7 +64,7 @@
     { id: 'hola', name: '¡Hola, mundo!', desc: 'Entra en la web desde el terminal' },
     { id: 'terminal', name: 'Usuario avanzado', desc: 'Escribe un comando en el terminal' },
     { id: 'explorador', name: 'Explorador', desc: 'Visita cuatro secciones distintas' },
-    { id: 'flujo', name: 'Flujo completo', desc: 'Recorre las cinco capas del sistema' },
+    { id: 'flujo', name: 'Flujo completo', desc: 'Recorre las cinco capas del flujo SAP' },
     { id: 'vuelta', name: 'Vuelta completa', desc: 'Gira el modelo 3D una vuelta entera' },
     { id: 'lector', name: 'Ratón de biblioteca', desc: 'Pasa por todos los libros de la estantería' },
     { id: 'sinfrenos', name: 'Sin frenos', desc: 'Llena la barra para pasar de sección' },
@@ -642,9 +643,13 @@
   });
 
   const hold = (() => {
-    let p = 0, lastIn = 0, looping = false, segs = [], pct = null, next = null, lit = -1, bottomSince = 0;
+    let p = 0, lastIn = 0, looping = false, segs = [], pct = null, next = null, lit = -1, bottomSince = 0, touchMode = false;
     const SEG = 32;
-    const atBottom = () => innerHeight + window.scrollY >= document.documentElement.scrollHeight - 6;
+    // En móvil la barra del navegador cambia la altura visible: se usa el visualViewport y más margen
+    const atBottom = slack => {
+      const vh = window.visualViewport ? window.visualViewport.height : innerHeight;
+      return window.scrollY + vh >= document.documentElement.scrollHeight - slack;
+    };
     function bind(view) {
       const band = $('.next-band', view);
       segs = band ? $$('.nb-bar i', band) : [];
@@ -659,13 +664,15 @@
       lit = n;
       if (pct) pct.textContent = Math.round(p * 100) + '%';
     }
-    function ready() {
+    function ready(touch) {
       if (!next || busy || menu.isOpen() || !body.classList.contains('is-page')) return false;
-      if (!atBottom()) { bottomSince = 0; return false; }
+      if (!atBottom(touch ? 60 : 8)) { bottomSince = 0; return false; }
+      if (touch) return true;
       if (!bottomSince) bottomSince = now();
       return now() - bottomSince > 260;
     }
-    function add(v) {
+    function add(v, touch) {
+      touchMode = !!touch;
       p = Math.min(1, p + v);
       lastIn = now();
       render();
@@ -673,7 +680,7 @@
       if (!looping) { looping = true; requestAnimationFrame(step); }
     }
     function step() {
-      if (now() - lastIn > 170) p = Math.max(0, p - 0.028);
+      if (now() - lastIn > (touchMode ? 500 : 170)) p = Math.max(0, p - (touchMode ? 0.012 : 0.028));
       render();
       if (p > 0 && !busy) requestAnimationFrame(step); else { looping = false; if (busy) { p = 0; render(); } }
     }
@@ -688,7 +695,7 @@
       if (ty === null) return;
       const y = e.touches[0].clientY, dy = ty - y;
       ty = y;
-      if (dy > 0 && ready()) add(Math.min(dy, 60) / 420);
+      if (dy > 0 && ready(true)) add(Math.min(dy, 80) / 330, true);
     }, { passive: true });
     document.addEventListener('keydown', e => {
       if (!['ArrowDown', 'PageDown', ' ', 'End'].includes(e.key) || /INPUT|TEXTAREA|BUTTON|SELECT/.test(document.activeElement.tagName)) return;
@@ -747,7 +754,7 @@
     };
     $('#enter-btn').addEventListener('click', () => enter('inicio'));
     const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/;$/, '').trim();
-    const ALIAS = { 'sobre mi': 'sobre-mi', sobremi: 'sobre-mi', about: 'sobre-mi', trabajo: 'trayectoria', web: 'servicios', webs: 'servicios', cv: 'perfil' };
+    const ALIAS = { sistema: 'sap', metodologia: 'sap', 'metodologia sap': 'sap', 'sobre mi': 'sobre-mi', sobremi: 'sobre-mi', about: 'sobre-mi', trabajo: 'trayectoria', web: 'servicios', webs: 'servicios', cv: 'perfil' };
     const years = Math.max(1, new Date().getFullYear() - 2020);
 
     // Comandos que muestran información en pantalla
@@ -756,7 +763,7 @@
         'info ...... whoami · neofetch · stack · experiencia · proyecto',
         '            estudios · certs · servicios · email',
         'navegar ... abrir <sección> · entrar · salir',
-        'secciones . perfil · trayectoria · sistema · metodo · sobre-mi',
+        'secciones . perfil · trayectoria · sap · metodo · sobre-mi',
         '            formacion · servicios · contacto',
         'extras .... sql · cafe · ajedrez · hora · logros · limpiar'
       ],
@@ -857,6 +864,26 @@
       print([`Comando no encontrado: ${raw.trim()}. Escribe «ayuda».`]);
     }
     form.addEventListener('submit', e => { e.preventDefault(); const v = input.value; input.value = ''; run(v); });
+    // Móvil: con el teclado abierto, el terminal ocupa solo la parte visible de la pantalla
+    if (!fine) {
+      const vv = window.visualViewport;
+      const fit = () => {
+        if (!view.classList.contains('kb')) return;
+        view.style.top = (vv ? vv.offsetTop : 0) + 'px';
+        view.style.height = (vv ? vv.height : innerHeight) + 'px';
+        view.style.bottom = 'auto';
+        out.scrollTop = out.scrollHeight;
+      };
+      const reset = () => { view.classList.remove('kb'); view.style.top = view.style.height = view.style.bottom = ''; };
+      input.addEventListener('focus', () => { view.classList.add('kb'); screen.classList.add('is-session'); fit(); setTimeout(fit, 250); setTimeout(fit, 600); });
+      input.addEventListener('blur', () => setTimeout(() => {
+        if (document.activeElement === input) return;
+        reset();
+        if (!out.children.length) screen.classList.remove('is-session');
+      }, 150));
+      if (vv) { vv.addEventListener('resize', fit); vv.addEventListener('scroll', fit); }
+      on('leave', key => { if (key === 'intro') { input.blur(); reset(); } });
+    }
     $$('.crt-try [data-cmd]').forEach(b => b.addEventListener('click', () => { run(b.dataset.cmd); if (fine) input.focus({ preventScroll: true }); }));
     view.addEventListener('wheel', e => { if (e.deltaY > 0 && settled()) { acc += e.deltaY; if (acc > 140) enter('inicio'); } }, { passive: true });
     let sy = null;

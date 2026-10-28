@@ -117,7 +117,7 @@
     document.addEventListener('click', e => { if (!panel.hidden && !panel.contains(e.target) && e.target !== toggle) setOpen(false); });
     function reset() { got = new Set(); render(); }
     render();
-    return { unlock, setOpen, reset, isOpen: () => !panel.hidden, size: () => got.size };
+    return { unlock, setOpen, reset, toast, isOpen: () => !panel.hidden, size: () => got.size };
   })();
   document.addEventListener('click', e => { const t = e.target.closest('[data-ach]'); if (t) ach.unlock(t.dataset.ach); });
 
@@ -749,34 +749,68 @@
   /* ================= Intro · terminal CRT ================= */
   (function intro() {
     const view = views.intro, form = $('#crt-form'), input = $('#crt-input'), out = $('#crt-out'), screen = $('#crt-content');
+    const crtScreen = $('.crt-screen', view), promptLabel = $('label', form), tryBar = $('.crt-try', view);
     const enter = key => {
       if (current !== 'intro' || busy) return;
+      ach.unlock('hola');
+      session.set('introSeen', true);
       history.replaceState(null, '', '#' + key);
       transitionTo(key);
     };
     $('#enter-btn').addEventListener('click', () => enter('inicio'));
-    const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/;$/, '').trim();
+    // Minúsculas, sin tildes, espacios simples y sin «;» final: así da igual cómo se escriba
+    const norm = s => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').replace(/;+\s*$/, '').trim();
+    const esc = s => String(s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
     const ALIAS = { sistema: 'sap', metodologia: 'sap', 'metodologia sap': 'sap', 'sobre mi': 'sobre-mi', sobremi: 'sobre-mi', about: 'sobre-mi', trabajo: 'trayectoria', web: 'servicios', webs: 'servicios', cv: 'perfil' };
     const years = Math.max(1, new Date().getFullYear() - 2020);
 
-    // Comandos que muestran información en pantalla
+    /* ---------- Salida ---------- */
+    function print(lines, cls) {
+      screen.classList.add('is-session');
+      const made = lines.map(l => {
+        const p = document.createElement('p');
+        p.textContent = l;
+        if (cls) p.className = cls;
+        out.appendChild(p);
+        return p;
+      });
+      while (out.children.length > 60) out.removeChild(out.firstChild);
+      return made;
+    }
+    const clearOut = () => { out.innerHTML = ''; };
+
+    /* ---------- Modos: comandos, SQL y mensaje ---------- */
+    let mode = 'cmd';
+    const DEFAULT_TRY = tryBar.innerHTML;
+    const PH_CMD = fine ? 'escribe aquí un comando…' : 'toca y escribe aquí…';
+    function setMode(m, label, placeholder, chips) {
+      mode = m;
+      promptLabel.textContent = label;
+      input.placeholder = placeholder;
+      tryBar.innerHTML = chips ? chips.map(c => `<button type="button" data-cmd="${esc(c)}">${esc(c)}</button>`).join(' ') : DEFAULT_TRY;
+      view.classList.toggle('mode-sql', m === 'sql');
+    }
+    const resetMode = () => setMode('cmd', 'usuario:~$', PH_CMD, null);
+    input.placeholder = PH_CMD;
+
+    /* ---------- Comandos de información ---------- */
     const INFO = {
       ayuda: () => [
         'info ...... whoami · neofetch · stack · experiencia · proyecto',
         '            estudios · certs · servicios · email',
+        'datos ..... sql  (consulta mis datos con SQL)',
+        'contacto .. mensaje  (escríbeme desde aquí)',
+        'efectos ... matrix · top · scan · apagar',
         'navegar ... abrir <sección> · entrar · salir',
         'secciones . perfil · trayectoria · sap · metodo · sobre-mi',
         '            formacion · servicios · contacto',
-        'extras .... sql · cafe · ajedrez · hora · logros · limpiar'
+        'extras .... cafe · ajedrez · hora · logros · trofeo · limpiar',
+        'historial . flechas ↑ ↓',
+        'Y hay comandos secretos… «secretos» muestra tu progreso.'
       ],
-      whoami: () => [
-        'Álvaro José Torres Baeza',
-        'Ingeniería de datos e integración SAP · Valencia, ES',
-        'También diseño y desarrollo webs a medida.'
-      ],
+      whoami: () => ['Álvaro José Torres Baeza', 'Ingeniería de datos e integración SAP · Valencia, ES', 'También diseño y desarrollo webs a medida.'],
       neofetch: () => [
-        'atb@datos',
-        '---------',
+        'atb@datos', '---------',
         'SO ........ ATB·DATA 1.0 LTS',
         'Host ...... Valencia, España',
         `Uptime .... ${years} años en datos`,
@@ -793,39 +827,12 @@
         'plataforma ... Microsoft Fabric · OneLake · Azure',
         'decisión ..... Qlik Sense · Power BI · SSRS'
       ],
-      experiencia: () => [
-        '2024 — hoy   RNB Cosméticos',
-        '             Ingeniería de datos e integración SAP',
-        '2020 — 2024  Preference',
-        '             Bases de datos y desarrollo a medida'
-      ],
-      proyecto: () => [
-        'Control presupuestario · Qlik Sense',
-        '≈30 usuarios · todas las áreas de la compañía',
-        'gasto real · gasto comprometido · presupuesto',
-        'Escribe «abrir trayectoria» para ver el detalle.'
-      ],
-      estudios: () => [
-        'Grado .. Ingeniería Informática · Universidad de Jaén',
-        'Máster . Big Data & Business Intelligence · INESEM / Nebrija',
-        'MBA .... Transformación Digital · UPV'
-      ],
-      certs: () => [
-        'DP-700 .. Fabric Data Engineer Associate',
-        'DP-900 .. Azure Data Fundamentals',
-        'AZ-900 .. Azure Fundamentals',
-        'PL-900 .. Power Platform Fundamentals',
-        'MOS-200 . Microsoft Office Specialist · Excel'
-      ],
-      servicios: () => [
-        'Diseño y desarrollo de webs a medida:',
-        '  · portfolios y marca personal',
-        '  · webs para proyectos y negocios',
-        '  · experiencias interactivas como esta',
-        'Escribe «abrir servicios» o «abrir contacto».'
-      ],
-      email: () => ['alvarotorresbaeza@gmail.com', 'linkedin.com/in/ajtb', 'instagram.com/alvarojtb'],
-      sql: () => ['SELECT proposito FROM datos;', '→ 1 fila: «hacer que signifiquen algo»'],
+      experiencia: () => ['2024 — hoy   RNB Cosméticos', '             Ingeniería de datos e integración SAP', '2020 — 2024  Preference', '             Bases de datos y desarrollo a medida'],
+      proyecto: () => ['Control presupuestario · Qlik Sense', '≈30 usuarios · todas las áreas de la compañía', 'gasto real · gasto comprometido · presupuesto', 'Escribe «abrir trayectoria» para ver el detalle.'],
+      estudios: () => ['Grado .. Ingeniería Informática · Universidad de Jaén', 'Máster . Big Data & Business Intelligence · INESEM / Nebrija', 'MBA .... Transformación Digital · UPV'],
+      certs: () => ['DP-700 .. Fabric Data Engineer Associate', 'DP-900 .. Azure Data Fundamentals', 'AZ-900 .. Azure Fundamentals', 'PL-900 .. Power Platform Fundamentals', 'MOS-200 . Microsoft Office Specialist · Excel'],
+      servicios: () => ['Diseño y desarrollo de webs a medida:', '  · portfolios y marca personal', '  · webs para proyectos y negocios', '  · experiencias interactivas como esta', 'Escribe «mensaje» o «abrir servicios».'],
+      email: () => ['alvarotorresbaeza@gmail.com', 'linkedin.com/in/ajtb', 'instagram.com/alvarojtb', 'O escribe «mensaje» y te contesto yo.'],
       cafe: () => ['   ( (', '    ) )', '  .______.', '  |      |]', '  \\      /', "   `----'", 'Café listo. Los datos, en un momento.'],
       ajedrez: () => ['1. e4 e5  2. Cf3 Cc6  3. Ab5', 'Apertura española: estrategia antes que táctica.'],
       hora: () => [new Date().toLocaleString('es-ES', { timeZone: 'Europe/Madrid' }) + ' · Valencia'],
@@ -833,17 +840,463 @@
     };
     const INFO_ALIAS = { help: 'ayuda', '?': 'ayuda', comandos: 'ayuda', fetch: 'neofetch', exp: 'experiencia', certificaciones: 'certs', correo: 'email', mail: 'email', linkedin: 'email', instagram: 'email', redes: 'email', coffee: 'cafe', chess: 'ajedrez', date: 'hora' };
 
+    /* ---------- Motor SQL sobre datos de la web ---------- */
+    const T = {
+      experiencia: { cols: ['id', 'empresa', 'puesto', 'desde', 'hasta'], rows: [
+        [1, 'RNB Cosméticos', 'Ingeniería de datos e integración SAP', 2024, 'hoy'],
+        [2, 'Preference', 'Bases de datos y desarrollo a medida', 2020, 2024]] },
+      certs: { cols: ['codigo', 'nombre', 'nivel', 'area'], rows: [
+        ['DP-700', 'Fabric Data Engineer', 'Associate', 'Datos'],
+        ['DP-900', 'Azure Data Fundamentals', 'Fundamentals', 'Datos'],
+        ['AZ-900', 'Azure Fundamentals', 'Fundamentals', 'Cloud'],
+        ['PL-900', 'Power Platform Fundamentals', 'Fundamentals', 'Bajo código'],
+        ['MOS-200', 'Office Specialist · Excel', 'Specialist', 'Ofimática']] },
+      stack: { cols: ['herramienta', 'capa', 'orden'], rows: [
+        ['SAP', 'origen', 1], ['CDS Views', 'origen', 1], ['BAPIs', 'origen', 1], ['Fiori', 'origen', 1],
+        ['SQL', 'integración', 2], ['ETL', 'integración', 2], ['Pipelines', 'integración', 2],
+        ['SAP Datasphere', 'modelo', 3], ['SQL Server', 'modelo', 3],
+        ['Microsoft Fabric', 'plataforma', 4], ['OneLake', 'plataforma', 4], ['Azure', 'plataforma', 4],
+        ['Qlik Sense', 'decisión', 5], ['Power BI', 'decisión', 5], ['SSRS', 'decisión', 5]] },
+      estudios: { cols: ['tipo', 'titulo', 'centro'], rows: [
+        ['Grado', 'Ingeniería Informática', 'Universidad de Jaén'],
+        ['Máster', 'Big Data & Business Intelligence', 'INESEM · Nebrija'],
+        ['MBA', 'Transformación Digital', 'UPV']] },
+      proyectos: { cols: ['nombre', 'herramienta', 'usuarios', 'areas'], rows: [
+        ['Control presupuestario', 'Qlik Sense', 30, 'Todas']] },
+      lugares: { cols: ['ciudad', 'etapa', 'latitud', 'longitud'], rows: [
+        ['La Rioja', 'origen', 42.47, -2.45], ['Jaén', 'raíces', 37.78, -3.79], ['Valencia', 'presente', 39.47, -0.38]] },
+      servicios: { cols: ['servicio', 'para'], rows: [
+        ['Portfolio y marca personal', 'Presentarte con una web propia'],
+        ['Webs para proyectos y negocios', 'Presentar un servicio o producto'],
+        ['Experiencias interactivas', 'Webs con animación y 3D']] }
+    };
+    const TABLES = Object.keys(T);
+    const sqlErr = msg => { const e = new Error(msg); e.sql = true; return e; };
+    function colIdx(t, name, tname) {
+      const i = t.cols.indexOf(name);
+      if (i < 0) throw sqlErr(`La tabla «${tname}» no tiene la columna «${name}». Columnas: ${t.cols.join(', ')}.`);
+      return i;
+    }
+    function value(s) {
+      s = s.trim();
+      const q = s.match(/^'(.*)'$|^"(.*)"$/);
+      if (q) return q[1] !== undefined ? q[1] : q[2];
+      if (/^-?\d+(\.\d+)?$/.test(s)) return +s;
+      return s;
+    }
+    function compare(a, b) {
+      if (typeof a === 'number' && typeof b === 'number') return a - b;
+      return norm(a).localeCompare(norm(b), 'es');
+    }
+    function cond(row, t, tname, text) {
+      const m = text.trim().match(/^([a-z_]+)\s*(not like|like|not in|in|<>|!=|>=|<=|=|>|<)\s*(.+)$/);
+      if (!m) throw sqlErr(`No entiendo el filtro «${text.trim()}». Ejemplo: WHERE nivel = 'associate'`);
+      const a = row[colIdx(t, m[1], tname)], op = m[2], raw = m[3];
+      if (op === 'like' || op === 'not like') {
+        const pat = norm(value(raw)).replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/%/g, '.*').replace(/_/g, '.');
+        const ok = new RegExp('^' + pat + '$').test(norm(a));
+        return op === 'like' ? ok : !ok;
+      }
+      if (op === 'in' || op === 'not in') {
+        const list = raw.replace(/^\(|\)$/g, '').split(',').map(value);
+        const ok = list.some(v => compare(a, v) === 0);
+        return op === 'in' ? ok : !ok;
+      }
+      const c = compare(a, value(raw));
+      return { '=': c === 0, '!=': c !== 0, '<>': c !== 0, '>': c > 0, '<': c < 0, '>=': c >= 0, '<=': c <= 0 }[op];
+    }
+    function where(row, t, tname, text) {
+      const parts = text.split(/\s+(and|or)\s+(?=(?:[^']*'[^']*')*[^']*$)/);
+      let res = cond(row, t, tname, parts[0]);
+      for (let i = 1; i < parts.length; i += 2) {
+        const next = cond(row, t, tname, parts[i + 1]);
+        res = parts[i] === 'and' ? res && next : res || next;
+      }
+      return res;
+    }
+    function charsWide() {
+      const p = document.createElement('p');
+      p.className = 'tbl';
+      p.innerHTML = '<span class="crt-measure">0000000000</span>';
+      out.appendChild(p);
+      const w = $('.crt-measure', p).getBoundingClientRect().width / 10 || 9;
+      p.remove();
+      return Math.max(20, Math.floor(out.clientWidth / w) - 1);
+    }
+    function table(cols, data) {
+      if (!data.length) { print(['0 filas. Ningún registro cumple el filtro.']); return; }
+      const cells = data.map(r => r.map(v => String(v)));
+      const widths = cols.map((c, i) => Math.min(26, Math.max(c.length, ...cells.map(r => r[i].length))));
+      const fit = (s, w) => (s.length > w ? s.slice(0, w - 1) + '…' : s.padEnd(w));
+      const total = widths.reduce((a, w) => a + w + 3, 1);
+      screen.classList.add('is-session');
+      if (total <= charsWide()) {
+        const sep = '+' + widths.map(w => '-'.repeat(w + 2)).join('+') + '+';
+        const row = r => '| ' + r.map((v, i) => fit(v, widths[i])).join(' | ') + ' |';
+        print([sep, row(cols), sep, ...cells.map(row), sep], 'tbl');
+      } else {
+        // Pantalla estrecha: un registro por bloque, como el modo \G de MySQL
+        const pad = Math.max(...cols.map(c => c.length));
+        const lines = [];
+        cells.forEach((r, n) => { lines.push(`── fila ${n + 1} ──`); r.forEach((v, i) => lines.push(`${cols[i].padStart(pad)}: ${v}`)); });
+        print(lines, 'tbl');
+      }
+      print([`${data.length} ${data.length === 1 ? 'fila' : 'filas'}.`]);
+    }
+    function sqlExec(raw) {
+      try {
+        const q = norm(raw);
+        if (/^(show tables|tablas|tables|\.tables|\\dt)$/.test(q)) {
+          print(TABLES.map(n => `${n.padEnd(12)} (${T[n].cols.join(', ')})`), 'tbl');
+          print(['Usa DESCRIBE <tabla> para ver sus campos.']);
+          return;
+        }
+        let m = q.match(/^(?:describe|desc|columnas|campos)\s+([a-z_]+)$/);
+        if (m) {
+          const t = T[m[1]];
+          if (!t) throw sqlErr(`No existe la tabla «${m[1]}». Tablas: ${TABLES.join(', ')}.`);
+          print(t.cols.map((c, i) => `${c.padEnd(12)} ${typeof t.rows[0][i] === 'number' ? 'número' : 'texto'}`), 'tbl');
+          print([`Ejemplo: SELECT ${t.cols.slice(0, 2).join(', ')} FROM ${m[1]};`]);
+          return;
+        }
+        m = q.match(/^select\s+(.+?)\s+from\s+([a-z_]+)(?:\s+where\s+(.+?))?(?:\s+order\s+by\s+([a-z_]+)(?:\s+(asc|desc))?)?(?:\s+limit\s+(\d+))?$/);
+        if (!m) throw sqlErr('No entiendo la consulta. Prueba: SELECT * FROM certs;  o escribe «ayuda».');
+        const [, colsRaw, tname, w, orderCol, dir, limit] = m;
+        const t = T[tname];
+        if (!t) throw sqlErr(`No existe la tabla «${tname}». Tablas: ${TABLES.join(', ')}.`);
+        let rows = t.rows.slice();
+        if (w) rows = rows.filter(r => where(r, t, tname, w));
+        if (orderCol) { const i = colIdx(t, orderCol, tname); rows.sort((a, b) => compare(a[i], b[i]) * (dir === 'desc' ? -1 : 1)); }
+        if (limit) rows = rows.slice(0, +limit);
+        if (/^count\(\s*\*\s*\)$/.test(colsRaw.trim())) { table(['count'], [[rows.length]]); return; }
+        const cols = colsRaw.trim() === '*' ? t.cols : colsRaw.split(',').map(c => c.trim());
+        const idx = cols.map(c => colIdx(t, c, tname));
+        table(cols, rows.map(r => idx.map(i => r[i])));
+      } catch (err) {
+        print([err.sql ? err.message : 'Algo ha fallado con esa consulta. Escribe «ayuda» para ver ejemplos.'], 'err');
+      }
+    }
+    function startSql() {
+      setMode('sql', 'sql>', 'SELECT * FROM certs;', ['SHOW TABLES', 'DESCRIBE stack', 'SELECT * FROM certs', 'ayuda', 'salir']);
+      print([
+        'Modo SQL · consulta mis datos como en una base de datos real.',
+        `Tablas: ${TABLES.join(' · ')}`,
+        'Mira los campos de una tabla con: DESCRIBE certs',
+        "Ejemplo: SELECT nombre, nivel FROM certs WHERE nivel = 'associate';",
+        'Mayúsculas, minúsculas y tildes dan igual. «ayuda» = chuleta · «salir» = volver.'
+      ]);
+    }
+    function sqlHelp() {
+      print([
+        'SELECT col1, col2 FROM tabla ....... elegir columnas (o * para todas)',
+        "WHERE campo = 'valor' .............. filtrar ( = != > < >= <= )",
+        "WHERE campo LIKE '%sap%' ........... contiene un texto",
+        "WHERE capa IN ('modelo', 'origen') . está en una lista",
+        'AND / OR ........................... combinar filtros',
+        'ORDER BY campo DESC ................ ordenar',
+        'LIMIT 3 ............................ limitar filas',
+        'SELECT COUNT(*) FROM tabla ......... contar filas',
+        'SHOW TABLES · DESCRIBE tabla ....... ver la estructura'
+      ], 'tbl');
+      print(["Prueba: SELECT empresa, desde FROM experiencia ORDER BY desde DESC;"]);
+    }
+    function sqlLine(v) {
+      const c = norm(v);
+      if (!c) return;
+      print(['sql> ' + v], 'cmd');
+      if (['salir', 'exit', 'quit', '\\q', 'q'].includes(c)) { resetMode(); print(['Has salido del modo SQL.']); return; }
+      if (['ayuda', 'help', '?'].includes(c)) { sqlHelp(); return; }
+      if (['limpiar', 'clear', 'cls'].includes(c)) { clearOut(); return; }
+      sqlExec(v);
+    }
+
+    /* ---------- Mensaje por conversación ---------- */
+    let msg = null;
+    function startMsg() {
+      msg = { step: 'nombre' };
+      setMode('msg', 'nombre>', 'tu nombre', ['cancelar']);
+      print(['Vamos a escribirme un mensaje. Puedes escribir «cancelar» en cualquier momento.', '¿Cómo te llamas?']);
+    }
+    async function msgStep(v) {
+      const c = norm(v);
+      if (!c) return;
+      print([promptLabel.textContent + ' ' + v], 'cmd');
+      if (c === 'cancelar' || c === 'salir') { msg = null; resetMode(); print(['Mensaje cancelado.']); return; }
+      if (msg.step === 'nombre') {
+        if (v.length < 2) { print(['Necesito al menos tu nombre.']); return; }
+        msg.nombre = v; msg.step = 'email';
+        setMode('msg', 'correo>', 'tu@correo.com', ['cancelar']);
+        print([`Encantado, ${v}. ¿A qué correo te respondo?`]);
+      } else if (msg.step === 'email') {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) { print(['Ese correo no parece válido. Revísalo, por favor.'], 'err'); return; }
+        msg.email = v; msg.step = 'mensaje';
+        setMode('msg', 'mensaje>', 'cuéntame qué necesitas', ['cancelar']);
+        print(['Perfecto. ¿Qué te gustaría contarme? (datos, SAP, una web…)']);
+      } else if (msg.step === 'mensaje') {
+        if (v.length < 5) { print(['Cuéntame un poco más.']); return; }
+        msg.mensaje = v; msg.step = 'ok';
+        setMode('msg', '¿enviar?>', 's / n', ['s', 'n']);
+        print(['Al enviarlo aceptas la política de privacidad (alvarotorresbaeza.com/#privacidad).', '¿Lo envío? (s/n)']);
+      } else if (msg.step === 'ok') {
+        if (['n', 'no'].includes(c)) { msg = null; resetMode(); print(['Vale, no lo envío.']); return; }
+        if (!['s', 'si', 'y', 'yes'].includes(c)) { print(['Responde «s» para enviar o «n» para cancelar.']); return; }
+        const data = msg;
+        msg = null;
+        resetMode();
+        print(['Enviando…']);
+        try {
+          const res = await fetch(FORM_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify({ nombre: data.nombre, email: data.email, mensaje: data.mensaje, origen: 'Terminal de la web', _subject: 'Nuevo mensaje desde el terminal de alvarotorresbaeza.com', _template: 'table', _captcha: 'false' })
+          });
+          const j = await res.json().catch(() => ({}));
+          if (!res.ok || String(j.success) !== 'true') throw new Error('envío');
+          print(['Mensaje enviado. Te responderé lo antes posible.']);
+          ach.unlock('conversacion');
+        } catch (_) {
+          print(['No se ha podido enviar ahora mismo. Escríbeme a alvarotorresbaeza@gmail.com.'], 'err');
+        }
+      }
+    }
+
+    /* ---------- Efectos ---------- */
+    let fxTimer = null, fxRaf = 0;
+    function stopFx() {
+      clearInterval(fxTimer); clearTimeout(fxTimer); fxTimer = null;
+      cancelAnimationFrame(fxRaf); fxRaf = 0;
+      const mc = $('.crt-matrix', crtScreen);
+      if (mc) mc.remove();
+    }
+    function matrix() {
+      stopFx();
+      if (reduce) { print(['01001101 01100001 01110100 01110010 01101001 01111000']); return; }
+      const r = crtScreen.getBoundingClientRect();
+      const c = document.createElement('canvas');
+      c.className = 'crt-matrix';
+      c.width = Math.round(r.width); c.height = Math.round(r.height);
+      crtScreen.insertBefore(c, $('.crt-fx', crtScreen));
+      const g = c.getContext('2d'), fs = Math.max(12, Math.round(r.width / 46));
+      const cols = Math.ceil(c.width / fs), drops = Array.from({ length: cols }, () => Math.random() * -25);
+      const chars = '01SELECTFROMWHEREDATOSAPETL{}<>=+*'.split('');
+      g.font = `${fs}px VT323, monospace`;
+      const t0 = now();
+      let last = 0;
+      const step = t => {
+        if (t - last > 45) {
+          last = t;
+          g.fillStyle = 'rgba(12,17,9,.2)';
+          g.fillRect(0, 0, c.width, c.height);
+          g.fillStyle = '#d4ec8e';
+          for (let i = 0; i < cols; i++) {
+            g.fillText(chars[Math.random() * chars.length | 0], i * fs, drops[i] * fs);
+            if (drops[i] * fs > c.height && Math.random() > 0.95) drops[i] = 0;
+            drops[i]++;
+          }
+        }
+        if (now() - t0 < 6500 && current === 'intro') { fxRaf = requestAnimationFrame(step); return; }
+        fxRaf = 0;
+        c.classList.add('out');
+        setTimeout(() => c.remove(), 600);
+        print(['Has visto el código. Ahora escribe «sql» y lee los datos de verdad.']);
+      };
+      fxRaf = requestAnimationFrame(step);
+    }
+    function top() {
+      stopFx();
+      const procs = ['sap-extract', 'etl-pipeline', 'datasphere', 'qlik-dash', 'fabric-lake', 'sql-server', 'curiosidad'];
+      print(['PID'.padEnd(5) + 'PROCESO'.padEnd(13) + 'CPU'.padEnd(10) + '   %'], 'tbl');
+      const lines = print(procs.map(() => ''), 'tbl');
+      let n = 0;
+      const tick = () => {
+        lines.forEach((p, i) => {
+          const cpu = procs[i] === 'curiosidad' ? 92 + Math.random() * 8 : 5 + Math.random() * 60;
+          p.textContent = `${String(1200 + i * 7).padEnd(5)}${procs[i].padEnd(13)}${'|'.repeat(Math.round(cpu / 10)).padEnd(10)}${cpu.toFixed(0).padStart(4)}%`;
+        });
+        if (++n > 14) { clearInterval(fxTimer); fxTimer = null; print(['El proceso «curiosidad» siempre va al máximo.']); }
+      };
+      tick();
+      if (!reduce) fxTimer = setInterval(tick, 380);
+    }
+    function scan() {
+      stopFx();
+      const [bar] = print([''], 'tbl');
+      let pct = 0;
+      const tick = () => {
+        pct = Math.min(100, pct + 4 + Math.random() * 9);
+        bar.textContent = `Escaneando [${'#'.repeat(Math.round(pct / 100 * 14)).padEnd(14, '.')}] ${Math.round(pct)}%`;
+        if (pct < 100) return;
+        clearInterval(fxTimer); fxTimer = null;
+        print(['Resultado del análisis:', '  curiosidad ......... alta', '  paciencia .......... suficiente para llegar aquí', '  interés en datos ... probable', 'Recomendación: escribe «mensaje» y hablamos.']);
+      };
+      if (reduce) { pct = 99; tick(); } else fxTimer = setInterval(tick, 140);
+    }
+    function powerOff() {
+      stopFx();
+      screen.classList.add('crt-off');
+      fxTimer = setTimeout(() => {
+        clearOut();
+        screen.classList.remove('is-session', 'crt-off');
+        fxTimer = null;
+      }, reduce ? 50 : 1700);
+    }
+    function hack() {
+      stopFx();
+      const steps = ['Conectando con mainframe.alvaro…', 'Saltando el cortafuegos… [OK]', 'Descifrando contraseñas… ********', 'Extrayendo la base de datos secreta…', 'ERROR 403 · ACCESO DENEGADO', 'Este sistema solo se abre con una buena conversación.', 'Prueba con «mensaje».'];
+      let i = 0;
+      fxTimer = setInterval(() => {
+        print([steps[i]], i === 4 ? 'alert' : '');
+        if (++i >= steps.length) { clearInterval(fxTimer); fxTimer = null; }
+      }, reduce ? 10 : 420);
+    }
+
+    /* ---------- Comandos secretos ---------- */
+    const SECRETS = {
+      ojo: { hint: 'te observa en la cabecera de cada sección', run: () => print(['    .-"""-.', "   /  .-.  \\", '  |  ( o )  |', "   \\  '-'  /", "    '-...-'", 'Te veo. Y también veo los datos… cuando están bien modelados.'], 'art') },
+      triangulo: { hint: 'la forma de tu cursor', run: () => print(['      /\\', '     /  \\', '    / ·  \\', '   /______\\', 'Tres lados, tres lugares: La Rioja, Jaén y Valencia.'], 'art') },
+      hack: { hint: 'lo que intentaría un intruso', run: hack },
+      rioja: { hint: 'donde empezó todo', run: () => print(['Tierra de viñedos. Los buenos procesos, como el vino, necesitan su tiempo.']) },
+      jaen: { hint: 'olivos y calma', run: () => print(['Mar de olivos. Los datos, como el aceite: mejor limpios y de primera extracción.']) },
+      valencia: { hint: 'el presente', run: () => print(['Luz, mar y datos bien modelados. Aquí se construye.']) },
+      nietzsche: { hint: 'el primero de la estantería', run: () => print(['«Quien tiene un porqué para vivir soporta casi cualquier cómo.»', 'En datos: quien tiene un para qué soporta cualquier ETL.']) },
+      seneca: { hint: 'un estoico con nombre propio', run: () => print(['«No es que tengamos poco tiempo, es que perdemos mucho.»', 'Por eso automatizo las cargas.']) },
+      '42': { hint: 'la respuesta a todo', run: () => print(['42. Pero ¿cuál era la pregunta? Sin pregunta, el dato no sirve.']) },
+      xyzzy: { hint: 'palabra mágica de las aventuras de texto', run: () => print(['Nada ocurre.', '(Bueno, sí: acabas de encontrar un secreto.)']) },
+      ping: { hint: '¿hay alguien ahí?', run: () => print(['PING alvarotorresbaeza.com', 'pong · 12 ms desde Valencia', 'Hay alguien al otro lado. Escribe «mensaje».']) },
+      'rm -rf': { hint: 'el comando más peligroso', run: () => print(['rm: no se puede borrar «/»: los datos tienen copia de seguridad.', 'Buen intento.']) }
+    };
+    const SECRET_ALIAS = { eye: 'ojo', triangle: 'triangulo', hacker: 'hack', vino: 'rioja', 'la rioja': 'rioja', olivo: 'jaen', olivos: 'jaen', aceite: 'jaen', seneca: 'seneca', 'el sentido de la vida': '42' };
+    const secretFound = new Set(local.get('secretos', []));
+    function secretKey(c) {
+      if (c.startsWith('rm ')) return 'rm -rf';
+      const k = SECRET_ALIAS[c] || c;
+      return SECRETS[k] ? k : null;
+    }
+    function findSecret(k) {
+      SECRETS[k].run();
+      if (secretFound.has(k)) return;
+      secretFound.add(k);
+      local.set('secretos', [...secretFound]);
+      const total = Object.keys(SECRETS).length;
+      setTimeout(() => print([secretFound.size === total
+        ? `¡Secreto ${total}/${total}! Los has encontrado todos. Eres de los míos: escribe «mensaje».`
+        : `Secreto descubierto · ${secretFound.size}/${total}`], 'alert'), k === 'hack' ? 3200 : 120);
+    }
+    function listSecrets() {
+      const keys = Object.keys(SECRETS);
+      print([`Secretos descubiertos: ${secretFound.size}/${keys.length}`]);
+      print(keys.map(k => {
+        const name = secretFound.has(k) ? k : k[0] + '·'.repeat(Math.max(1, k.length - 1));
+        return `${secretFound.has(k) ? '▲' : '△'} ${name.padEnd(11)} ${secretFound.has(k) ? '' : '— ' + SECRETS[k].hint}`;
+      }), 'tbl');
+    }
+
+    /* ---------- Intérprete ---------- */
+    function run(raw) {
+      const v = raw.trim();
+      if (mode === 'msg') { msgStep(v); return; }
+      if (mode === 'sql') { stopFx(); sqlLine(v); return; }
+      const c = norm(v);
+      if (!c) { enter('inicio'); return; }
+      stopFx();
+      print(['usuario:~$ ' + v], 'cmd');
+      if (['entrar', 'inicio', 'start', 'enter', 'login', 'salir', 'exit'].includes(c)) { ach.unlock('terminal'); enter('inicio'); return; }
+      if (['limpiar', 'clear', 'cls'].includes(c)) { clearOut(); screen.classList.remove('is-session'); return; }
+      if (c === 'terminal') { print(['Ya estás en el terminal. Escribe «entrar» para volver a la web.']); return; }
+      if (c === 'trofeo' || c === 'trophy') {
+        const left = ACH.length - ach.size();
+        if (left <= 0) showTrophy(); else print([`Te ${left === 1 ? 'falta 1 logro' : `faltan ${left} logros`} para el trofeo.`]);
+        return;
+      }
+      if (c.startsWith('sudo')) { print(['Permiso denegado. Prueba con «mensaje».']); return; }
+      if (['sql', 'mysql', 'psql', 'sqlite'].includes(c)) { ach.unlock('terminal'); startSql(); return; }
+      if (['mensaje', 'contactar', 'escribeme', 'hablar', 'hablame', 'contacta'].includes(c)) { ach.unlock('terminal'); startMsg(); return; }
+      if (c === 'matrix') { ach.unlock('terminal'); matrix(); return; }
+      if (c === 'top' || c === 'htop') { ach.unlock('terminal'); top(); return; }
+      if (c === 'scan') { ach.unlock('terminal'); scan(); return; }
+      if (['apagar', 'shutdown', 'reboot', 'reiniciar', 'poweroff'].includes(c)) { ach.unlock('terminal'); powerOff(); return; }
+      if (c === 'secretos' || c === 'secrets') { ach.unlock('terminal'); listSecrets(); return; }
+      const sk = secretKey(c);
+      if (sk) { ach.unlock('terminal'); findSecret(sk); return; }
+      // Una consulta SQL escrita directamente sobre una tabla de datos
+      const sel = c.match(/^select\s+.+\s+from\s+([a-z_]+)/);
+      if ((sel && T[sel[1]]) || /^(show tables|describe |desc )/.test(c)) { ach.unlock('terminal'); sqlExec(v); return; }
+      const info = INFO[INFO_ALIAS[c] || c];
+      if (info) { ach.unlock('terminal'); print(info()); return; }
+      const nav = (sel && [sel[0], sel[1]]) || c.match(/^(?:abrir|open|cd|ir)\s+(.+)$/);
+      let key = nav ? nav[1] : c;
+      key = ALIAS[key] || key.replace(/\s+/g, '-');
+      if (key === 'experiencia') key = 'trayectoria';
+      if (key === 'certs' || key === 'estudios') key = 'formacion';
+      if (views[key] && key !== 'intro') { ach.unlock('terminal'); print(['Abriendo ' + labelFor(key).title + '…']); setTimeout(() => enter(key), 450); return; }
+      print([`Comando no encontrado: ${v}. Escribe «ayuda».`]);
+    }
+
+    /* ---------- Entrada: historial con flechas y sugerencias pulsables ---------- */
+    const hist = [];
+    let hIdx = 0;
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const v = input.value;
+      input.value = '';
+      if (v.trim() && mode !== 'msg' && hist[hist.length - 1] !== v.trim()) hist.push(v.trim());
+      hIdx = hist.length;
+      run(v);
+    });
+    input.addEventListener('keydown', e => {
+      if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+      if (!hist.length || mode === 'msg') return;
+      e.preventDefault();
+      hIdx = clamp(hIdx + (e.key === 'ArrowUp' ? -1 : 1), 0, hist.length);
+      input.value = hist[hIdx] || '';
+      requestAnimationFrame(() => input.setSelectionRange(input.value.length, input.value.length));
+    });
+    tryBar.addEventListener('click', e => {
+      const b = e.target.closest('[data-cmd]');
+      if (!b) return;
+      run(b.dataset.cmd);
+      if (fine) input.focus({ preventScroll: true });
+    });
+    const hint = $('.intro-hint', view);
+    if (hint) hint.textContent = fine ? 'o escribe un comando en la pantalla' : 'o toca la pantalla para escribir';
+    crtScreen.addEventListener('click', e => { if (!e.target.closest('button, a')) input.focus(); });
+
+    /* ---------- Móvil: con el teclado abierto, el terminal ocupa solo la parte visible ---------- */
+    if (!fine) {
+      const vv = window.visualViewport;
+      const fit = () => {
+        if (!view.classList.contains('kb')) return;
+        view.style.top = (vv ? vv.offsetTop : 0) + 'px';
+        view.style.height = (vv ? vv.height : innerHeight) + 'px';
+        view.style.bottom = 'auto';
+      };
+      const reset = () => { view.classList.remove('kb'); view.style.top = view.style.height = view.style.bottom = ''; };
+      input.addEventListener('focus', () => { view.classList.add('kb'); screen.classList.add('is-session'); fit(); setTimeout(fit, 250); setTimeout(fit, 600); });
+      input.addEventListener('blur', () => setTimeout(() => {
+        if (document.activeElement === input) return;
+        reset();
+        if (!out.children.length) screen.classList.remove('is-session');
+      }, 150));
+      if (vv) { vv.addEventListener('resize', fit); vv.addEventListener('scroll', fit); }
+      on('leave', key => { if (key === 'intro') { input.blur(); reset(); } });
+    }
+
+    /* ---------- Entrada y salida de la vista ---------- */
     let introAt = 0, acc = 0, trophyPending = false;
+    const settled = () => now() - introAt > 1200;
     on('enter', key => {
       if (key !== 'intro') return;
       introAt = now(); acc = 0;
-      out.innerHTML = '';
-      screen.classList.remove('is-session');
+      clearOut();
+      msg = null;
+      resetMode();
+      screen.classList.remove('is-session', 'crt-off');
       if (trophyPending) { trophyPending = false; setTimeout(showTrophy, reduce ? 0 : 900); return; }
       if (fine) setTimeout(() => { if (current === 'intro') input.focus({ preventScroll: true }); }, 1600);
     });
+    on('leave', key => { if (key === 'intro') stopFx(); });
 
-    // Trofeo final: al completar los 8 logros
+    /* ---------- Trofeo final: al completar los 8 logros ---------- */
     const TROPHY = [
       '      ___________',
       '     (___________)',
@@ -857,7 +1310,7 @@
       '       |_______|'
     ];
     function showTrophy() {
-      out.innerHTML = '';
+      clearOut();
       print(TROPHY, 'art');
       print(['¡Todos los logros desbloqueados!']);
       const p = document.createElement('p');
@@ -865,7 +1318,7 @@
       p.innerHTML = '<button type="button">Háblame</button>';
       $('button', p).addEventListener('click', () => enter('contacto'));
       out.appendChild(p);
-      print(['Pulsa «Háblame» o escribe «abrir contacto».']);
+      print(['Pulsa «Háblame» o escribe «mensaje».']);
     }
     function goTrophy() {
       if (current === 'intro') { showTrophy(); return; }
@@ -876,66 +1329,12 @@
       go('intro', 'curtain');
     }
     on('logros-completos', goTrophy);
-    const settled = () => now() - introAt > 1200;
-    function print(lines, cls) {
-      screen.classList.add('is-session');
-      lines.forEach(l => { const p = document.createElement('p'); p.textContent = l; if (cls) p.className = cls; out.appendChild(p); });
-      while (out.children.length > 18) out.removeChild(out.firstChild);
-    }
-    function run(raw) {
-      const c = norm(raw);
-      if (!c) { enter('inicio'); return; }
-      print(['usuario:~$ ' + raw.trim()], 'cmd');
-      if (['entrar', 'inicio', 'start', 'enter', 'login', 'salir', 'exit'].includes(c)) { ach.unlock('terminal'); enter('inicio'); return; }
-      if (c === 'limpiar' || c === 'clear' || c === 'cls') { out.innerHTML = ''; screen.classList.remove('is-session'); return; }
-      if (c === 'terminal') { print(['Ya estás en el terminal. Escribe «entrar» para volver a la web.']); return; }
-      if (c === 'trofeo' || c === 'trophy') {
-        const left = ACH.length - ach.size();
-        if (left <= 0) showTrophy(); else print([`Te ${left === 1 ? 'falta 1 logro' : `faltan ${left} logros`} para el trofeo.`]);
-        return;
-      }
-      if (c.startsWith('sudo')) { print(['Permiso denegado. Prueba con «abrir contacto».']); return; }
-      const nav = c.match(/^select\s+.+\s+from\s+([\w-]+)/) || c.match(/^(?:abrir|open|cd|ir)\s+(.+)$/);
-      const info = INFO[INFO_ALIAS[c] || c];
-      if (info && !nav) { ach.unlock('terminal'); print(info()); return; }
-      let key = nav ? nav[1] : c;
-      key = ALIAS[key] || key.replace(/\s+/g, '-');
-      if (key === 'experiencia') key = 'trayectoria';
-      if (key === 'certs' || key === 'estudios') key = 'formacion';
-      if (views[key] && key !== 'intro') { ach.unlock('terminal'); print(['Abriendo ' + labelFor(key).title + '…']); setTimeout(() => enter(key), 450); return; }
-      print([`Comando no encontrado: ${raw.trim()}. Escribe «ayuda».`]);
-    }
-    form.addEventListener('submit', e => { e.preventDefault(); const v = input.value; input.value = ''; run(v); });
-    // Llamada a escribir: texto de ayuda y toda la pantalla del monitor activa el cursor (y el teclado en el móvil)
-    input.placeholder = fine ? 'escribe aquí un comando…' : 'toca y escribe aquí…';
-    const hint = $('.intro-hint', view);
-    if (hint) hint.textContent = fine ? 'o escribe un comando en la pantalla' : 'o toca la pantalla para escribir';
-    $('.crt-screen', view).addEventListener('click', e => { if (!e.target.closest('button, a')) input.focus(); });
-    // Móvil: con el teclado abierto, el terminal ocupa solo la parte visible de la pantalla
-    if (!fine) {
-      const vv = window.visualViewport;
-      const fit = () => {
-        if (!view.classList.contains('kb')) return;
-        view.style.top = (vv ? vv.offsetTop : 0) + 'px';
-        view.style.height = (vv ? vv.height : innerHeight) + 'px';
-        view.style.bottom = 'auto';
-        out.scrollTop = out.scrollHeight;
-      };
-      const reset = () => { view.classList.remove('kb'); view.style.top = view.style.height = view.style.bottom = ''; };
-      input.addEventListener('focus', () => { view.classList.add('kb'); screen.classList.add('is-session'); fit(); setTimeout(fit, 250); setTimeout(fit, 600); });
-      input.addEventListener('blur', () => setTimeout(() => {
-        if (document.activeElement === input) return;
-        reset();
-        if (!out.children.length) screen.classList.remove('is-session');
-      }, 150));
-      if (vv) { vv.addEventListener('resize', fit); vv.addEventListener('scroll', fit); }
-      on('leave', key => { if (key === 'intro') { input.blur(); reset(); } });
-    }
-    $$('.crt-try [data-cmd]').forEach(b => b.addEventListener('click', () => { run(b.dataset.cmd); if (fine) input.focus({ preventScroll: true }); }));
-    view.addEventListener('wheel', e => { if (e.deltaY > 0 && settled()) { acc += e.deltaY; if (acc > 140) enter('inicio'); } }, { passive: true });
+
+    /* ---------- Gestos para entrar en la web ---------- */
+    view.addEventListener('wheel', e => { if (e.deltaY > 0 && settled() && mode === 'cmd') { acc += e.deltaY; if (acc > 140) enter('inicio'); } }, { passive: true });
     let sy = null;
     view.addEventListener('touchstart', e => { sy = e.touches[0].clientY; }, { passive: true });
-    view.addEventListener('touchend', e => { if (sy !== null && settled() && sy - e.changedTouches[0].clientY > 60) enter('inicio'); sy = null; }, { passive: true });
+    view.addEventListener('touchend', e => { if (sy !== null && settled() && mode === 'cmd' && sy - e.changedTouches[0].clientY > 60) enter('inicio'); sy = null; }, { passive: true });
     document.addEventListener('keydown', e => {
       if (current !== 'intro' || busy || !settled() || document.activeElement === input) return;
       if (['Enter', 'ArrowDown', ' '].includes(e.key) && document.activeElement.tagName !== 'BUTTON') { e.preventDefault(); enter('inicio'); }
@@ -1008,12 +1407,20 @@
 
   /* ================= Ojo (detalle sutil en la cabecera de cada sección) ================= */
   const EYE = '<svg viewBox="0 0 44 26" aria-hidden="true"><g class="lid"><path class="almond" d="M2 13Q22-3 42 13 22 29 2 13Z"/><circle class="iris" cx="22" cy="13" r="6.4"/><circle class="pupil" cx="22" cy="13" r="2.7"/><circle class="glint" cx="24.2" cy="10.8" r="1.1"/></g></svg>';
+  // Pista escondida: al pulsar el ojo tres veces, sugiere un comando secreto del terminal
+  let eyeClicks = 0;
   $$('.view--page .page-hero').forEach(h => {
     const s = document.createElement('span');
     s.className = 'eye-mark';
     s.innerHTML = EYE;
+    s.addEventListener('click', () => {
+      const lid = $('.lid', s);
+      if (lid && lid.animate && !reduce) lid.animate([{ transform: 'scaleY(1)' }, { transform: 'scaleY(.08)' }, { transform: 'scaleY(1)' }], { duration: 260 });
+      if (++eyeClicks === 3) ach.toast('<b>Pista</b><span>Escribe «ojo» en el terminal</span>');
+    });
     h.appendChild(s);
   });
+  try { console.log('%c¿Curioseando el código? Escribe «hack» en el terminal de la web.', 'color:#d4ec8e;font:14px monospace'); } catch (_) {}
   if (fine && !reduce) {
     let eq = false, ex = 0, ey = 0;
     window.addEventListener('pointermove', e => {
@@ -1040,7 +1447,8 @@
     const el = document.createElement('div');
     el.className = 'cursor';
     el.setAttribute('aria-hidden', 'true');
-    el.innerHTML = '<svg viewBox="-14 -14 28 28"><path class="c-out" d="M0-9.5 8.2 4.75H-8.2Z"/><path class="c-in" d="M0-9.5 8.2 4.75H-8.2Z"/><circle class="c-dot" r="1.8"/></svg>';
+    // Flecha: triángulo con punto y «palito», inclinada como un puntero; la punta (0,0) es la que hace clic
+    el.innerHTML = '<svg viewBox="-3 -3 26 26"><g transform="rotate(-35)"><path class="c-out" d="M0 0 7 13H-7Z M0 13V22"/><path class="c-in" d="M0 0 7 13H-7Z"/><path class="c-stem" d="M0 13V22"/><circle class="c-dot" cy="8.6" r="1.6"/></g></svg>';
     const cv = document.createElement('canvas');
     cv.className = 'cursor-trail';
     cv.setAttribute('aria-hidden', 'true');

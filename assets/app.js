@@ -625,18 +625,17 @@
   /* ================= Banda «siguiente» y scroll sostenido ================= */
   $$('.next-slot').forEach(slot => {
     const next = slot.dataset.next, lab = labelFor(next);
-    const cmd = next === 'inicio' ? 'volver --inicio' : `abrir --sección ${next}`;
     const band = document.createElement('footer');
     band.className = 'next-band';
     band.dataset.next = next;
     band.innerHTML = `<div class="wrap">
-      <p class="nb-prompt"><span class="who">alvaro@datos ~ %</span><br><span class="cmd">${cmd}</span><span class="caret" aria-hidden="true"></span></p>
+      <p class="nb-prompt"><span class="who">SELECT datos FROM alvaro</span><br><span class="cmd">WHERE sección = '${lab.title}';</span><span class="caret" aria-hidden="true"></span></p>
       <div class="nb-row">
         <div class="nb-bar" aria-hidden="true">${'<i></i>'.repeat(32)}</div>
         <p class="nb-hint"><span>Sigue deslizando para continuar ↓</span><span class="nb-pct">0%</span></p>
         <button class="nb-go" type="button">Ir a ${lab.title} →</button>
       </div>
-      <div class="nb-foot"><span>© 2026 Álvaro José Torres Baeza</span><nav aria-label="Pie"><a href="#inicio">Inicio</a><a href="#terminal">Terminal</a><a href="#privacidad">Privacidad</a><a href="mailto:alvarotorresbaeza@gmail.com" data-ach="conversacion">Correo</a><a href="https://www.linkedin.com/in/ajtb" target="_blank" rel="noopener noreferrer" data-ach="conversacion">LinkedIn ↗</a></nav><span>alvarotorresbaeza.com</span></div>
+      <div class="nb-foot"><span>© 2026 Álvaro José Torres Baeza</span><nav aria-label="Pie"><a href="#inicio">Inicio</a><a href="#terminal">Terminal</a><a href="#privacidad">Privacidad</a><a href="mailto:alvarotorresbaeza@gmail.com" data-ach="conversacion">Correo</a><a href="https://www.linkedin.com/in/ajtb" target="_blank" rel="noopener noreferrer" data-ach="conversacion">LinkedIn ↗</a><a href="https://www.instagram.com/alvarojtb/" target="_blank" rel="noopener noreferrer" data-ach="conversacion">Instagram ↗</a></nav><span>alvarotorresbaeza.com</span></div>
     </div>`;
     $('.nb-go', band).addEventListener('click', () => go(next, 'curtain'));
     slot.replaceWith(band);
@@ -822,14 +821,14 @@
         '  · experiencias interactivas como esta',
         'Escribe «abrir servicios» o «abrir contacto».'
       ],
-      email: () => ['alvarotorresbaeza@gmail.com', 'linkedin.com/in/ajtb'],
+      email: () => ['alvarotorresbaeza@gmail.com', 'linkedin.com/in/ajtb', 'instagram.com/alvarojtb'],
       sql: () => ['SELECT proposito FROM datos;', '→ 1 fila: «hacer que signifiquen algo»'],
       cafe: () => ['   ( (', '    ) )', '  .______.', '  |      |]', '  \\      /', "   `----'", 'Café listo. Los datos, en un momento.'],
       ajedrez: () => ['1. e4 e5  2. Cf3 Cc6  3. Ab5', 'Apertura española: estrategia antes que táctica.'],
       hora: () => [new Date().toLocaleString('es-ES', { timeZone: 'Europe/Madrid' }) + ' · Valencia'],
       logros: () => [`${ach.size()}/${ACH.length} logros desbloqueados. Ábrelos desde «Logros» dentro de la web.`]
     };
-    const INFO_ALIAS = { help: 'ayuda', '?': 'ayuda', comandos: 'ayuda', fetch: 'neofetch', exp: 'experiencia', certificaciones: 'certs', correo: 'email', mail: 'email', linkedin: 'email', coffee: 'cafe', chess: 'ajedrez', date: 'hora' };
+    const INFO_ALIAS = { help: 'ayuda', '?': 'ayuda', comandos: 'ayuda', fetch: 'neofetch', exp: 'experiencia', certificaciones: 'certs', correo: 'email', mail: 'email', linkedin: 'email', instagram: 'email', redes: 'email', coffee: 'cafe', chess: 'ajedrez', date: 'hora' };
 
     let introAt = 0, acc = 0;
     on('enter', key => {
@@ -864,6 +863,11 @@
       print([`Comando no encontrado: ${raw.trim()}. Escribe «ayuda».`]);
     }
     form.addEventListener('submit', e => { e.preventDefault(); const v = input.value; input.value = ''; run(v); });
+    // Llamada a escribir: texto de ayuda y toda la pantalla del monitor activa el cursor (y el teclado en el móvil)
+    input.placeholder = fine ? 'escribe aquí un comando…' : 'toca y escribe aquí…';
+    const hint = $('.intro-hint', view);
+    if (hint) hint.textContent = fine ? 'o escribe un comando en la pantalla' : 'o toca la pantalla para escribir';
+    $('.crt-screen', view).addEventListener('click', e => { if (!e.target.closest('button, a')) input.focus(); });
     // Móvil: con el teclado abierto, el terminal ocupa solo la parte visible de la pantalla
     if (!fine) {
       const vv = window.visualViewport;

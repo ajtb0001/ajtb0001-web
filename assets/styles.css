@@ -798,8 +798,32 @@ body.is-intro .topbar > *{pointer-events:none}
   .next-band::after{width:160px;height:139px}
 }
 
+/* ---------- Terminal: llamada a escribir ---------- */
+.crt-screen{cursor:text}
+.crt-prompt{border:1px dashed rgba(212,236,142,.5);padding:.28em .5em;animation:crt-type .12s linear calc(.45s + var(--i) * .3s) forwards,prompt-pulse 2.4s ease-in-out 3s infinite}
+.crt-prompt:focus-within{animation:none;opacity:1;border-style:solid;border-color:var(--crt);box-shadow:0 0 0 3px rgba(212,236,142,.15)}
+.crt-prompt input::placeholder{color:var(--crt-dim);opacity:1;text-shadow:none}
+.crt-prompt input:focus::placeholder{opacity:.5}
+@keyframes prompt-pulse{0%,100%{box-shadow:0 0 0 0 rgba(212,236,142,0)}50%{box-shadow:0 0 0 3px rgba(212,236,142,.16),0 0 20px rgba(212,236,142,.28)}}
+.intro-actions{flex-wrap:wrap;justify-content:center}
+
+@media (max-width:1100px){
+  .svc-grid{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:760px){
+  .intro-hint{display:inline}
+  .nb-prompt{font-size:clamp(19px,5.6vw,26px)}
+}
+@media (max-width:540px){
+  .case-stats{grid-template-columns:minmax(0,1fr)}
+  .case-stats div{display:flex;align-items:baseline;gap:14px;padding:12px 0;border-left:0;border-top:1px solid var(--line)}
+  .case-stats div:first-child{border-top:0}
+  .case-stats span{margin-top:0}
+  .case .btn{width:100%;justify-content:center}
+}
+
 @media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
   .particle{display:none}
   .js [data-anim]{opacity:1;transform:none}
   .crt-screen::after,.crt-fx::after{display:none}

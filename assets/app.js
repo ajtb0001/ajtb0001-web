@@ -1341,7 +1341,7 @@
     drawPortrait();
 
     /* ---------- Ajuste: si el texto no cabe en la pantalla del monitor, se reduce hasta que encaje ---------- */
-    const nameEl = $('.crt-name', view), portraitEl = $('#crt-portrait');
+    const nameEl = $('.crt-name', view), portraitEl = $('.crt-portrait-box', view);
     function fitCrt() {
       if (current !== 'intro') return;
       screen.style.fontSize = ''; nameEl.style.fontSize = '';
@@ -1353,7 +1353,7 @@
         screen.style.fontSize = (base * k).toFixed(2) + 'px';
         nameEl.style.fontSize = (baseName * k).toFixed(2) + 'px';
       }
-      if (portraitEl && portraitEl.getBoundingClientRect().height < 70) screen.classList.add('no-portrait');
+      if (portraitEl && portraitEl.clientHeight < 70) screen.classList.add('no-portrait');
     }
     on('enter', key => { if (key === 'intro') requestAnimationFrame(fitCrt); });
     window.addEventListener('resize', () => requestAnimationFrame(fitCrt));

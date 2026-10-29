@@ -1070,7 +1070,6 @@
     }
     function matrix() {
       stopFx();
-      if (reduce) { print(['01001101 01100001 01110100 01110010 01101001 01111000']); return; }
       const r = crtScreen.getBoundingClientRect();
       const c = document.createElement('canvas');
       c.className = 'crt-matrix';
@@ -1116,7 +1115,7 @@
         if (++n > 14) { clearInterval(fxTimer); fxTimer = null; print(['El proceso «curiosidad» siempre va al máximo.']); }
       };
       tick();
-      if (!reduce) fxTimer = setInterval(tick, 380);
+      fxTimer = setInterval(tick, 380);
     }
     function scan() {
       stopFx();
@@ -1129,7 +1128,7 @@
         clearInterval(fxTimer); fxTimer = null;
         print(['Resultado del análisis:', '  curiosidad ......... alta', '  paciencia .......... suficiente para llegar aquí', '  interés en datos ... probable', 'Recomendación: escribe «mensaje» y hablamos.']);
       };
-      if (reduce) { pct = 99; tick(); } else fxTimer = setInterval(tick, 140);
+      fxTimer = setInterval(tick, 140);
     }
     function powerOff() {
       stopFx();
@@ -1138,7 +1137,7 @@
         clearOut();
         screen.classList.remove('is-session', 'crt-off');
         fxTimer = null;
-      }, reduce ? 50 : 1700);
+      }, 1700);
     }
     function hack() {
       stopFx();
@@ -1147,7 +1146,7 @@
       fxTimer = setInterval(() => {
         print([steps[i]], i === 4 ? 'alert' : '');
         if (++i >= steps.length) { clearInterval(fxTimer); fxTimer = null; }
-      }, reduce ? 10 : 420);
+      }, 420);
     }
 
     /* ---------- Comandos secretos ---------- */
@@ -1340,6 +1339,26 @@
       if (['Enter', 'ArrowDown', ' '].includes(e.key) && document.activeElement.tagName !== 'BUTTON') { e.preventDefault(); enter('inicio'); }
     });
     drawPortrait();
+
+    /* ---------- Ajuste: si el texto no cabe en la pantalla del monitor, se reduce hasta que encaje ---------- */
+    const nameEl = $('.crt-name', view), portraitEl = $('#crt-portrait');
+    function fitCrt() {
+      if (current !== 'intro') return;
+      screen.style.fontSize = ''; nameEl.style.fontSize = '';
+      screen.classList.remove('no-portrait');
+      const base = parseFloat(getComputedStyle(screen).fontSize), baseName = parseFloat(getComputedStyle(nameEl).fontSize);
+      let k = 1;
+      while (screen.scrollHeight > screen.clientHeight + 2 && k > 0.62) {
+        k -= 0.06;
+        screen.style.fontSize = (base * k).toFixed(2) + 'px';
+        nameEl.style.fontSize = (baseName * k).toFixed(2) + 'px';
+      }
+      if (portraitEl && portraitEl.getBoundingClientRect().height < 70) screen.classList.add('no-portrait');
+    }
+    on('enter', key => { if (key === 'intro') requestAnimationFrame(fitCrt); });
+    window.addEventListener('resize', () => requestAnimationFrame(fitCrt));
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => requestAnimationFrame(fitCrt));
+    setTimeout(fitCrt, 1200);
   })();
 
   /* Retrato tramado (dither) para la pantalla CRT. Usa assets/retrato.jpg si existe. */

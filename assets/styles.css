@@ -884,6 +884,15 @@ html.cursor-on,html.cursor-on *{cursor:none!important}
 .crt-try button{white-space:nowrap}
 .view--intro.mode-sql .crt-portrait{display:none}
 .view--intro.mode-sql .crt-content.is-session .crt-term{grid-column:1/-1}
+/* Terminal: sin foto si no queda sitio para ella */
+.crt-content.no-portrait .crt-portrait{display:none}
+/* Modelo 3D en pantallas táctiles: el gesto sobre el modelo es solo para girarlo */
+@media (pointer:coarse){
+  .viz-stage{touch-action:none}
+}
+@media (max-width:760px){
+  .viz{--stage-h:340px}
+}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
   .particle{display:none}

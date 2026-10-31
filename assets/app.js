@@ -36,7 +36,7 @@
     { key: 'metodo', n: '04', title: 'Método', sub: 'Del dato al propósito', tag: 'D · I · C · P' },
     { key: 'sobre-mi', n: '05', title: 'Sobre mí', sub: 'Tres lugares, una mirada', tag: 'Rioja · Jaén · Valencia' },
     { key: 'formacion', n: '06', title: 'Formación', sub: 'Grado · Máster · MBA', tag: '5 certificaciones' },
-    { key: 'servicios', n: '07', title: 'Servicios', sub: '¿Quieres una web como esta?', tag: 'Diseño web' },
+    { key: 'servicios', n: '07', title: 'Servicios', sub: '¿Una web como esta o una app?', tag: 'Webs y apps' },
     { key: 'contacto', n: '08', title: 'Contacto', sub: '¿Tienes un problema de datos?', tag: 'Escríbeme' }
   ];
   const byKey = Object.fromEntries(SECTIONS.map(s => [s.key, s]));
@@ -638,7 +638,7 @@
         <p class="nb-hint"><span>Sigue deslizando para continuar ↓</span><span class="nb-pct">0%</span></p>
         <button class="nb-go" type="button">Ir a ${lab.title} →</button>
       </div>
-      <div class="nb-foot"><span>© 2026 Álvaro José Torres Baeza</span><nav aria-label="Pie"><a href="#inicio">Inicio</a><a href="#terminal">Terminal</a><a href="#privacidad">Privacidad</a><a href="mailto:alvarotorresbaeza@gmail.com" data-ach="conversacion">Correo</a><a href="https://www.linkedin.com/in/ajtb" target="_blank" rel="noopener noreferrer" data-ach="conversacion">LinkedIn ↗</a><a href="https://www.instagram.com/alvarojtb/" target="_blank" rel="noopener noreferrer" data-ach="conversacion">Instagram ↗</a></nav><span>alvarotorresbaeza.com</span></div>
+      <div class="nb-foot"><span>© 2026 Álvaro José Torres Baeza</span><nav aria-label="Pie"><a href="#inicio">Inicio</a><a href="#terminal">Terminal</a><a href="#privacidad">Privacidad</a><a href="mailto:alvarotorresbaeza@gmail.com" data-ach="conversacion">Correo</a><a href="https://www.linkedin.com/in/ajtb" target="_blank" rel="noopener noreferrer" data-ach="conversacion">LinkedIn ↗</a></nav><span>alvarotorresbaeza.com</span></div>
     </div>`;
     $('.nb-go', band).addEventListener('click', () => go(next, 'curtain'));
     slot.replaceWith(band);
@@ -761,7 +761,7 @@
     // Minúsculas, sin tildes, espacios simples y sin «;» final: así da igual cómo se escriba
     const norm = s => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').replace(/;+\s*$/, '').trim();
     const esc = s => String(s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
-    const ALIAS = { sistema: 'sap', metodologia: 'sap', 'metodologia sap': 'sap', 'sobre mi': 'sobre-mi', sobremi: 'sobre-mi', about: 'sobre-mi', trabajo: 'trayectoria', web: 'servicios', webs: 'servicios', cv: 'perfil' };
+    const ALIAS = { sistema: 'sap', metodologia: 'sap', 'metodologia sap': 'sap', 'sobre mi': 'sobre-mi', sobremi: 'sobre-mi', about: 'sobre-mi', trabajo: 'trayectoria', web: 'servicios', webs: 'servicios', app: 'servicios', apps: 'servicios', cv: 'perfil' };
     const years = Math.max(1, new Date().getFullYear() - 2020);
 
     /* ---------- Salida ---------- */
@@ -808,7 +808,7 @@
         'historial . flechas ↑ ↓',
         'Y hay comandos secretos… «secretos» muestra tu progreso.'
       ],
-      whoami: () => ['Álvaro José Torres Baeza', 'Ingeniería de datos e integración SAP · Valencia, ES', 'También diseño y desarrollo webs a medida.'],
+      whoami: () => ['Álvaro José Torres Baeza', 'Ingeniería de datos e integración SAP · Valencia, ES', 'También diseño y desarrollo webs y apps a medida.'],
       neofetch: () => [
         'atb@datos', '---------',
         'SO ........ ATB·DATA 1.0 LTS',
@@ -818,7 +818,7 @@
         'Shell ..... SQL',
         'Stack ..... SAP · SQL Server · Qlik · Fabric',
         'Certs ..... 5 × Microsoft',
-        'Extra ..... diseño web a medida'
+        'Extra ..... webs y apps a medida'
       ],
       stack: () => [
         'origen ....... SAP · CDS Views · BAPIs · Fiori',
@@ -831,14 +831,14 @@
       proyecto: () => ['Control presupuestario · Qlik Sense', '≈30 usuarios · todas las áreas de la compañía', 'gasto real · gasto comprometido · presupuesto', 'Escribe «abrir trayectoria» para ver el detalle.'],
       estudios: () => ['Grado .. Ingeniería Informática · Universidad de Jaén', 'Máster . Big Data & Business Intelligence · INESEM / Nebrija', 'MBA .... Transformación Digital · UPV'],
       certs: () => ['DP-700 .. Fabric Data Engineer Associate', 'DP-900 .. Azure Data Fundamentals', 'AZ-900 .. Azure Fundamentals', 'PL-900 .. Power Platform Fundamentals', 'MOS-200 . Microsoft Office Specialist · Excel'],
-      servicios: () => ['Diseño y desarrollo de webs a medida:', '  · portfolios y marca personal', '  · webs para proyectos y negocios', '  · experiencias interactivas como esta', 'Escribe «mensaje» o «abrir servicios».'],
-      email: () => ['alvarotorresbaeza@gmail.com', 'linkedin.com/in/ajtb', 'instagram.com/alvarojtb', 'O escribe «mensaje» y te contesto yo.'],
+      servicios: () => ['Diseño y desarrollo de webs y apps a medida:', '  · portfolios y marca personal', '  · webs para proyectos y negocios', '  · apps a medida para tu negocio', '  · experiencias interactivas como esta', 'Escribe «mensaje» o «abrir servicios».'],
+      email: () => ['alvarotorresbaeza@gmail.com', 'linkedin.com/in/ajtb', 'O escribe «mensaje» y te contesto yo.'],
       cafe: () => ['   ( (', '    ) )', '  .______.', '  |      |]', '  \\      /', "   `----'", 'Café listo. Los datos, en un momento.'],
       ajedrez: () => ['1. e4 e5  2. Cf3 Cc6  3. Ab5', 'Apertura española: estrategia antes que táctica.'],
       hora: () => [new Date().toLocaleString('es-ES', { timeZone: 'Europe/Madrid' }) + ' · Valencia'],
       logros: () => [`${ach.size()}/${ACH.length} logros desbloqueados. Ábrelos desde «Logros» dentro de la web.`]
     };
-    const INFO_ALIAS = { help: 'ayuda', '?': 'ayuda', comandos: 'ayuda', fetch: 'neofetch', exp: 'experiencia', certificaciones: 'certs', correo: 'email', mail: 'email', linkedin: 'email', instagram: 'email', redes: 'email', coffee: 'cafe', chess: 'ajedrez', date: 'hora' };
+    const INFO_ALIAS = { help: 'ayuda', '?': 'ayuda', comandos: 'ayuda', fetch: 'neofetch', exp: 'experiencia', certificaciones: 'certs', correo: 'email', mail: 'email', linkedin: 'email', redes: 'email', coffee: 'cafe', chess: 'ajedrez', date: 'hora' };
 
     /* ---------- Motor SQL sobre datos de la web ---------- */
     const T = {
@@ -868,6 +868,7 @@
       servicios: { cols: ['servicio', 'para'], rows: [
         ['Portfolio y marca personal', 'Presentarte con una web propia'],
         ['Webs para proyectos y negocios', 'Presentar un servicio o producto'],
+        ['Apps a medida', 'Herramientas para tu negocio'],
         ['Experiencias interactivas', 'Webs con animación y 3D']] }
     };
     const TABLES = Object.keys(T);

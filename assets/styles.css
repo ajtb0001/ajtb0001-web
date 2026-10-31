@@ -669,7 +669,7 @@ body.is-page .particles{display:block}
 .cert--feature .cert-desc{font-size:16px;color:var(--text);max-width:62ch}
 
 /* ---------- Servicios ---------- */
-.offers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.offers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
 .offer{border:1px solid var(--line);background:var(--surface);padding:clamp(24px,2.6vw,36px);display:flex;flex-direction:column;gap:14px;min-height:320px;transition:border-color .3s,transform .5s var(--ease)}
 .offer:hover{border-color:var(--accent);transform:translateY(-4px)}
 .offer-n{width:36px;height:36px;display:grid;place-items:center;border:1px solid var(--accent);font:500 13px/1 var(--f-mono);color:var(--accent)}
@@ -722,7 +722,7 @@ body.is-page .particles{display:block}
 
 @media (max-width:1100px){
   .offers{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
-  .offer--accent{grid-column:1/-1;min-height:0}
+  .offer{min-height:260px}
 }
 @media (max-width:760px){
   .offers{grid-template-columns:minmax(0,1fr)}

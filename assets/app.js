@@ -150,7 +150,7 @@
     if (busy) return;
     if (key === current) { window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' }); return; }
     const hash = '#' + hashFor(key);
-    if (location.hash !== hash) history.pushState(null, '', hash);
+    if (location.hash !== hash) { try { history.pushState(null, '', hash); } catch (_) {} }
     transitionTo(key, how, src);
   }
   async function transitionTo(key, how, src) {
@@ -158,6 +158,7 @@
     busy = true;
     try {
       if (reduce) show(key);
+      else if (key === 'intro' && current && current !== 'intro') await introEnter();
       else if (current === 'intro' && key !== 'intro') await introExit(key);
       else if (how === 'flip' && src) await flipOpen(src, key);
       else await curtain(key);
@@ -215,22 +216,80 @@
     a.cancel(); b.cancel();
   }
 
-  /* Salida de la intro: la pantalla sube como un telón y revela el destino */
+  /* Terminal ⇄ web como una cámara que entra y sale de la pantalla del ordenador.
+     Calcula cuánto hay que ampliar el monitor para que su pantalla llene la ventana. */
+  const EASE_CAM = 'cubic-bezier(.66,0,.22,1)';
+  function screenZoom(crt) {
+    const scr = $('.crt-screen', crt), cr = crt.getBoundingClientRect(), sr = scr.getBoundingClientRect();
+    const vw = innerWidth, vh = innerHeight;
+    crt.style.transformOrigin = `${sr.left - cr.left + sr.width / 2}px ${sr.top - cr.top + sr.height / 2}px`;
+    const dx = vw / 2 - (sr.left + sr.width / 2), dy = vh / 2 - (sr.top + sr.height / 2);
+    const s = Math.max(vw / sr.width, vh / sr.height) * 1.12;
+    return `translate(${dx.toFixed(1)}px,${dy.toFixed(1)}px) scale(${s.toFixed(3)})`;
+  }
+
+  /* Entrada al terminal: la web queda dentro de la pantalla y la cámara se aleja hasta ver el ordenador; luego se enciende */
+  // Durante el zoom se apagan los efectos caros (sombras, líneas animadas) para que el navegador solo mueva una imagen ya dibujada
+  const camOn = (...els) => els.forEach(el => el.classList.add('is-cam'));
+  const camOff = (...els) => els.forEach(el => el.classList.remove('is-cam'));
+  function flashEl(crt) {
+    let f = $('.crt-flash', crt);
+    if (!f) { f = document.createElement('div'); f.className = 'crt-flash'; $('.crt-screen', crt).appendChild(f); }
+    return f;
+  }
+  async function introEnter() {
+    const prev = current, from = views[prev], intro = views.intro, crt = $('.crt', intro);
+    camOn(intro, from);
+    intro.classList.add('is-active', 'is-arriving');
+    intro.style.zIndex = 6;
+    current = 'intro';
+    setBodyState('intro');
+    emit('leave', prev);
+    emit('enter', 'intro', prev);
+    // Un fotograma para que el terminal ya tenga su tamaño (con límite por si la pestaña está en segundo plano)
+    await Promise.race([new Promise(r => requestAnimationFrame(r)), wait(60)]);
+    const zoom = screenZoom(crt), T = 1150;
+    from.style.transformOrigin = `50% ${window.scrollY + innerHeight / 2}px`;
+    const a = crt.animate([{ transform: zoom }, { transform: zoom, offset: 0.12 }, { transform: 'none' }], { duration: T, easing: EASE_CAM, fill: 'both' });
+    const b = intro.animate([{ opacity: 0 }, { opacity: 1, offset: 0.3 }, { opacity: 1 }], { duration: T, easing: 'linear', fill: 'both' });
+    const c = from.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'scale(.82)', offset: 0.4 }, { opacity: 0, transform: 'scale(.82)' }], { duration: T, easing: 'ease-in', fill: 'both' });
+    // La pantalla se enciende cuando el monitor ya casi está en su sitio
+    setTimeout(() => intro.classList.remove('is-arriving'), T * 0.72);
+    await done(a, T);
+    intro.classList.remove('is-arriving');
+    camOff(intro, from);
+    from.classList.remove('is-active');
+    from.style.transformOrigin = '';
+    window.scrollTo(0, 0);
+    a.cancel(); b.cancel(); c.cancel();
+    crt.style.transformOrigin = '';
+    intro.style.zIndex = '';
+  }
+
+  /* Salida del terminal: la cámara se mete dentro de la pantalla y aparece la web */
   async function introExit(key) {
     session.set('introSeen', true);
     ach.unlock('hola');
-    const intro = views.intro, dest = views[key];
+    const intro = views.intro, dest = views[key], crt = $('.crt', intro);
+    const zoom = screenZoom(crt), T = 1150;
+    camOn(intro, dest);
     intro.style.zIndex = 6;
     dest.classList.add('is-active');
     current = key;
     setBodyState(key);
     emit('leave', 'intro');
     emit('enter', key, 'intro');
-    const a = intro.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-100%)' }], { duration: 1100, easing: EASE_IO, fill: 'forwards' });
-    $('.crt', intro).animate([{ transform: 'none', opacity: 1 }, { transform: 'translateY(18%) scale(.88)', opacity: .4 }], { duration: 1100, easing: EASE_IO, fill: 'forwards' });
-    await done(a, 1100);
+    const a = crt.animate([{ transform: 'none' }, { transform: zoom }], { duration: T, easing: EASE_CAM, fill: 'forwards' });
+    // Destello de la pantalla al atravesarla (solo opacidad: barato de animar)
+    const f = flashEl(crt).animate([{ opacity: 0 }, { opacity: 0, offset: 0.35 }, { opacity: 0.55 }], { duration: T, easing: 'ease-in', fill: 'forwards' });
+    const b = intro.animate([{ opacity: 1 }, { opacity: 1, offset: 0.62 }, { opacity: 0 }], { duration: T, easing: 'linear', fill: 'forwards' });
+    const c = dest.animate([{ opacity: 0, transform: 'scale(.8)' }, { opacity: 0, transform: 'scale(.8)', offset: 0.55, easing: EASE_OUT }, { opacity: 1, transform: 'none' }], { duration: T, easing: 'linear', fill: 'both' });
+    await done(a, T);
+    camOff(intro, dest);
     intro.classList.remove('is-active');
+    a.cancel(); b.cancel(); c.cancel(); f.cancel();
     intro.getAnimations({ subtree: true }).forEach(x => x.cancel());
+    crt.style.transformOrigin = '';
     intro.style.zIndex = '';
   }
 
@@ -356,9 +415,10 @@
     function layout() {
       build();
       const ow = W, oh = H;
-      vw = innerWidth; vh = innerHeight;
-      const small = vw < 700;
-      W = Math.round(small ? vw * 0.66 : clamp(vw * 0.25, 280, 460));
+      // El mosaico ocupa solo su zona (a la derecha del retrato en escritorio, debajo en móvil)
+      vw = root.clientWidth || innerWidth; vh = root.clientHeight || innerHeight;
+      const small = innerWidth < 700;
+      W = Math.round(small ? innerWidth * 0.62 : clamp(innerWidth * 0.22, 260, 420));
       H = Math.round(W * 0.68);
       G = Math.round(W * (small ? 0.07 : 0.075));
       spanW = EC * (W + G); spanH = ER * (H + G);
@@ -489,6 +549,101 @@
       a.addEventListener('blur', () => highlight(null));
     });
     return { enter, leave, layout: () => { if (running) { layout(); render(); } }, tileFor };
+  })();
+
+  /* ================= Retrato de partículas en el inicio ================= */
+  // Cada píxel encendido del retrato tramado es una partícula que vuela hasta su sitio
+  const me = (() => {
+    const box = $('.me-portrait'), cv = $('#me-canvas');
+    if (!box || !cv) return { enter() {}, leave() {}, resize() {} };
+    const ctx = cv.getContext('2d');
+    // Misma imagen que el retrato del terminal: 132 × 160 píxeles tramados
+    const COLS = 132, ROWS = 160;
+    let img = null, w = 0, h = 0, cell = 1, P = null, N = 0, active = false, looping = false, sizeKey = '';
+    let mx = -9999, my = -9999, lastMove = 0;
+    const loadImg = new Promise(res => {
+      const i = new Image();
+      i.onload = () => res(i); i.onerror = () => res(null);
+      i.src = 'assets/retrato.jpg';
+    });
+    function build() {
+      const bw = box.clientWidth, bh = box.clientHeight;
+      if (bw < 40 || bh < 40) return false;
+      const key = bw + 'x' + bh;
+      if (key === sizeKey && P) return true;
+      sizeKey = key;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = bw; h = bh;
+      cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cell = Math.min(w / COLS, h / ROWS);
+      // Centrado en horizontal y apoyado abajo
+      const ox = (w - COLS * cell) / 2, oy = h - ROWS * cell;
+      const bits = portraitBits(img, COLS, ROWS), pts = [];
+      for (let i = 0; i < bits.length; i++) if (bits[i]) pts.push(ox + (i % COLS) * cell, oy + ((i / COLS) | 0) * cell);
+      N = pts.length / 2;
+      P = new Float32Array(N * 5); // x, y, tx, ty, semilla
+      for (let k = 0; k < N; k++) {
+        const q = k * 5;
+        P[q + 2] = pts[k * 2]; P[q + 3] = pts[k * 2 + 1]; P[q + 4] = Math.random();
+      }
+      return true;
+    }
+    function scatter() {
+      for (let k = 0; k < N; k++) {
+        const q = k * 5, a = Math.random() * Math.PI * 2, r = (0.6 + Math.random()) * Math.max(w, h);
+        P[q] = w / 2 + Math.cos(a) * r; P[q + 1] = h / 2 + Math.sin(a) * r;
+      }
+    }
+    function settle() { for (let k = 0; k < N; k++) { const q = k * 5; P[q] = P[q + 2]; P[q + 1] = P[q + 3]; } }
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      const R = Math.max(36, w * 0.14), R2 = R * R, sz = cell + 0.15;
+      let moving = 0;
+      ctx.fillStyle = '#d4ec8e';
+      for (let k = 0; k < N; k++) {
+        const q = k * 5, e = 0.06 + P[q + 4] * 0.04;
+        let x = P[q] + (P[q + 2] - P[q]) * e, y = P[q + 1] + (P[q + 3] - P[q + 1]) * e;
+        const dx = x - mx, dy = y - my, dd = dx * dx + dy * dy;
+        if (dd < R2 && dd > 0.01) { const dl = Math.sqrt(dd), f = (1 - dl / R) * 7; x += dx / dl * f; y += dy / dl * f; }
+        if (Math.abs(x - P[q]) + Math.abs(y - P[q + 1]) > 0.05) moving++;
+        P[q] = x; P[q + 1] = y;
+        ctx.fillRect(x, y, sz, sz);
+      }
+      return moving;
+    }
+    function frame(t) {
+      if (!active || document.hidden) { looping = false; return; }
+      const moving = draw(t);
+      // Cuando todo está en su sitio se para la animación para no gastar batería (y se enciende el brillo, que es caro en movimiento)
+      if (!moving && now() - lastMove > 400) { looping = false; box.classList.add('is-still'); return; }
+      requestAnimationFrame(frame);
+    }
+    function kick() { if (active && !reduce && !looping) { looping = true; box.classList.remove('is-still'); requestAnimationFrame(frame); } }
+    async function enter() {
+      active = true;
+      img = await loadImg;
+      if (!active || !build()) return;
+      if (reduce) { settle(); draw(0); box.classList.add('is-still'); return; }
+      ctx.clearRect(0, 0, w, h);
+      // Las partículas empiezan a volar cuando ha terminado la transición de entrada
+      for (let i = 0; busy && i < 60; i++) await wait(50);
+      if (!active) return;
+      scatter(); kick();
+    }
+    function leave() { active = false; mx = my = -9999; }
+    function resize() { if (!active) return; sizeKey = ''; if (build()) { settle(); if (reduce) draw(0); else kick(); } }
+    const point = e => { const r = cv.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; lastMove = now(); kick(); };
+    const away = () => { mx = my = -9999; lastMove = now(); kick(); };
+    if (!reduce) {
+      box.addEventListener('pointermove', point);
+      box.addEventListener('pointerdown', point);
+      box.addEventListener('pointerleave', away);
+      box.addEventListener('pointerup', away);
+      box.addEventListener('pointercancel', away);
+    }
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) kick(); });
+    return { enter, leave, resize };
   })();
 
   /* ================= Partículas (número de sección) ================= */
@@ -738,14 +893,14 @@
   let resizeT = 0;
   window.addEventListener('resize', () => {
     clearTimeout(resizeT);
-    resizeT = setTimeout(() => { hub.layout(); particles.resize(); updateReveals(); }, 150);
+    resizeT = setTimeout(() => { hub.layout(); me.resize(); particles.resize(); updateReveals(); }, 150);
   });
 
   /* ================= Entrada/salida de vistas ================= */
   const visited = new Set(local.get('visitadas', []));
   on('enter', (key, prev) => {
     const v = views[key];
-    if (key === 'inicio') hub.enter(prev === 'intro');
+    if (key === 'inicio') { hub.enter(prev === 'intro'); me.enter(); }
     if (!v.classList.contains('view--page')) { particles.stop(); return; }
     enteredAt = now();
     $$('[data-anim]', v).forEach(el => { el.classList.remove('in'); el.style.removeProperty('--d'); io.observe(el); });
@@ -760,7 +915,7 @@
       if (visited.size >= 4) ach.unlock('explorador');
     }
   });
-  on('leave', key => { if (key === 'inicio') hub.leave(); });
+  on('leave', key => { if (key === 'inicio') { hub.leave(); me.leave(); } });
 
   /* ================= Intro · terminal CRT ================= */
   (function intro() {
@@ -1383,43 +1538,48 @@
     setTimeout(fitCrt, 1200);
   })();
 
-  /* Retrato tramado (dither) para la pantalla CRT. Usa assets/retrato.jpg si existe. */
+  /* Retrato tramado (dither) de assets/retrato.jpg: 1 = píxel encendido. Lo usan el terminal y el inicio. */
+  function portraitBits(src, W, H) {
+    const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
+    const o = document.createElement('canvas'); o.width = W; o.height = H;
+    const g = o.getContext('2d');
+    if (src) {
+      const s = Math.max(W / src.width, H / src.height);
+      const dw = src.width * s, dh = src.height * s;
+      g.drawImage(src, (W - dw) / 2, (H - dh) / 2, dw, dh);
+    } else {
+      const grad = g.createLinearGradient(0, 0, 0, H);
+      grad.addColorStop(0, '#fff'); grad.addColorStop(1, '#555');
+      g.fillStyle = grad;
+      g.font = `${Math.round(H * 0.95)}px "Segoe UI Symbol","Noto Sans Symbols 2","DejaVu Sans",serif`;
+      g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+      g.fillText('♞', W / 2, H * 0.9);
+    }
+    const d = g.getImageData(0, 0, W, H).data, bits = new Uint8Array(W * H);
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const i = (y * W + x) * 4;
+      let l = (0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]) / 255 * (d[i + 3] / 255);
+      if (src) {
+        const ex = (x - W / 2) / (W * 0.55), ey = (y - H * 0.55) / (H * 0.62);
+        l = clamp((l - 0.08) * 1.35, 0, 1) * clamp(1.25 - Math.sqrt(ex * ex + ey * ey), 0, 1);
+      }
+      if (l > (BAYER[(y % 4) * 4 + (x % 4)] + 0.5) / 16) bits[y * W + x] = 1;
+    }
+    return bits;
+  }
+  /* Retrato para la pantalla CRT */
   function drawPortrait() {
     const cv = $('#crt-portrait');
     if (!cv) return;
     const ctx = cv.getContext('2d'), W = cv.width, H = cv.height;
-    const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
-    function dither(src) {
-      const o = document.createElement('canvas'); o.width = W; o.height = H;
-      const g = o.getContext('2d');
-      if (src) {
-        const s = Math.max(W / src.width, H / src.height);
-        const dw = src.width * s, dh = src.height * s;
-        g.drawImage(src, (W - dw) / 2, (H - dh) / 2, dw, dh);
-      } else {
-        const grad = g.createLinearGradient(0, 0, 0, H);
-        grad.addColorStop(0, '#fff'); grad.addColorStop(1, '#555');
-        g.fillStyle = grad;
-        g.font = `${Math.round(H * 0.95)}px "Segoe UI Symbol","Noto Sans Symbols 2","DejaVu Sans",serif`;
-        g.textAlign = 'center'; g.textBaseline = 'alphabetic';
-        g.fillText('♞', W / 2, H * 0.9);
-      }
-      const img = g.getImageData(0, 0, W, H), d = img.data;
-      const res = ctx.createImageData(W, H), r = res.data;
-      for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
-        const i = (y * W + x) * 4;
-        let l = (0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]) / 255 * (d[i + 3] / 255);
-        if (src) {
-          const ex = (x - W / 2) / (W * 0.55), ey = (y - H * 0.55) / (H * 0.62);
-          l = clamp((l - 0.08) * 1.35, 0, 1) * clamp(1.25 - Math.sqrt(ex * ex + ey * ey), 0, 1);
-        }
-        if (l > (BAYER[(y % 4) * 4 + (x % 4)] + 0.5) / 16) { r[i] = 212; r[i + 1] = 236; r[i + 2] = 142; r[i + 3] = 255; }
-      }
+    function paint(src) {
+      const bits = portraitBits(src, W, H), res = ctx.createImageData(W, H), r = res.data;
+      for (let p = 0; p < bits.length; p++) if (bits[p]) { const i = p * 4; r[i] = 212; r[i + 1] = 236; r[i + 2] = 142; r[i + 3] = 255; }
       ctx.putImageData(res, 0, 0);
     }
     const img = new Image();
-    img.onload = () => dither(img);
-    img.onerror = () => dither(null);
+    img.onload = () => paint(img);
+    img.onerror = () => paint(null);
     img.src = 'assets/retrato.jpg';
   }
 
@@ -1811,8 +1971,7 @@
   });
 
   /* ================= Arranque ================= */
+  // Sin dirección concreta se entra al inicio; el terminal queda en #terminal
   const start = keyFromHash();
-  if (start) show(start);
-  else if (session.get('introSeen', false)) { history.replaceState(null, '', '#inicio'); show('inicio'); }
-  else show('intro');
+  show(start || 'inicio');
 })();

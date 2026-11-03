@@ -25,8 +25,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..400&family=Schibsted+Grotesk:wght@400..800&family=JetBrains+Mono:wght@400;500&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css?v=e11ee3f0">
-<script src="assets/app.js?v=075fd8db" defer></script>
+<link rel="stylesheet" href="assets/styles.css?v=d486783a">
+<script src="assets/app.js?v=03f6ba38" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#perfil">Saltar al contenido</a>
@@ -99,10 +99,23 @@
 <!-- ============ INICIO · MOSAICO ============ -->
 <section class="view view--hub" id="inicio" data-view="inicio" aria-labelledby="hub-title">
   <h1 class="sr-only" id="hub-title">Álvaro José Torres Baeza · Ingeniería de datos e integración SAP</h1>
+  <div class="me" id="me">
+    <div class="me-portrait" aria-hidden="true"><canvas id="me-canvas"></canvas></div>
+    <div class="me-text">
+      <p class="me-hello">&gt; whoami</p>
+      <p class="me-name">Álvaro José<br>Torres Baeza</p>
+      <p class="me-tag">Hacer que los datos <em>signifiquen</em> algo.</p>
+      <ul class="me-roles">
+        <li>Ingeniería de datos</li>
+        <li>Integración SAP</li>
+        <li>Webs y apps a medida</li>
+      </ul>
+      <a class="me-term" href="#terminal"><span aria-hidden="true">&gt;_</span> Abrir el terminal</a>
+    </div>
+  </div>
   <div class="hub" id="hub" aria-hidden="true">
     <div class="hub-stage" id="hub-stage"></div>
   </div>
-  <p class="hub-caption">Hacer que los datos <em>signifiquen</em> algo.</p>
   <p class="hub-hint" aria-hidden="true"><span class="hint-dot"></span>Arrastra para explorar · Pulsa una tarjeta</p>
   <nav class="dock" id="dock" aria-label="Secciones">
     <a href="#terminal" class="dock-term"><i>&gt;_</i>Terminal</a>

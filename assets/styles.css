@@ -968,16 +968,17 @@ body.tone-light .rail span{background:rgba(236,235,228,.92);color:var(--accent-i
 }
 /* Móvil en vertical: presentación arriba (texto + retrato) y el mosaico debajo */
 @media (orientation:portrait) and (max-width:899px){
-  :root{--me-h:clamp(200px,31vh,300px)}
-  .me{right:0;width:auto;bottom:auto;height:var(--me-h);padding:4px 16px 0;flex-direction:row-reverse;align-items:stretch;gap:10px}
-  .me-portrait{flex:0 0 46%;max-width:none;height:100%}
+  /* Alto justo para el retrato (132 × 160) según el ancho de la pantalla: en iPhone el «vh» incluye las barras y dejaba hueco */
+  :root{--me-h:clamp(186px,calc((100vw - 32px) * .43 * 1.2121 + 4px),300px)}
+  .me{top:calc(var(--top-h) - 6px);right:0;width:auto;bottom:auto;height:var(--me-h);padding:0 16px;flex-direction:row-reverse;align-items:stretch;gap:10px}
+  .me-portrait{flex:0 0 43%;max-width:none;height:100%}
   .me-text{flex:1 1 auto;min-width:0;align-self:center}
   .me-hello{font-size:11px}
   .me-name{margin-top:8px;font-size:clamp(24px,7.2vw,34px)}
   .me-tag{display:none}
   .me-roles{margin-top:10px;flex-direction:column;gap:3px;font-size:10px}
   .me-term{margin-top:12px;padding:8px 9px;font-size:10px;letter-spacing:.04em;white-space:nowrap}
-  .view--hub .hub{left:0;top:calc(var(--top-h) + var(--me-h));-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 48px);mask-image:linear-gradient(180deg,transparent 0,#000 48px)}
+  .view--hub .hub{left:0;top:calc(var(--top-h) - 6px + var(--me-h));-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 48px);mask-image:linear-gradient(180deg,transparent 0,#000 48px)}
   .view--hub::before{display:none}
 }
 @media (prefers-reduced-motion:reduce){

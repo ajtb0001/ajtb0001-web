@@ -25,8 +25,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..400&family=Schibsted+Grotesk:wght@400..800&family=JetBrains+Mono:wght@400;500&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css?v=a183e689">
-<script src="assets/app.js?v=8a72728d" defer></script>
+<link rel="stylesheet" href="assets/styles.css?v=e11ee3f0">
+<script src="assets/app.js?v=075fd8db" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#perfil">Saltar al contenido</a>
@@ -41,9 +41,22 @@
   <div class="top-actions">
     <a class="pill-btn pill-btn--term" href="#terminal" aria-label="Abrir el terminal" title="Terminal">&gt;_</a>
     <button class="pill-btn" type="button" id="ach-toggle" aria-expanded="false" aria-controls="ach-panel">Logros <b id="ach-count">0/8</b></button>
-    <button class="pill-btn pill-btn--solid" type="button" id="menu-btn" aria-expanded="false" aria-controls="menu">Menú</button>
+    <button class="pill-btn pill-btn--solid pill-btn--menu" type="button" id="menu-btn" aria-expanded="false" aria-controls="menu" aria-keyshortcuts="M"><span class="burger" aria-hidden="true"><i></i><i></i><i></i></span>Menú<kbd aria-hidden="true">M</kbd></button>
   </div>
 </header>
+
+<!-- Índice lateral (solo escritorio, en las secciones) -->
+<nav class="rail" id="rail" aria-label="Índice de secciones">
+  <a href="#inicio" data-k="inicio"><i>00</i><span>Inicio</span></a>
+  <a href="#perfil" data-k="perfil"><i>01</i><span>Perfil</span></a>
+  <a href="#trayectoria" data-k="trayectoria"><i>02</i><span>Trayectoria</span></a>
+  <a href="#sap" data-k="sap"><i>03</i><span>Metodología SAP</span></a>
+  <a href="#metodo" data-k="metodo"><i>04</i><span>Método</span></a>
+  <a href="#sobre-mi" data-k="sobre-mi"><i>05</i><span>Sobre mí</span></a>
+  <a href="#formacion" data-k="formacion"><i>06</i><span>Formación</span></a>
+  <a href="#servicios" data-k="servicios"><i>07</i><span>Servicios</span></a>
+  <a href="#contacto" data-k="contacto"><i>08</i><span>Contacto</span></a>
+</nav>
 
 <!-- ============ INTRO · TERMINAL CRT ============ -->
 <section class="view view--intro" id="intro" data-view="intro" aria-label="Bienvenida">
@@ -452,15 +465,15 @@
       </div>
       <div class="frow">
         <label for="f-name">Nombre completo <span class="req" aria-hidden="true">*</span></label>
-        <input id="f-name" name="nombre" type="text" autocomplete="name" placeholder="Ana García" required>
+        <input id="f-name" name="nombre" type="text" maxlength="100" autocomplete="name" placeholder="Ana García" required>
       </div>
       <div class="frow">
         <label for="f-org">Empresa u organización</label>
-        <input id="f-org" name="empresa" type="text" autocomplete="organization" placeholder="Tu empresa">
+        <input id="f-org" name="empresa" type="text" maxlength="120" autocomplete="organization" placeholder="Tu empresa">
       </div>
       <div class="frow">
         <label for="f-mail">Correo electrónico <span class="req" aria-hidden="true">*</span></label>
-        <input id="f-mail" name="email" type="email" autocomplete="email" placeholder="ana@empresa.com" required>
+        <input id="f-mail" name="email" type="email" maxlength="160" autocomplete="email" placeholder="ana@empresa.com" required>
       </div>
       <div class="frow" role="group" aria-labelledby="f-topics">
         <p class="frow-label" id="f-topics">¿En qué te puedo ayudar?</p>
@@ -476,7 +489,7 @@
       </div>
       <div class="frow">
         <label for="f-msg">Mensaje <span class="req" aria-hidden="true">*</span></label>
-        <textarea id="f-msg" name="mensaje" rows="5" placeholder="Cuéntame brevemente qué necesitas" required></textarea>
+        <textarea id="f-msg" name="mensaje" rows="5" maxlength="4000" placeholder="Cuéntame brevemente qué necesitas" required></textarea>
       </div>
       <input class="hp" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
       <div class="frow frow--end">
@@ -517,7 +530,7 @@
     <h3>Tus derechos</h3>
     <p>Puedes pedir acceso, rectificación, supresión, oposición, limitación o portabilidad de tus datos escribiendo a <a href="mailto:alvarotorresbaeza@gmail.com">alvarotorresbaeza@gmail.com</a>. Si crees que no se han respetado tus derechos, puedes reclamar ante la Agencia Española de Protección de Datos (aepd.es).</p>
     <h3>Cookies y almacenamiento local</h3>
-    <p>Esta web no usa cookies ni herramientas de analítica o publicidad. Solo guarda en tu propio navegador (almacenamiento local) los logros que desbloqueas y si ya has visto la introducción. Esa información no sale de tu dispositivo y puedes borrarla con este botón:</p>
+    <p>Esta web no usa cookies ni herramientas de analítica o publicidad. Solo guarda en tu propio navegador (almacenamiento local) los logros que desbloqueas, si ya has visto la introducción y la hora de tus envíos del formulario, para evitar envíos repetidos. Esa información no sale de tu dispositivo y puedes borrarla con este botón:</p>
     <p><button class="btn btn--ghost" type="button" id="clear-local">Borrar mis datos locales</button> <span class="clear-msg" id="clear-msg" role="status"></span></p>
     <h3>Servicios de terceros</h3>
     <ul class="ticks">

@@ -307,6 +307,21 @@
     });
     return { open: openMenu, close, isOpen: () => open };
   })();
+  // Atajo de teclado: «M» abre o cierra el menú (fuera de campos de texto y del terminal)
+  document.addEventListener('keydown', e => {
+    if (e.key.toLowerCase() !== 'm' || e.ctrlKey || e.metaKey || e.altKey || current === 'intro') return;
+    if (/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) || document.activeElement.isContentEditable) return;
+    e.preventDefault();
+    if (menu.isOpen()) menu.close(); else menu.open();
+  });
+
+  /* Índice lateral: marca la sección actual */
+  const railLinks = $$('#rail a');
+  on('enter', key => railLinks.forEach(a => {
+    const isCur = a.dataset.k === key;
+    a.classList.toggle('is-current', isCur);
+    if (isCur) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+  }));
 
   /* ================= Mosaico curvo (inicio) ================= */
   const hub = (() => {
@@ -671,7 +686,7 @@
       if (!atBottom(touch ? 60 : 8)) { bottomSince = 0; return false; }
       if (touch) return true;
       if (!bottomSince) bottomSince = now();
-      return now() - bottomSince > 260;
+      return now() - bottomSince > 120;
     }
     function add(v, touch) {
       touchMode = !!touch;
@@ -682,14 +697,15 @@
       if (!looping) { looping = true; requestAnimationFrame(step); }
     }
     function step() {
-      if (now() - lastIn > (touchMode ? 500 : 170)) p = Math.max(0, p - (touchMode ? 0.012 : 0.028));
+      if (now() - lastIn > (touchMode ? 500 : 450)) p = Math.max(0, p - (touchMode ? 0.012 : 0.014));
       render();
       if (p > 0 && !busy) requestAnimationFrame(step); else { looping = false; if (busy) { p = 0; render(); } }
     }
     window.addEventListener('wheel', e => {
       if (e.deltaY <= 0 || !ready()) return;
       const d = e.deltaMode === 1 ? e.deltaY * 40 : e.deltaMode === 2 ? e.deltaY * 800 : e.deltaY;
-      add(clamp(d, 0, 140) / 1300);
+      // Unas 4-5 vueltas de rueda de ratón (o un gesto corto en el panel táctil) bastan para pasar de sección
+      add(clamp(d, 0, 140) / 480);
     }, { passive: true });
     let ty = null;
     window.addEventListener('touchstart', e => { ty = e.touches[0].clientY; }, { passive: true });
@@ -701,7 +717,7 @@
     }, { passive: true });
     document.addEventListener('keydown', e => {
       if (!['ArrowDown', 'PageDown', ' ', 'End'].includes(e.key) || /INPUT|TEXTAREA|BUTTON|SELECT/.test(document.activeElement.tagName)) return;
-      if (ready()) add(0.14);
+      if (ready()) add(0.25);
     });
     return { bind, poke: ready };
   })();
@@ -1025,16 +1041,18 @@
       if (c === 'cancelar' || c === 'salir') { msg = null; resetMode(); print(['Mensaje cancelado.']); return; }
       if (msg.step === 'nombre') {
         if (v.length < 2) { print(['Necesito al menos tu nombre.']); return; }
+        if (v.length > 100) { print(['Ese nombre es demasiado largo.'], 'err'); return; }
         msg.nombre = v; msg.step = 'email';
         setMode('msg', 'correo>', 'tu@correo.com', ['cancelar']);
         print([`Encantado, ${v}. ¿A qué correo te respondo?`]);
       } else if (msg.step === 'email') {
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) { print(['Ese correo no parece válido. Revísalo, por favor.'], 'err'); return; }
+        if (v.length > 160 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) { print(['Ese correo no parece válido. Revísalo, por favor.'], 'err'); return; }
         msg.email = v; msg.step = 'mensaje';
         setMode('msg', 'mensaje>', 'cuéntame qué necesitas', ['cancelar']);
         print(['Perfecto. ¿Qué te gustaría contarme? (datos, SAP, una web…)']);
       } else if (msg.step === 'mensaje') {
         if (v.length < 5) { print(['Cuéntame un poco más.']); return; }
+        if (v.length > 4000) { print(['Es un poco largo para el terminal. Resúmelo o usa el formulario de contacto.'], 'err'); return; }
         msg.mensaje = v; msg.step = 'ok';
         setMode('msg', '¿enviar?>', 's / n', ['s', 'n']);
         print(['Al enviarlo aceptas la política de privacidad (alvarotorresbaeza.com/#privacidad).', '¿Lo envío? (s/n)']);
@@ -1044,6 +1062,8 @@
         const data = msg;
         msg = null;
         resetMode();
+        const blocked = sendBlock();
+        if (blocked) { print([blocked], 'err'); return; }
         print(['Enviando…']);
         try {
           const res = await fetch(FORM_ENDPOINT, {
@@ -1054,6 +1074,7 @@
           const j = await res.json().catch(() => ({}));
           if (!res.ok || String(j.success) !== 'true') throw new Error('envío');
           print(['Mensaje enviado. Te responderé lo antes posible.']);
+          sendLog();
           ach.unlock('conversacion');
         } catch (_) {
           print(['No se ha podido enviar ahora mismo. Escríbeme a alvarotorresbaeza@gmail.com.'], 'err');
@@ -1537,9 +1558,23 @@
 
   /* ================= Contacto ================= */
   const FORM_ENDPOINT = 'https://formsubmit.co/ajax/alvarotorresbaeza@gmail.com';
+  // Freno a envíos repetidos desde un mismo navegador: 1 minuto entre envíos y máximo 3 por hora
+  const SEND_GAP = 60e3, SEND_MAX = 3, HOUR = 36e5;
+  const sendBlock = () => {
+    const t = Date.now(), log = local.get('envios', []).filter(x => t - x < HOUR);
+    if (log.length && t - log[log.length - 1] < SEND_GAP) return 'Acabas de enviarme un mensaje. Espera un minuto antes de mandar otro.';
+    if (log.length >= SEND_MAX) return 'Ya me has enviado varios mensajes. Te responderé pronto; si es urgente, escríbeme a alvarotorresbaeza@gmail.com.';
+    return '';
+  };
+  const sendLog = () => { const t = Date.now(); local.set('envios', [...local.get('envios', []).filter(x => t - x < HOUR), t]); };
   (function contact() {
     const form = $('#cform'), status = $('#f-status'), send = $('#f-send');
     const setStatus = (msg, cls) => { status.textContent = msg; status.className = 'fstatus ' + (cls || ''); };
+    // Una persona tarda más de 4 segundos en rellenar el formulario; un robot, no
+    let startedAt = 0;
+    const markStart = () => { if (!startedAt) startedAt = now(); };
+    form.addEventListener('focusin', markStart);
+    form.addEventListener('input', markStart);
     form.addEventListener('submit', async e => {
       e.preventDefault();
       const f = form.elements;
@@ -1556,7 +1591,9 @@
         bad[0].focus();
         return;
       }
-      if (f._honey.value) { setStatus('Mensaje enviado. Te responderé lo antes posible.', 'ok'); form.reset(); return; }
+      if (f._honey.value || !startedAt || now() - startedAt < 4000) { setStatus('Mensaje enviado. Te responderé lo antes posible.', 'ok'); form.reset(); return; }
+      const blocked = sendBlock();
+      if (blocked) { setStatus(blocked, 'err'); return; }
       send.disabled = true;
       setStatus('Enviando…');
       const temas = $$('input[name="tema"]:checked', form).map(x => x.value).join(', ');
@@ -1569,7 +1606,9 @@
         const j = await res.json().catch(() => ({}));
         if (!res.ok || String(j.success) !== 'true') throw new Error(j.message || 'error');
         setStatus('Mensaje enviado. Te responderé lo antes posible.', 'ok');
+        sendLog();
         form.reset();
+        startedAt = now();
         ach.unlock('conversacion');
       } catch (_) {
         setStatus('No se ha podido enviar ahora mismo. Escríbeme directamente a alvarotorresbaeza@gmail.com.', 'err');

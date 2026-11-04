@@ -651,7 +651,7 @@
     const cv = $('#particles'), ctx = cv.getContext('2d');
     const N = fine && innerWidth > 900 ? 2200 : 800;
     const P = new Float32Array(N * 6); // x, y, tx, ty, seed, size
-    let w = 0, h = 0, label = null, active = false, looping = false, mx = -9999, my = -9999, seeded = false;
+    let w = 0, h = 0, label = null, active = false, looping = false, mx = -9999, my = -9999, seeded = false, numW = 0;
     const cache = new Map();
     function resize() {
       const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
@@ -678,9 +678,12 @@
       const data = o.getImageData(0, 0, oc.width, oc.height).data;
       const step = Math.max(2, Math.round(S / 170));
       const pts = [];
-      for (let y = 0; y < oc.height; y += step) for (let x = 0; x < oc.width; x += step) if (data[(y * oc.width + x) * 4 + 3] > 120) pts.push(x, y);
+      let maxY = 0;
+      for (let y = 0; y < oc.height; y += step) for (let x = 0; x < oc.width; x += step) if (data[(y * oc.width + x) * 4 + 3] > 120) { pts.push(x, y); maxY = y; }
       const cx = desk ? w * 0.77 : w * 0.7, cy = desk ? h * 0.36 : tab ? h * 0.2 : h * 0.17;
       const out = new Float32Array(N * 2);
+      // Borde inferior real del número dibujado: en móvil y tablet vertical el texto de la sección empieza justo debajo
+      out.bottom = desk ? 0 : cy - oc.height / 2 + maxY;
       const count = pts.length / 2 || 1;
       for (let i = 0; i < N; i++) {
         const j = (Math.random() * count | 0) * 2;
@@ -702,6 +705,8 @@
       label = text;
       if (!seeded) scatter();
       const t = targets(text);
+      // Al cambiar de sección o de ancho (no cuando el móvil esconde sus barras al hacer scroll, para que el texto no salte)
+      if (t.bottom && (!instant || w !== numW)) { numW = w; document.documentElement.style.setProperty('--num-bottom', Math.round(t.bottom) + 'px'); }
       for (let i = 0; i < N; i++) {
         const k = i * 6;
         P[k + 2] = t[i * 2]; P[k + 3] = t[i * 2 + 1];

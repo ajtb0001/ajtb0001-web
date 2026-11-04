@@ -642,10 +642,11 @@ body.is-page .particles{display:block}
   .particles{opacity:.6}
   .menu-preview{display:none}
   /* El texto empieza justo debajo del número de partículas (que ocupa el 17 % superior más su tamaño), sin depender de lo largo que sea */
-  .page-hero{min-height:0;justify-content:flex-start;padding-top:calc(17vh + min(15.75vh,28.9vw) + 14px);padding-top:calc(17svh + min(15.75svh,28.9vw) + 14px)}
+  /* --num-bottom lo fija app.js con el borde real del número; si aún no está, se estima */
+  .page-hero{min-height:0;justify-content:flex-start;padding-top:calc(17vh + min(15.75vh,28.9vw) + 14px);padding-top:calc(var(--num-bottom,calc(17svh + min(15.75svh,28.9vw))) + 18px)}
 }
 @media (orientation:portrait) and (min-width:761px) and (max-width:1100px){
-  .page-hero{min-height:0;justify-content:flex-start;padding-top:calc(20vh + min(12.6vh,26.25vw) + 14px);padding-top:calc(20svh + min(12.6svh,26.25vw) + 14px)}
+  .page-hero{min-height:0;justify-content:flex-start;padding-top:calc(20vh + min(12.6vh,26.25vw) + 14px);padding-top:calc(var(--num-bottom,calc(20svh + min(12.6svh,26.25vw))) + 18px)}
 }
 /* ---------- Terminal: comandos sugeridos y modo sesión ---------- */
 .crt-try{display:flex;flex-wrap:wrap;gap:.1em .45em}
@@ -934,6 +935,22 @@ html.cursor-on,html.cursor-on *{cursor:none!important}
 body.tone-light .rail a{color:var(--accent-ink-2)}
 body.tone-light .rail a:hover,body.tone-light .rail a.is-current{color:var(--accent-ink);border-right-color:var(--accent-ink)}
 body.tone-light .rail span{background:rgba(236,235,228,.92);color:var(--accent-ink);border-color:var(--paper-line)}
+/* ---------- Ajustes por dispositivo (04-11-2026) ---------- */
+/* Ordenador: los títulos pasan de línea antes de llegar al número grande de la derecha (centrado al 77 % y de ancho ~1,2 × su tamaño) */
+@media (min-width:1101px),(min-width:761px) and (orientation:landscape){
+  .view--page:not(.view--light) .page-hero{--title-room:max(420px,calc(77vw - min(34.8vh,19.2vw) - max((100vw - 1280px) / 2,0px) - clamp(16px,4vw,48px) - 24px))}
+  .view--page:not(.view--light) .page-hero .page-title{max-width:min(15ch,var(--title-room))}
+  .view--page:not(.view--light) .page-hero .page-title--xl{max-width:min(13ch,var(--title-room))}
+}
+/* Tablet: el reloj de la barra no cabe junto al nombre */
+@media (min-width:761px) and (max-width:1000px){ .clock{display:none} }
+/* Táctil: más zona de toque en los comandos sugeridos del terminal (sin cambiar su aspecto) y casilla de privacidad más grande */
+@media (pointer:coarse){
+  .crt-try button{position:relative}
+  .crt-try button::after{content:"";position:absolute;inset:-9px -3px}
+  .consent input{width:22px;height:22px;margin-top:0}
+}
+
 /* ---------- Transición al terminal: la pantalla espera apagada hasta que llega el monitor ---------- */
 /* Sin animación mientras llega: al quitar la clase, el encendido empieza desde cero */
 .view--intro.is-arriving .crt-content,.view--intro.is-arriving .crt-content *,.view--intro.is-arriving .intro-actions{animation:none}

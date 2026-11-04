@@ -641,7 +641,11 @@ body.is-page .particles{display:block}
   .next-band{background-size:160px 160px}
   .particles{opacity:.6}
   .menu-preview{display:none}
-  .page-hero{min-height:min(78svh,720px)}
+  /* El texto empieza justo debajo del número de partículas (que ocupa el 17 % superior más su tamaño), sin depender de lo largo que sea */
+  .page-hero{min-height:0;justify-content:flex-start;padding-top:calc(17vh + min(15.75vh,28.9vw) + 14px);padding-top:calc(17svh + min(15.75svh,28.9vw) + 14px)}
+}
+@media (orientation:portrait) and (min-width:761px) and (max-width:1100px){
+  .page-hero{min-height:0;justify-content:flex-start;padding-top:calc(20vh + min(12.6vh,26.25vw) + 14px);padding-top:calc(20svh + min(12.6svh,26.25vw) + 14px)}
 }
 /* ---------- Terminal: comandos sugeridos y modo sesión ---------- */
 .crt-try{display:flex;flex-wrap:wrap;gap:.1em .45em}

@@ -664,8 +664,10 @@
     function targets(text) {
       const key = text + '|' + w + 'x' + h;
       if (cache.has(key)) return cache.get(key);
-      const desk = w > 760;
-      const S = Math.round(desk ? Math.min(h * 0.58, w * 0.32) : Math.min(h * 0.3, w * 0.55));
+      // Tablet en vertical: el número arriba, como en el móvil (el CSS deja el texto justo debajo)
+      const desk = w > 760 && !(h >= w && w <= 1100);
+      const tab = !desk && w > 760;
+      const S = Math.round(desk ? Math.min(h * 0.58, w * 0.32) : tab ? Math.min(h * 0.24, w * 0.5) : Math.min(h * 0.3, w * 0.55));
       if (S < 16) { const r = new Float32Array(N * 2); for (let i = 0; i < N * 2; i += 2) { r[i] = Math.random() * w; r[i + 1] = Math.random() * h; } return r; }
       const oc = document.createElement('canvas');
       oc.width = Math.round(S * 1.5); oc.height = Math.round(S * 1.05);
@@ -677,7 +679,7 @@
       const step = Math.max(2, Math.round(S / 170));
       const pts = [];
       for (let y = 0; y < oc.height; y += step) for (let x = 0; x < oc.width; x += step) if (data[(y * oc.width + x) * 4 + 3] > 120) pts.push(x, y);
-      const cx = desk ? w * 0.77 : w * 0.7, cy = desk ? h * 0.36 : h * 0.17;
+      const cx = desk ? w * 0.77 : w * 0.7, cy = desk ? h * 0.36 : tab ? h * 0.2 : h * 0.17;
       const out = new Float32Array(N * 2);
       const count = pts.length / 2 || 1;
       for (let i = 0; i < N; i++) {

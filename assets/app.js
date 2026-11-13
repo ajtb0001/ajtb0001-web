@@ -30,34 +30,38 @@
 
   /* ================= Datos ================= */
   const SECTIONS = [
-    { key: 'perfil', n: '01', title: 'Perfil', sub: 'Hacer que los datos signifiquen algo', tag: 'Ingeniería de datos' },
+    { key: 'perfil', n: '01', title: 'Perfil', sub: 'Datos e IA para decidir mejor', tag: 'Estrategia · Gobierno' },
     { key: 'trayectoria', n: '02', title: 'Trayectoria', sub: '2020 — hoy', tag: 'RNB · Preference' },
-    { key: 'sap', n: '03', title: 'SAP', sub: 'Metodología · del dato a la decisión', tag: 'Metodología' },
-    { key: 'metodo', n: '04', title: 'Método', sub: 'Del dato al propósito', tag: 'D · I · C · P' },
-    { key: 'sobre-mi', n: '05', title: 'Sobre mí', sub: 'Tres lugares, una mirada', tag: 'Rioja · Jaén · Valencia' },
-    { key: 'formacion', n: '06', title: 'Formación', sub: 'Grado · Máster · MBA', tag: '5 certificaciones' },
-    { key: 'servicios', n: '07', title: 'Servicios', sub: '¿Una web como esta o una app?', tag: 'Webs y apps' },
-    { key: 'contacto', n: '08', title: 'Contacto', sub: '¿Tienes un problema de datos?', tag: 'Escríbeme' }
+    { key: 'como-trabajo', n: '03', title: 'Cómo trabajo', sub: 'Del problema al valor', tag: 'Método · SAP', cv: 'sap' },
+    { key: 'formacion', n: '04', title: 'Formación', sub: 'Grado · Máster · MBA', tag: 'DP-700 · MBA' },
+    { key: 'proyectos', n: '05', title: 'Proyectos a medida', sub: 'IA aplicada, apps y webs', tag: 'IA · Apps · Webs', cv: 'servicios' },
+    { key: 'sobre-mi', n: '06', title: 'Sobre mí', sub: 'Tres lugares, una mirada', tag: 'Rioja · Jaén · Valencia' },
+    { key: 'contacto', n: '07', title: 'Contacto', sub: 'Datos o proyectos a medida', tag: 'Escríbeme' }
   ];
   const byKey = Object.fromEntries(SECTIONS.map(s => [s.key, s]));
+  // Los dos caminos del contacto (formulario y comando «mensaje»)
+  const CAMINOS = ['Oportunidades y colaboraciones en datos', 'Proyectos de webs, apps o IA'];
+  // El mosaico del inicio tiene 8 huecos: las 7 secciones y el terminal
+  const HUB = [...SECTIONS, { key: 'intro', n: '>_', title: 'Terminal', sub: 'Escribe un comando', tag: 'ATB·DATA', cv: 'terminal' }];
   const LABELS = { intro: { n: '>_', title: 'Terminal' }, inicio: { n: '00', title: 'Inicio' }, privacidad: { n: '§', title: 'Privacidad' } };
   // La vista de entrada (intro) se publica en la dirección #terminal
   const hashFor = k => (k === 'intro' ? 'terminal' : k);
-  const HASH_ALIAS = { terminal: 'intro', agenda: 'contacto', sistema: 'sap', intro: null };
+  // Direcciones antiguas que siguen funcionando
+  const HASH_ALIAS = { terminal: 'intro', agenda: 'contacto', sistema: 'como-trabajo', sap: 'como-trabajo', metodo: 'como-trabajo', servicios: 'proyectos', intro: null };
   const keyForHash = h => (Object.prototype.hasOwnProperty.call(HASH_ALIAS, h) ? HASH_ALIAS[h] : h);
   const labelFor = k => byKey[k] || LABELS[k] || { n: '', title: k };
 
   const MOTIF = {
     perfil: '<div class="m"></div>',
     trayectoria: '<div class="m"><i data-y="2020"></i><i data-y="2024"></i><i data-y="hoy"></i></div>',
-    sap: '<div class="m">' + [4, 3, 2, 1, 0].map(k => `<i style="--k:${k}"></i>`).join('') + '</div>',
-    metodo: '<div class="m">' + [0, 1, 2, 3].map(k => `<i style="--k:${k}"></i>`).join('') + '</div>',
+    'como-trabajo': '<div class="m">' + [4, 3, 2, 1, 0].map(k => `<i style="--k:${k}"></i>`).join('') + '</div>',
+    intro: '<div class="m"><i>$ whoami</i><i>$ sql</i><i>$ _</i></div>',
     'sobre-mi': '<div class="m">&#x265E;&#xFE0E;</div>',
-    formacion: '<div class="m"><i>DP-700</i><i>DP-900</i><i>AZ-900</i><i>PL-900</i><i>MOS-200</i></div>',
-    servicios: '<div class="m"><span class="m-bar"><i></i><i></i><i></i></span><span class="m-l m-l1"></span><span class="m-l m-l2"></span><span class="m-l m-l3"></span><span class="m-cur"></span></div>',
+    formacion: '<div class="m"><i>DP-700</i><i>MBA</i><i>AZ-900</i><i>DP-900</i><i>PL-900</i></div>',
+    proyectos: '<div class="m"><span class="m-bar"><i></i><i></i><i></i></span><span class="m-l m-l1"></span><span class="m-l m-l2"></span><span class="m-l m-l3"></span><span class="m-cur"></span></div>',
     contacto: '<div class="m">@</div>'
   };
-  const coverHTML = s => `<div class="cover cv-${s.key}">${MOTIF[s.key]}<span class="cover-num">${s.n}</span><span class="cover-tag">${s.tag}</span><div class="cover-txt"><b class="cover-title">${s.title}</b><span class="cover-sub">${s.sub}</span></div></div>`;
+  const coverHTML = s => `<div class="cover cv-${s.cv || s.key}">${MOTIF[s.key]}<span class="cover-num">${s.n}</span><span class="cover-tag">${s.tag}</span><div class="cover-txt"><b class="cover-title">${s.title}</b><span class="cover-sub">${s.sub}</span></div></div>`;
 
   /* ================= Logros ================= */
   const ACH = [
@@ -96,6 +100,8 @@
       pump();
     }
     function toast(html) { queue.push(html); pump(); }
+    // Los logros solo se enseñan en el terminal: fuera de él se guardan en silencio y se avisan al volver
+    let fresh = [];
     function unlock(id) {
       if (got.has(id)) return;
       const a = ACH.find(x => x.id === id);
@@ -103,12 +109,14 @@
       got.add(id);
       local.set('logros', [...got]);
       render();
-      toast(`<b>Logro ${got.size}/${ACH.length}</b><span>${a.name}</span>`);
+      if (current === 'intro') toast(`<b>Logro ${got.size}/${ACH.length}</b><span>${a.name}</span>`);
+      else fresh.push(a.name);
       if (got.size === ACH.length) {
-        toast('<b>Completado</b><span>Has desbloqueado todos los logros</span>');
+        if (current === 'intro') toast('<b>Completado</b><span>Has desbloqueado todos los logros</span>');
         setTimeout(() => emit('logros-completos'), 2400);
       }
     }
+    const takeFresh = () => { const f = fresh; fresh = []; return f; };
     function setOpen(open) {
       panel.hidden = !open;
       toggle.setAttribute('aria-expanded', String(open));
@@ -117,7 +125,7 @@
     document.addEventListener('click', e => { if (!panel.hidden && !panel.contains(e.target) && e.target !== toggle) setOpen(false); });
     function reset() { got = new Set(); render(); }
     render();
-    return { unlock, setOpen, reset, toast, isOpen: () => !panel.hidden, size: () => got.size };
+    return { unlock, setOpen, reset, toast, takeFresh, isOpen: () => !panel.hidden, size: () => got.size, has: id => got.has(id) };
   })();
   document.addEventListener('click', e => { const t = e.target.closest('[data-ach]'); if (t) ach.unlock(t.dataset.ach); });
 
@@ -406,7 +414,7 @@
           const el = document.createElement('div');
           el.className = 'tile';
           el.dataset.i = idx;
-          el.innerHTML = `<div class="tile-inner">${coverHTML(SECTIONS[idx])}</div>`;
+          el.innerHTML = `<div class="tile-inner">${coverHTML(HUB[idx])}</div>`;
           stage.appendChild(el);
           tiles.push({ el, c, r, idx, cx: 0, cy: 0 });
         }
@@ -518,7 +526,7 @@
       if (!down) return;
       if (!dragging && !cancel && down.tile) {
         const idx = +down.tile.dataset.i;
-        go(SECTIONS[idx].key, 'flip', $('.tile-inner', down.tile));
+        go(HUB[idx].key, 'flip', $('.tile-inner', down.tile));
       } else if (now() - down.t > 90) { vx = vy = 0; }
       vx = clamp(vx, -60, 60); vy = clamp(vy, -60, 60);
       dragging = false; down = null;
@@ -766,7 +774,9 @@
   const countUp = root => $$('[data-count]', root).forEach(el => {
     if (reduce) return;
     const n = +el.dataset.count, pre = el.dataset.prefix || '', t0 = now();
-    const step = () => { const p = clamp((now() - t0) / 1200, 0, 1); el.textContent = pre + Math.round(n * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(step); };
+    // data-fmt="miles": separador de miles con punto (1.200)
+    const fmt = el.dataset.fmt === 'miles' ? v => String(v).replace(/\B(?=(\d{3})+(?!\d))/g, '.') : String;
+    const step = () => { const p = clamp((now() - t0) / 1200, 0, 1); el.textContent = pre + fmt(Math.round(n * (1 - Math.pow(1 - p, 3)))); if (p < 1) requestAnimationFrame(step); };
     step();
   });
   const io = new IntersectionObserver(entries => {
@@ -939,7 +949,7 @@
     // Minúsculas, sin tildes, espacios simples y sin «;» final: así da igual cómo se escriba
     const norm = s => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').replace(/;+\s*$/, '').trim();
     const esc = s => String(s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
-    const ALIAS = { sistema: 'sap', metodologia: 'sap', 'metodologia sap': 'sap', 'sobre mi': 'sobre-mi', sobremi: 'sobre-mi', about: 'sobre-mi', trabajo: 'trayectoria', web: 'servicios', webs: 'servicios', app: 'servicios', apps: 'servicios', cv: 'perfil' };
+    const ALIAS = { sistema: 'como-trabajo', sap: 'como-trabajo', metodo: 'como-trabajo', metodologia: 'como-trabajo', 'metodologia sap': 'como-trabajo', 'como trabajo': 'como-trabajo', comotrabajo: 'como-trabajo', 'sobre mi': 'sobre-mi', sobremi: 'sobre-mi', about: 'sobre-mi', trabajo: 'trayectoria', servicios: 'proyectos', 'proyectos a medida': 'proyectos', web: 'proyectos', webs: 'proyectos', app: 'proyectos', apps: 'proyectos', ia: 'proyectos' };
     const years = Math.max(1, new Date().getFullYear() - 2020);
 
     /* ---------- Salida ---------- */
@@ -974,29 +984,38 @@
     /* ---------- Comandos de información ---------- */
     const INFO = {
       ayuda: () => [
-        'info ...... whoami · neofetch · stack · experiencia · proyecto',
-        '            estudios · certs · servicios · email',
+        'info ...... whoami · neofetch · rnb · stack · experiencia',
+        '            proyecto · estudios · certs · a-medida · email · cv',
         'datos ..... sql  (consulta mis datos con SQL)',
         'contacto .. mensaje  (escríbeme desde aquí)',
         'efectos ... matrix · top · scan · apagar',
         'navegar ... abrir <sección> · entrar · salir',
-        'secciones . perfil · trayectoria · sap · metodo · sobre-mi',
-        '            formacion · servicios · contacto',
+        'secciones . perfil · trayectoria · como-trabajo · formacion',
+        '            proyectos · sobre-mi · contacto',
         'extras .... cafe · ajedrez · hora · logros · trofeo · limpiar',
         'historial . flechas ↑ ↓',
         'Y hay comandos secretos… «secretos» muestra tu progreso.'
       ],
-      whoami: () => ['Álvaro José Torres Baeza', 'Ingeniería de datos e integración SAP · Valencia, ES', 'También diseño y desarrollo webs y apps a medida.'],
+      whoami: () => ['Álvaro José Torres Baeza', 'Transformación digital con datos e IA · Valencia, ES', 'Estrategia, arquitectura y gobierno del dato para que', 'la dirección decida con datos fiables.', 'Siguiente paso: Head of Data. Destino: estrategia y transformación.', 'También: proyectos a medida de IA aplicada, apps y webs.'],
       neofetch: () => [
         'atb@datos', '---------',
         'SO ........ ATB·DATA 1.0 LTS',
         'Host ...... Valencia, España',
         `Uptime .... ${years} años en datos`,
-        'Empresa ... RNB Cosméticos',
+        'Empresa ... RNB Cosméticos (301 M€ · 1.200 personas)',
+        'Rol ....... arquitectura y gobierno del dato',
         'Shell ..... SQL',
-        'Stack ..... SAP · SQL Server · Qlik · Fabric',
-        'Certs ..... 5 × Microsoft',
-        'Extra ..... webs y apps a medida'
+        'Stack ..... SAP · Datasphere · Fabric · Power BI · Qlik',
+        'Certs ..... DP-700 + 3 × Fundamentals',
+        'Extra ..... IA aplicada, apps y webs a medida'
+      ],
+      rnb: () => [
+        'RNB Cosméticos · fabricante cosmético en plena expansión',
+        '301 M€ de facturación y 1.200 personas en 2025,',
+        'crecimiento a doble dígito y adquisiciones como 3INA.',
+        'Mi papel: que la compañía tenga datos fiables y que',
+        'lleguen a las decisiones de dirección.',
+        'Escribe «abrir trayectoria» para ver el detalle.'
       ],
       stack: () => [
         'origen ....... SAP · CDS Views · BAPIs · Fiori',
@@ -1005,18 +1024,19 @@
         'plataforma ... Microsoft Fabric · OneLake · Azure',
         'decisión ..... Qlik Sense · Power BI · SSRS'
       ],
-      experiencia: () => ['2024 — hoy   RNB Cosméticos', '             Ingeniería de datos e integración SAP', '2020 — 2024  Preference', '             Bases de datos y desarrollo a medida'],
-      proyecto: () => ['Control presupuestario · Qlik Sense', '≈30 usuarios · todas las áreas de la compañía', 'gasto real · gasto comprometido · presupuesto', 'Escribe «abrir trayectoria» para ver el detalle.'],
+      experiencia: () => ['2024 — hoy   RNB Cosméticos', '             Ingeniería de datos · arquitectura y gobierno', '             Plataforma en Microsoft Fabric · modelo SAP', '             en Datasphere · accesos auditables', '2020 — 2024  Preference', '             Bases de datos y desarrollo a medida'],
+      proyecto: () => ['Control presupuestario para toda la compañía', 'Diseñado y liderado de principio a fin.', '≈30 responsables · 7 áreas · una misma fuente de datos', 'gasto real · gasto comprometido · presupuesto', 'Escribe «abrir trayectoria» para ver el detalle.'],
       estudios: () => ['Grado .. Ingeniería Informática · Universidad de Jaén', 'Máster . Big Data & Business Intelligence · INESEM / Nebrija', 'MBA .... Transformación Digital · UPV'],
-      certs: () => ['DP-700 .. Fabric Data Engineer Associate', 'DP-900 .. Azure Data Fundamentals', 'AZ-900 .. Azure Fundamentals', 'PL-900 .. Power Platform Fundamentals', 'MOS-200 . Microsoft Office Specialist · Excel'],
-      servicios: () => ['Diseño y desarrollo de webs y apps a medida:', '  · portfolios y marca personal', '  · webs para proyectos y negocios', '  · apps a medida para tu negocio', '  · experiencias interactivas como esta', 'Escribe «mensaje» o «abrir servicios».'],
+      certs: () => ['DP-700 .. Fabric Data Engineer Associate', 'Fundamentos:', '  AZ-900 · Azure Fundamentals', '  DP-900 · Azure Data Fundamentals', '  PL-900 · Power Platform Fundamentals'],
+      'a-medida': () => ['Proyectos a medida, con el mismo método que uso con datos:', '  · IA aplicada: asistentes con RAG y servidores MCP', '  · apps a medida para tu negocio', '  · webs y portfolios', '  · experiencias interactivas como esta', 'Escribe «mensaje» o «abrir proyectos».'],
       email: () => ['alvarotorresbaeza@gmail.com', 'linkedin.com/in/ajtb', 'O escribe «mensaje» y te contesto yo.'],
+      cv: () => { setTimeout(() => window.open('cv/CV-Alvaro-Torres-Baeza.pdf', '_blank', 'noopener'), 300); return ['Abriendo el CV en PDF…', 'alvarotorresbaeza.com/cv/CV-Alvaro-Torres-Baeza.pdf']; },
       cafe: () => ['   ( (', '    ) )', '  .______.', '  |      |]', '  \\      /', "   `----'", 'Café listo. Los datos, en un momento.'],
       ajedrez: () => ['1. e4 e5  2. Cf3 Cc6  3. Ab5', 'Apertura española: estrategia antes que táctica.'],
       hora: () => [new Date().toLocaleString('es-ES', { timeZone: 'Europe/Madrid' }) + ' · Valencia'],
-      logros: () => [`${ach.size()}/${ACH.length} logros desbloqueados. Ábrelos desde «Logros» dentro de la web.`]
+      logros: () => [`${ach.size()}/${ACH.length} logros desbloqueados:`, ...ACH.map(a => (ach.has(a.id) ? '[x] ' + a.name : '[ ] ' + '?'.repeat(Math.max(6, a.name.length - 2))) + ' · ' + a.desc)]
     };
-    const INFO_ALIAS = { help: 'ayuda', '?': 'ayuda', comandos: 'ayuda', fetch: 'neofetch', exp: 'experiencia', certificaciones: 'certs', correo: 'email', mail: 'email', linkedin: 'email', redes: 'email', coffee: 'cafe', chess: 'ajedrez', date: 'hora' };
+    const INFO_ALIAS = { help: 'ayuda', '?': 'ayuda', comandos: 'ayuda', fetch: 'neofetch', exp: 'experiencia', certificaciones: 'certs', correo: 'email', mail: 'email', linkedin: 'email', redes: 'email', coffee: 'cafe', chess: 'ajedrez', date: 'hora', empresa: 'rnb', servicios: 'a-medida', curriculum: 'cv', 'curriculum vitae': 'cv', resume: 'cv' };
 
     /* ---------- Motor SQL sobre datos de la web ---------- */
     const T = {
@@ -1027,8 +1047,7 @@
         ['DP-700', 'Fabric Data Engineer', 'Associate', 'Datos'],
         ['DP-900', 'Azure Data Fundamentals', 'Fundamentals', 'Datos'],
         ['AZ-900', 'Azure Fundamentals', 'Fundamentals', 'Cloud'],
-        ['PL-900', 'Power Platform Fundamentals', 'Fundamentals', 'Bajo código'],
-        ['MOS-200', 'Office Specialist · Excel', 'Specialist', 'Ofimática']] },
+        ['PL-900', 'Power Platform Fundamentals', 'Fundamentals', 'Bajo código']] },
       stack: { cols: ['herramienta', 'capa', 'orden'], rows: [
         ['SAP', 'origen', 1], ['CDS Views', 'origen', 1], ['BAPIs', 'origen', 1], ['Fiori', 'origen', 1],
         ['SQL', 'integración', 2], ['ETL', 'integración', 2], ['Pipelines', 'integración', 2],
@@ -1039,14 +1058,19 @@
         ['Grado', 'Ingeniería Informática', 'Universidad de Jaén'],
         ['Máster', 'Big Data & Business Intelligence', 'INESEM · Nebrija'],
         ['MBA', 'Transformación Digital', 'UPV']] },
-      proyectos: { cols: ['nombre', 'herramienta', 'usuarios', 'areas'], rows: [
-        ['Control presupuestario', 'Qlik Sense', 30, 'Todas']] },
+      proyectos: { cols: ['nombre', 'ambito', 'tecnologia', 'usuarios'], rows: [
+        ['Plataforma de datos de la compañía', 'arquitectura', 'Microsoft Fabric', 'toda la empresa'],
+        ['Modelo de datos de SAP', 'arquitectura', 'SAP Datasphere', 'finanzas y operaciones'],
+        ['Modelo de acceso y auditoría de permisos', 'gobierno', 'Fabric · Power BI · SAP', 'toda la empresa'],
+        ['Control presupuestario', 'negocio', 'Qlik Sense', '30 responsables · 7 áreas'],
+        ['Matriz de tiempos de desarrollo de producto', 'negocio', 'BI', 'desarrollo de producto'],
+        ['Migración a Qlik Cloud', 'arquitectura', 'Qlik', 'toda la empresa']] },
       lugares: { cols: ['ciudad', 'etapa', 'latitud', 'longitud'], rows: [
         ['La Rioja', 'origen', 42.47, -2.45], ['Jaén', 'raíces', 37.78, -3.79], ['Valencia', 'presente', 39.47, -0.38]] },
-      servicios: { cols: ['servicio', 'para'], rows: [
-        ['Portfolio y marca personal', 'Presentarte con una web propia'],
-        ['Webs para proyectos y negocios', 'Presentar un servicio o producto'],
+      a_medida: { cols: ['tipo', 'para'], rows: [
+        ['IA aplicada', 'Asistentes con RAG y servidores MCP'],
         ['Apps a medida', 'Herramientas para tu negocio'],
+        ['Webs y portfolios', 'Presentarte a ti o a tu negocio'],
         ['Experiencias interactivas', 'Webs con animación y 3D']] }
     };
     const TABLES = Object.keys(T);
@@ -1204,14 +1228,20 @@
       if (msg.step === 'nombre') {
         if (v.length < 2) { print(['Necesito al menos tu nombre.']); return; }
         if (v.length > 100) { print(['Ese nombre es demasiado largo.'], 'err'); return; }
-        msg.nombre = v; msg.step = 'email';
+        msg.nombre = v; msg.step = 'camino';
+        setMode('msg', 'camino>', '1 o 2', ['1', '2', 'cancelar']);
+        print([`Encantado, ${v}. ¿Sobre qué quieres hablar?`, '  1 · Oportunidades y colaboraciones en datos', '  2 · Proyectos de webs, apps o IA']);
+      } else if (msg.step === 'camino') {
+        const path = { 1: CAMINOS[0], 2: CAMINOS[1], datos: CAMINOS[0], proyectos: CAMINOS[1], proyecto: CAMINOS[1] }[c];
+        if (!path) { print(['Responde «1» o «2».']); return; }
+        msg.camino = path; msg.step = 'email';
         setMode('msg', 'correo>', 'tu@correo.com', ['cancelar']);
-        print([`Encantado, ${v}. ¿A qué correo te respondo?`]);
+        print([`${path}. ¿A qué correo te respondo?`]);
       } else if (msg.step === 'email') {
         if (v.length > 160 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) { print(['Ese correo no parece válido. Revísalo, por favor.'], 'err'); return; }
         msg.email = v; msg.step = 'mensaje';
         setMode('msg', 'mensaje>', 'cuéntame qué necesitas', ['cancelar']);
-        print(['Perfecto. ¿Qué te gustaría contarme? (datos, SAP, una web…)']);
+        print(['Perfecto. ¿Qué te gustaría contarme?']);
       } else if (msg.step === 'mensaje') {
         if (v.length < 5) { print(['Cuéntame un poco más.']); return; }
         if (v.length > 4000) { print(['Es un poco largo para el terminal. Resúmelo o usa el formulario de contacto.'], 'err'); return; }
@@ -1231,7 +1261,7 @@
           const res = await fetch(FORM_ENDPOINT, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-            body: JSON.stringify({ nombre: data.nombre, email: data.email, mensaje: data.mensaje, origen: 'Terminal de la web', _subject: 'Nuevo mensaje desde el terminal de alvarotorresbaeza.com', _template: 'table', _captcha: 'false' })
+            body: JSON.stringify({ nombre: data.nombre, email: data.email, camino: data.camino, mensaje: data.mensaje, origen: 'Terminal de la web', _subject: 'Nuevo mensaje desde el terminal de alvarotorresbaeza.com', _template: 'table', _captcha: 'false' })
           });
           const j = await res.json().catch(() => ({}));
           if (!res.ok || String(j.success) !== 'true') throw new Error('envío');
@@ -1477,7 +1507,13 @@
       if (trophyPending) { trophyPending = false; setTimeout(showTrophy, reduce ? 0 : 900); return; }
       if (fine) setTimeout(() => { if (current === 'intro') input.focus({ preventScroll: true }); }, 1600);
     });
-    on('leave', key => { if (key === 'intro') stopFx(); });
+    on('leave', key => { if (key === 'intro') { stopFx(); ach.setOpen(false); } });
+    // Logros conseguidos mientras se navegaba por la web: se cuentan al volver al terminal
+    on('enter', key => {
+      if (key !== 'intro') return;
+      const f = ach.takeFresh();
+      if (f.length) setTimeout(() => ach.toast(`<b>${f.length === 1 ? 'Logro nuevo' : f.length + ' logros nuevos'} · ${ach.size()}/${ACH.length}</b><span>${f.join(' · ')}</span>`), reduce ? 0 : 1400);
+    });
 
     /* ---------- Trofeo final: al completar los 8 logros ---------- */
     const TROPHY = [
@@ -1715,12 +1751,12 @@
     books.forEach((b, i) => b.addEventListener('pointerenter', () => { seen.add(i); if (seen.size === books.length) ach.unlock('lector'); }));
   })();
 
-  /* Enlaces que llevan al formulario con un tema ya marcado (p. ej. «Diseño de una web») */
+  /* Enlaces que llevan al formulario con un camino ya marcado (p. ej. desde «Proyectos a medida») */
   document.addEventListener('click', e => {
     const t = e.target.closest('[data-topic]');
     if (!t) return;
-    const box = $$('#cform input[name="tema"]').find(x => x.value === t.dataset.topic);
-    if (box) box.checked = true;
+    const radio = $(`#cform input[name="camino"][data-path="${t.dataset.topic}"]`);
+    if (radio) radio.checked = true;
   });
 
   /* ================= Contacto ================= */
@@ -1745,6 +1781,14 @@
     form.addEventListener('submit', async e => {
       e.preventDefault();
       const f = form.elements;
+      const camino = $('input[name="camino"]:checked', form);
+      const paths = $('.paths', form);
+      paths.classList.toggle('is-invalid', !camino);
+      if (!camino) {
+        setStatus('Elige sobre qué quieres hablar: oportunidades en datos o un proyecto a medida.', 'err');
+        $('input[name="camino"]', form).focus();
+        return;
+      }
       const checks = [
         [f.nombre, f.nombre.value.trim().length > 1],
         [f.email, /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.email.value.trim())],
@@ -1763,12 +1807,11 @@
       if (blocked) { setStatus(blocked, 'err'); return; }
       send.disabled = true;
       setStatus('Enviando…');
-      const temas = $$('input[name="tema"]:checked', form).map(x => x.value).join(', ');
       try {
         const res = await fetch(FORM_ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({ nombre: f.nombre.value.trim(), empresa: f.empresa.value.trim(), email: f.email.value.trim(), temas, mensaje: f.mensaje.value.trim(), _subject: 'Nuevo mensaje desde alvarotorresbaeza.com', _template: 'table', _captcha: 'false' })
+          body: JSON.stringify({ camino: camino.value, nombre: f.nombre.value.trim(), empresa: f.empresa.value.trim(), email: f.email.value.trim(), mensaje: f.mensaje.value.trim(), _subject: `Nuevo mensaje · ${camino.value}`, _template: 'table', _captcha: 'false' })
         });
         const j = await res.json().catch(() => ({}));
         if (!res.ok || String(j.success) !== 'true') throw new Error(j.message || 'error');
@@ -1782,7 +1825,10 @@
       }
       send.disabled = false;
     });
-    form.addEventListener('input', e => { if (e.target.getAttribute('aria-invalid') === 'true') e.target.removeAttribute('aria-invalid'); });
+    form.addEventListener('input', e => {
+      if (e.target.getAttribute('aria-invalid') === 'true') e.target.removeAttribute('aria-invalid');
+      if (e.target.name === 'camino') $('.paths', form).classList.remove('is-invalid');
+    });
     const copyBtn = $('#copy-mail'), addr = $('#mail-addr');
     copyBtn.addEventListener('click', () => {
       const flash = t => { copyBtn.textContent = t; setTimeout(() => { copyBtn.textContent = 'Copiar'; }, 1800); };

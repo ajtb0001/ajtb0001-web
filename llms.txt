@@ -1,0 +1,44 @@
+# Álvaro José Torres Baeza
+
+> Ingeniero de datos en Valencia (España) especializado en transformación digital con datos e IA: estrategia, arquitectura y gobierno del dato para que la dirección de empresas en crecimiento decida con datos fiables. Trabaja en RNB Cosméticos (301 M€ de facturación y 1.200 personas en 2025). Su siguiente paso profesional es dirigir el área de datos (Head of Data); su destino, la estrategia y la transformación. Además diseña y desarrolla proyectos a medida de IA aplicada, apps y webs.
+
+Data engineer based in Valencia, Spain, focused on digital transformation with data and AI: data strategy, architecture and governance so that leadership at growing companies decides with reliable data. Works at RNB Cosméticos (€301M revenue, 1,200 people in 2025). Next career step: leading the data function (Head of Data); destination: strategy and transformation. He also builds custom applied-AI projects, apps and websites.
+
+Datos clave / Key facts:
+
+- Empresa actual / Current company: RNB Cosméticos (fabricante cosmético, Valencia), 2024 – actualidad. Antes / Before: Preference (bases de datos y desarrollo a medida), 2020 – 2024.
+- Trabajo en RNB / Work at RNB: decidió y diseñó la plataforma de datos de la compañía en Microsoft Fabric; construyó gran parte del modelo de datos de SAP en SAP Datasphere; integró fuentes de RRHH y control horario; definió el modelo de acceso a la información en Fabric (Power BI) y SAP, con un cuadro de mando de permisos auditable; diseñó y lideró el control presupuestario para unos 30 responsables de 7 áreas; participó en la migración de Qlik Sense a Qlik Cloud; coordina a consultores externos cuando el proyecto lo requiere.
+- Tecnologías / Stack: SAP, SAP Datasphere, Microsoft Fabric, OneLake, SQL Server, Power BI, Qlik Sense / Qlik Cloud, SSRS, RAG, MCP.
+- Formación / Education: MBA en Transformación Digital (Universitat Politècnica de València); Máster en Big Data y Business Intelligence (INESEM · Universidad de Nebrija); Grado en Ingeniería Informática (Universidad de Jaén).
+- Certificaciones / Certifications: Microsoft Certified: Fabric Data Engineer Associate (DP-700); AZ-900, DP-900 y PL-900 (Fundamentals).
+- Método / How he works: problema → proceso → datos → accesos → tecnología → medición → valor.
+- Contacto / Contact: alvarotorresbaeza@gmail.com · https://www.linkedin.com/in/ajtb · formulario en https://alvarotorresbaeza.com/contacto/
+
+## Español
+
+- [Inicio](https://alvarotorresbaeza.com/): presentación y acceso a todas las secciones.
+- [Perfil](https://alvarotorresbaeza.com/perfil/): posicionamiento, rumbo profesional y qué aporta (estrategia, arquitectura, gobierno del dato, IA aplicada).
+- [Trayectoria](https://alvarotorresbaeza.com/trayectoria/): RNB Cosméticos y Preference, cifras, arquitectura de datos e impacto.
+- [Cómo trabajo](https://alvarotorresbaeza.com/como-trabajo/): método del problema al valor y trabajo en entornos SAP.
+- [Formación](https://alvarotorresbaeza.com/formacion/): MBA, máster, grado y certificaciones.
+- [Proyectos a medida](https://alvarotorresbaeza.com/proyectos/): IA aplicada (RAG y MCP), apps y webs a medida.
+- [Sobre mí](https://alvarotorresbaeza.com/sobre-mi/): La Rioja, Jaén y Valencia; libros y filosofía.
+- [Contacto](https://alvarotorresbaeza.com/contacto/): oportunidades y colaboraciones en datos, o proyectos de webs, apps o IA.
+- [CV en PDF](https://alvarotorresbaeza.com/cv/CV-Alvaro-Torres-Baeza.pdf)
+
+## English
+
+- [Home](https://alvarotorresbaeza.com/en/): introduction and access to every section.
+- [Profile](https://alvarotorresbaeza.com/en/profile/): positioning, career direction and what he brings.
+- [Experience](https://alvarotorresbaeza.com/en/experience/): RNB Cosméticos and Preference, figures, data architecture and impact.
+- [How I work](https://alvarotorresbaeza.com/en/how-i-work/): from problem to value; working in SAP environments.
+- [Education](https://alvarotorresbaeza.com/en/education/): MBA, master's, degree and certifications.
+- [Custom projects](https://alvarotorresbaeza.com/en/projects/): applied AI (RAG and MCP), custom apps and websites.
+- [About me](https://alvarotorresbaeza.com/en/about/): La Rioja, Jaén and Valencia; books and philosophy.
+- [Contact](https://alvarotorresbaeza.com/en/contact/): data opportunities and collaborations, or web, app and AI projects.
+- [CV (PDF)](https://alvarotorresbaeza.com/cv/CV-Alvaro-Torres-Baeza-EN.pdf)
+
+## Optional
+
+- [Terminal](https://alvarotorresbaeza.com/terminal/): interactive terminal with commands and SQL over his career data.
+- [Privacidad / Privacy](https://alvarotorresbaeza.com/privacidad/)

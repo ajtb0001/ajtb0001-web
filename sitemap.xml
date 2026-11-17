@@ -1,11 +1,123 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://alvarotorresbaeza.com/</loc>
+    <lastmod>2026-11-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://alvarotorresbaeza.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://alvarotorresbaeza.com/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://alvarotorresbaeza.com/"/>
+  </url>
+  <url>
+    <loc>https://alvarotorresbaeza.com/perfil/</loc>
+    <lastmod>2026-11-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://alvarotorresbaeza.com/perfil/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://alvarotorresbaeza.com/en/profile/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://alvarotorresbaeza.com/perfil/"/>
+  </url>
+  <url>
+    <loc>https://alvarotorresbaeza.com/trayectoria/</loc>
+    <lastmod>2026-11-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://alvarotorresbaeza.com/trayectoria/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://alvarotorresbaeza.com/en/experience/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://alvarotorresbaeza.com/trayectoria/"/>
+  </url>
+  <url>
+    <loc>https://alvarotorresbaeza.com/como-trabajo/</loc>
+    <lastmod>2026-11-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://alvarotorresbaeza.com/como-trabajo/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://alvarotorresbaeza.com/en/how-i-work/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://alvarotorresbaeza.com/como-trabajo/"/>
+  </url>
+  <url>
+    <loc>https://alvarotorresbaeza.com/formacion/</loc>
+    <lastmod>2026-11-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://alvarotorresbaeza.com/formacion/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://alvarotorresbaeza.com/en/education/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://alvarotorresbaeza.com/formacion/"/>
+  </url>
+  <url>
+    <loc>https://alvarotorresbaeza.com/proyectos/</loc>
+    <lastmod>2026-11-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://alvarotorresbaeza.com/proyectos/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://alvarotorresbaeza.com/en/projects/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://alvarotorresbaeza.com/proyectos/"/>
+  </url>
+  <url>
+    <loc>https://alvarotorresbaeza.com/sobre-mi/</loc>
+    <lastmod>2026-11-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://alvarotorresbaeza.com/sobre-mi/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://alvarotorresbaeza.com/en/about/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://alvarotorresbaeza.com/sobre-mi/"/>
+  </url>
+  <url>
+    <loc>https://alvarotorresbaeza.com/contacto/</loc>
+    <lastmod>2026-11-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://alvarotorresbaeza.com/contacto/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://alvarotorresbaeza.com/en/contact/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://alvarotorresbaeza.com/contacto/"/>
+  </url>
+  <url>
+    <loc>https://alvarotorresbaeza.com/en/</loc>
+    <lastmod>2026-11-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://alvarotorresbaeza.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://alvarotorresbaeza.com/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://alvarotorresbaeza.com/"/>
+  </url>
+  <url>
+    <loc>https://alvarotorresbaeza.com/en/profile/</loc>
+    <lastmod>2026-11-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://alvarotorresbaeza.com/perfil/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://alvarotorresbaeza.com/en/profile/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://alvarotorresbaeza.com/perfil/"/>
+  </url>
+  <url>
+    <loc>https://alvarotorresbaeza.com/en/experience/</loc>
+    <lastmod>2026-11-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://alvarotorresbaeza.com/trayectoria/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://alvarotorresbaeza.com/en/experience/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://alvarotorresbaeza.com/trayectoria/"/>
+  </url>
+  <url>
+    <loc>https://alvarotorresbaeza.com/en/how-i-work/</loc>
+    <lastmod>2026-11-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://alvarotorresbaeza.com/como-trabajo/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://alvarotorresbaeza.com/en/how-i-work/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://alvarotorresbaeza.com/como-trabajo/"/>
+  </url>
+  <url>
+    <loc>https://alvarotorresbaeza.com/en/education/</loc>
+    <lastmod>2026-11-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://alvarotorresbaeza.com/formacion/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://alvarotorresbaeza.com/en/education/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://alvarotorresbaeza.com/formacion/"/>
+  </url>
+  <url>
+    <loc>https://alvarotorresbaeza.com/en/projects/</loc>
+    <lastmod>2026-11-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://alvarotorresbaeza.com/proyectos/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://alvarotorresbaeza.com/en/projects/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://alvarotorresbaeza.com/proyectos/"/>
+  </url>
+  <url>
+    <loc>https://alvarotorresbaeza.com/en/about/</loc>
+    <lastmod>2026-11-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://alvarotorresbaeza.com/sobre-mi/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://alvarotorresbaeza.com/en/about/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://alvarotorresbaeza.com/sobre-mi/"/>
+  </url>
+  <url>
+    <loc>https://alvarotorresbaeza.com/en/contact/</loc>
+    <lastmod>2026-11-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://alvarotorresbaeza.com/contacto/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://alvarotorresbaeza.com/en/contact/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://alvarotorresbaeza.com/contacto/"/>
+  </url>
+  <url>
+    <loc>https://alvarotorresbaeza.com/cv/CV-Alvaro-Torres-Baeza-EN.pdf</loc>
     <lastmod>2026-11-17</lastmod>
   </url>
   <url>
     <loc>https://alvarotorresbaeza.com/cv/CV-Alvaro-Torres-Baeza.pdf</loc>
-    <lastmod>2026-11-13</lastmod>
+    <lastmod>2026-11-17</lastmod>
   </url>
 </urlset>

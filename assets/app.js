@@ -44,11 +44,32 @@
   // El mosaico del inicio tiene 8 huecos: las 7 secciones y el terminal
   const HUB = [...SECTIONS, { key: 'intro', n: '>_', title: 'Terminal', sub: 'Escribe un comando', tag: 'ATB·DATA', cv: 'terminal' }];
   const LABELS = { intro: { n: '>_', title: 'Terminal' }, inicio: { n: '00', title: 'Inicio' }, privacidad: { n: '§', title: 'Privacidad' } };
-  // La vista de entrada (intro) se publica en la dirección #terminal
+  /* Direcciones: cada vista tiene su propia ruta (/trayectoria/, /en/experience/…).
+     La vista previa de Claude no admite rutas y usa #clave (window.ATB.route = 'hash'). */
+  const CFG = window.ATB || {};
+  const ROUTE = CFG.route === 'hash' ? 'hash' : 'path';
+  const ROOT = typeof CFG.root === 'string' ? CFG.root : '/';
+  const LANG = (CFG.lang || document.documentElement.lang) === 'en' ? 'en' : 'es';
+  const SLUGS = {
+    es: { intro: 'terminal', inicio: '', perfil: 'perfil', trayectoria: 'trayectoria', 'como-trabajo': 'como-trabajo', formacion: 'formacion', proyectos: 'proyectos', 'sobre-mi': 'sobre-mi', contacto: 'contacto', privacidad: 'privacidad' },
+    en: { intro: 'terminal', inicio: '', perfil: 'profile', trayectoria: 'experience', 'como-trabajo': 'how-i-work', formacion: 'education', proyectos: 'projects', 'sobre-mi': 'about', contacto: 'contact', privacidad: 'privacy' }
+  };
+  const PREFIX = { es: '/', en: '/en/' };
+  const pathFor = (k, lang = LANG) => PREFIX[lang] + (SLUGS[lang][k] ? SLUGS[lang][k] + '/' : '');
   const hashFor = k => (k === 'intro' ? 'terminal' : k);
-  // Direcciones antiguas que siguen funcionando
+  const urlFor = k => (ROUTE === 'hash' ? '#' + hashFor(k) : pathFor(k));
+  // Direcciones antiguas con # que siguen funcionando (#trayectoria, #sap, #servicios…)
   const HASH_ALIAS = { terminal: 'intro', agenda: 'contacto', sistema: 'como-trabajo', sap: 'como-trabajo', metodo: 'como-trabajo', servicios: 'proyectos', intro: null };
   const keyForHash = h => (Object.prototype.hasOwnProperty.call(HASH_ALIAS, h) ? HASH_ALIAS[h] : h);
+  // Clave de vista a partir de una ruta, en cualquiera de los dos idiomas
+  function keyForPath(p) {
+    const parts = p.replace(/index\.html$/, '').split('/').filter(Boolean);
+    if (parts[0] === 'en') parts.shift();
+    if (!parts.length) return 'inicio';
+    if (parts.length > 1) return null;
+    for (const l of ['es', 'en']) for (const k in SLUGS[l]) if (SLUGS[l][k] === parts[0]) return k;
+    return null;
+  }
   const labelFor = k => byKey[k] || LABELS[k] || { n: '', title: k };
 
   const MOTIF = {
@@ -150,15 +171,43 @@
     window.scrollTo(0, 0);
     emit('enter', key, prev);
   }
-  const keyFromHash = () => {
-    const k = keyForHash(decodeURIComponent(location.hash.slice(1)));
+  // Al cambiar de vista: título de la pestaña y enlace al otro idioma apuntando a la misma sección
+  const langSwitch = $('#lang-switch');
+  on('enter', key => {
+    if (ROUTE === 'path') document.title = titleFor(key);
+    if (langSwitch) langSwitch.setAttribute('href', pathFor(key, LANG === 'en' ? 'es' : 'en'));
+  });
+  // Vista que corresponde a la dirección actual: primero un #antiguo, luego la ruta
+  const keyFromLocation = () => {
+    let k = null;
+    if (location.hash.length > 1) { try { k = keyForHash(decodeURIComponent(location.hash.slice(1))); } catch (_) {} }
+    if (!k && ROUTE === 'path') k = keyForPath(location.pathname);
     return k && views[k] ? k : null;
   };
+  // Clave de vista de un enlace interno (#clave o /ruta/), o null si no es de la web
+  function keyForLink(a) {
+    const href = a.getAttribute('href') || '';
+    if (href.startsWith('#')) { const k = keyForHash(href.slice(1)); return k && views[k] ? k : null; }
+    if (ROUTE !== 'path' || a.target === '_blank' || a.hasAttribute('download') || a.hasAttribute('hreflang')) return null;
+    let u;
+    try { u = new URL(href, location.href); } catch (_) { return null; }
+    if (u.origin !== location.origin || /\.\w+$/.test(u.pathname.replace(/index\.html$/, ''))) return null;
+    if ((u.pathname.startsWith('/en/') || u.pathname === '/en') !== (LANG === 'en')) return null;
+    const k = keyForPath(u.pathname);
+    return k && views[k] ? k : null;
+  }
+  // Título de la pestaña según la vista
+  const homeTitle = LANG === 'en' ? 'Álvaro Torres Baeza · Data & AI, architecture and governance' : 'Álvaro Torres Baeza · Datos e IA, arquitectura y gobierno';
+  const titleFor = k => (k === 'inicio' ? homeTitle : `${labelFor(k).title} · Álvaro Torres Baeza`);
+  function setUrl(key, replace) {
+    const url = urlFor(key);
+    const same = ROUTE === 'hash' ? location.hash === url : location.pathname === url && !location.hash;
+    if (!same) { try { history[replace ? 'replaceState' : 'pushState'](null, '', url); } catch (_) {} }
+  }
   function go(key, how, src) {
     if (busy) return;
     if (key === current) { window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' }); return; }
-    const hash = '#' + hashFor(key);
-    if (location.hash !== hash) { try { history.pushState(null, '', hash); } catch (_) {} }
+    setUrl(key);
     transitionTo(key, how, src);
   }
   async function transitionTo(key, how, src) {
@@ -175,14 +224,15 @@
   }
   history.scrollRestoration = 'manual';
   window.addEventListener('popstate', () => {
-    const k = keyFromHash() || 'inicio';
+    const k = keyFromLocation() || 'inicio';
     if (k !== current) transitionTo(k, 'curtain');
   });
   document.addEventListener('click', e => {
-    const a = e.target.closest('a[href^="#"]');
+    if (e.defaultPrevented || e.button > 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+    const a = e.target.closest('a[href]');
     if (!a) return;
-    const k = keyForHash(a.getAttribute('href').slice(1));
-    if (!k || !views[k]) return;
+    const k = keyForLink(a);
+    if (!k) return;
     e.preventDefault();
     if (menu.isOpen()) menu.close(true);
     ach.setOpen(false);
@@ -331,7 +381,7 @@
       el.hidden = false;
       body.style.overflow = 'hidden';
       btn.setAttribute('aria-expanded', 'true');
-      links.forEach(a => a.classList.toggle('is-current', a.getAttribute('href') === '#' + hashFor(current)));
+      links.forEach(a => a.classList.toggle('is-current', keyForLink(a) === current));
       if (!reduce) {
         el.classList.remove('is-anim'); void el.offsetWidth; el.classList.add('is-anim');
         el.animate([{ clipPath: 'inset(100% 0 0 0)' }, { clipPath: 'inset(0 0 0 0)' }], { duration: 700, easing: EASE_IO });
@@ -572,7 +622,7 @@
     const loadImg = new Promise(res => {
       const i = new Image();
       i.onload = () => res(i); i.onerror = () => res(null);
-      i.src = 'assets/retrato.jpg';
+      i.src = ROOT + 'assets/retrato.jpg';
     });
     function build() {
       const bw = box.clientWidth, bh = box.clientHeight;
@@ -825,7 +875,7 @@
         <p class="nb-hint"><span>Sigue deslizando para continuar ↓</span><span class="nb-pct">0%</span></p>
         <button class="nb-go" type="button">Ir a ${lab.title} →</button>
       </div>
-      <div class="nb-foot"><span>© 2026 Álvaro José Torres Baeza</span><nav aria-label="Pie"><a href="#inicio">Inicio</a><a href="#terminal">Terminal</a><a href="#privacidad">Privacidad</a><a href="mailto:alvarotorresbaeza@gmail.com" data-ach="conversacion">Correo</a><a href="https://www.linkedin.com/in/ajtb" target="_blank" rel="noopener noreferrer" data-ach="conversacion">LinkedIn ↗</a></nav><span>alvarotorresbaeza.com</span></div>
+      <div class="nb-foot"><span>© 2026 Álvaro José Torres Baeza</span><nav aria-label="Pie"><a href="${urlFor('inicio')}">Inicio</a><a href="${urlFor('intro')}">Terminal</a><a href="${urlFor('privacidad')}">Privacidad</a><a href="mailto:alvarotorresbaeza@gmail.com" data-ach="conversacion">Correo</a><a href="https://www.linkedin.com/in/ajtb" target="_blank" rel="noopener noreferrer" data-ach="conversacion">LinkedIn ↗</a></nav><span>alvarotorresbaeza.com</span></div>
     </div>`;
     $('.nb-go', band).addEventListener('click', () => go(next, 'curtain'));
     slot.replaceWith(band);
@@ -942,14 +992,16 @@
       if (current !== 'intro' || busy) return;
       ach.unlock('hola');
       session.set('introSeen', true);
-      history.replaceState(null, '', '#' + key);
+      setUrl(key, true);
       transitionTo(key);
     };
     $('#enter-btn').addEventListener('click', () => enter('inicio'));
     // Minúsculas, sin tildes, espacios simples y sin «;» final: así da igual cómo se escriba
     const norm = s => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').replace(/;+\s*$/, '').trim();
     const esc = s => String(s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
-    const ALIAS = { sistema: 'como-trabajo', sap: 'como-trabajo', metodo: 'como-trabajo', metodologia: 'como-trabajo', 'metodologia sap': 'como-trabajo', 'como trabajo': 'como-trabajo', comotrabajo: 'como-trabajo', 'sobre mi': 'sobre-mi', sobremi: 'sobre-mi', about: 'sobre-mi', trabajo: 'trayectoria', servicios: 'proyectos', 'proyectos a medida': 'proyectos', web: 'proyectos', webs: 'proyectos', app: 'proyectos', apps: 'proyectos', ia: 'proyectos' };
+    const ALIAS = { sistema: 'como-trabajo', sap: 'como-trabajo', metodo: 'como-trabajo', metodologia: 'como-trabajo', 'metodologia sap': 'como-trabajo', 'como trabajo': 'como-trabajo', comotrabajo: 'como-trabajo', 'sobre mi': 'sobre-mi', sobremi: 'sobre-mi', about: 'sobre-mi', trabajo: 'trayectoria', servicios: 'proyectos', 'proyectos a medida': 'proyectos', web: 'proyectos', webs: 'proyectos', app: 'proyectos', apps: 'proyectos', ia: 'proyectos',
+      // En inglés (sirven en las dos versiones)
+      profile: 'perfil', experience: 'trayectoria', career: 'trayectoria', 'how i work': 'como-trabajo', 'how-i-work': 'como-trabajo', method: 'como-trabajo', education: 'formacion', studies: 'formacion', projects: 'proyectos', 'custom projects': 'proyectos', 'about me': 'sobre-mi', 'about-me': 'sobre-mi', contact: 'contacto', privacy: 'privacidad', home: 'inicio' };
     const years = Math.max(1, new Date().getFullYear() - 2020);
 
     /* ---------- Salida ---------- */
@@ -1030,13 +1082,15 @@
       certs: () => ['DP-700 .. Fabric Data Engineer Associate', 'Fundamentos:', '  AZ-900 · Azure Fundamentals', '  DP-900 · Azure Data Fundamentals', '  PL-900 · Power Platform Fundamentals'],
       'a-medida': () => ['Proyectos a medida, con el mismo método que uso con datos:', '  · IA aplicada: asistentes con RAG y servidores MCP', '  · apps a medida para tu negocio', '  · webs y portfolios', '  · experiencias interactivas como esta', 'Escribe «mensaje» o «abrir proyectos».'],
       email: () => ['alvarotorresbaeza@gmail.com', 'linkedin.com/in/ajtb', 'O escribe «mensaje» y te contesto yo.'],
-      cv: () => { setTimeout(() => window.open('cv/CV-Alvaro-Torres-Baeza.pdf', '_blank', 'noopener'), 300); return ['Abriendo el CV en PDF…', 'alvarotorresbaeza.com/cv/CV-Alvaro-Torres-Baeza.pdf']; },
+      cv: () => { setTimeout(() => window.open(ROOT + 'cv/CV-Alvaro-Torres-Baeza.pdf', '_blank', 'noopener'), 300); return ['Abriendo el CV en PDF…', 'alvarotorresbaeza.com/cv/CV-Alvaro-Torres-Baeza.pdf']; },
       cafe: () => ['   ( (', '    ) )', '  .______.', '  |      |]', '  \\      /', "   `----'", 'Café listo. Los datos, en un momento.'],
       ajedrez: () => ['1. e4 e5  2. Cf3 Cc6  3. Ab5', 'Apertura española: estrategia antes que táctica.'],
       hora: () => [new Date().toLocaleString('es-ES', { timeZone: 'Europe/Madrid' }) + ' · Valencia'],
       logros: () => [`${ach.size()}/${ACH.length} logros desbloqueados:`, ...ACH.map(a => (ach.has(a.id) ? '[x] ' + a.name : '[ ] ' + '?'.repeat(Math.max(6, a.name.length - 2))) + ' · ' + a.desc)]
     };
-    const INFO_ALIAS = { help: 'ayuda', '?': 'ayuda', comandos: 'ayuda', fetch: 'neofetch', exp: 'experiencia', certificaciones: 'certs', correo: 'email', mail: 'email', linkedin: 'email', redes: 'email', coffee: 'cafe', chess: 'ajedrez', date: 'hora', empresa: 'rnb', servicios: 'a-medida', curriculum: 'cv', 'curriculum vitae': 'cv', resume: 'cv' };
+    const INFO_ALIAS = { help: 'ayuda', '?': 'ayuda', comandos: 'ayuda', fetch: 'neofetch', exp: 'experiencia', certificaciones: 'certs', correo: 'email', mail: 'email', linkedin: 'email', redes: 'email', coffee: 'cafe', chess: 'ajedrez', date: 'hora', empresa: 'rnb', servicios: 'a-medida', curriculum: 'cv', 'curriculum vitae': 'cv', resume: 'cv',
+      // En inglés («experience» abre la sección; la ficha corta es «jobs»)
+      commands: 'ayuda', jobs: 'experiencia', work: 'experiencia', company: 'rnb', project: 'proyecto', studies: 'estudios', certifications: 'certs', custom: 'a-medida', 'custom-projects': 'a-medida', time: 'hora', achievements: 'logros' };
 
     /* ---------- Motor SQL sobre datos de la web ---------- */
     const T = {
@@ -1154,7 +1208,7 @@
           print(['Usa DESCRIBE <tabla> para ver sus campos.']);
           return;
         }
-        let m = q.match(/^(?:describe|desc|columnas|campos)\s+([a-z_]+)$/);
+        let m = q.match(/^(?:describe|desc|columnas|campos|columns|fields)\s+([a-z_]+)$/);
         if (m) {
           const t = T[m[1]];
           if (!t) throw sqlErr(`No existe la tabla «${m[1]}». Tablas: ${TABLES.join(', ')}.`);
@@ -1224,7 +1278,7 @@
       const c = norm(v);
       if (!c) return;
       print([promptLabel.textContent + ' ' + v], 'cmd');
-      if (c === 'cancelar' || c === 'salir') { msg = null; resetMode(); print(['Mensaje cancelado.']); return; }
+      if (['cancelar', 'salir', 'cancel', 'exit'].includes(c)) { msg = null; resetMode(); print(['Mensaje cancelado.']); return; }
       if (msg.step === 'nombre') {
         if (v.length < 2) { print(['Necesito al menos tu nombre.']); return; }
         if (v.length > 100) { print(['Ese nombre es demasiado largo.'], 'err'); return; }
@@ -1232,7 +1286,7 @@
         setMode('msg', 'camino>', '1 o 2', ['1', '2', 'cancelar']);
         print([`Encantado, ${v}. ¿Sobre qué quieres hablar?`, '  1 · Oportunidades y colaboraciones en datos', '  2 · Proyectos de webs, apps o IA']);
       } else if (msg.step === 'camino') {
-        const path = { 1: CAMINOS[0], 2: CAMINOS[1], datos: CAMINOS[0], proyectos: CAMINOS[1], proyecto: CAMINOS[1] }[c];
+        const path = { 1: CAMINOS[0], 2: CAMINOS[1], datos: CAMINOS[0], proyectos: CAMINOS[1], proyecto: CAMINOS[1], data: CAMINOS[0], projects: CAMINOS[1], project: CAMINOS[1] }[c];
         if (!path) { print(['Responde «1» o «2».']); return; }
         msg.camino = path; msg.step = 'email';
         setMode('msg', 'correo>', 'tu@correo.com', ['cancelar']);
@@ -1247,7 +1301,7 @@
         if (v.length > 4000) { print(['Es un poco largo para el terminal. Resúmelo o usa el formulario de contacto.'], 'err'); return; }
         msg.mensaje = v; msg.step = 'ok';
         setMode('msg', '¿enviar?>', 's / n', ['s', 'n']);
-        print(['Al enviarlo aceptas la política de privacidad (alvarotorresbaeza.com/#privacidad).', '¿Lo envío? (s/n)']);
+        print(['Al enviarlo aceptas la política de privacidad (alvarotorresbaeza.com/privacidad/).', '¿Lo envío? (s/n)']);
       } else if (msg.step === 'ok') {
         if (['n', 'no'].includes(c)) { msg = null; resetMode(); print(['Vale, no lo envío.']); return; }
         if (!['s', 'si', 'y', 'yes'].includes(c)) { print(['Responde «s» para enviar o «n» para cancelar.']); return; }
@@ -1399,7 +1453,7 @@
       const keys = Object.keys(SECRETS);
       print([`Secretos descubiertos: ${secretFound.size}/${keys.length}`]);
       print(keys.map(k => {
-        const name = secretFound.has(k) ? k : k[0] + '·'.repeat(Math.max(1, k.length - 1));
+        const nm = SECRETS[k].label || k, name = secretFound.has(k) ? nm : nm[0] + '·'.repeat(Math.max(1, nm.length - 1));
         return `${secretFound.has(k) ? '▲' : '△'} ${name.padEnd(11)} ${secretFound.has(k) ? '' : '— ' + SECRETS[k].hint}`;
       }), 'tbl');
     }
@@ -1413,7 +1467,7 @@
       if (!c) { enter('inicio'); return; }
       stopFx();
       print(['usuario:~$ ' + v], 'cmd');
-      if (['entrar', 'inicio', 'start', 'enter', 'login', 'salir', 'exit'].includes(c)) { ach.unlock('terminal'); enter('inicio'); return; }
+      if (['entrar', 'inicio', 'start', 'enter', 'login', 'salir', 'exit', 'home'].includes(c)) { ach.unlock('terminal'); enter('inicio'); return; }
       if (['limpiar', 'clear', 'cls'].includes(c)) { clearOut(); screen.classList.remove('is-session'); return; }
       if (c === 'terminal') { print(['Ya estás en el terminal. Escribe «entrar» para volver a la web.']); return; }
       if (c === 'trofeo' || c === 'trophy') {
@@ -1423,7 +1477,7 @@
       }
       if (c.startsWith('sudo')) { print(['Permiso denegado. Prueba con «mensaje».']); return; }
       if (['sql', 'mysql', 'psql', 'sqlite'].includes(c)) { ach.unlock('terminal'); startSql(); return; }
-      if (['mensaje', 'contactar', 'escribeme', 'hablar', 'hablame', 'contacta'].includes(c)) { ach.unlock('terminal'); startMsg(); return; }
+      if (['mensaje', 'contactar', 'escribeme', 'hablar', 'hablame', 'contacta', 'message', 'msg', 'write', 'talk'].includes(c)) { ach.unlock('terminal'); startMsg(); return; }
       if (c === 'matrix') { ach.unlock('terminal'); matrix(); return; }
       if (c === 'top' || c === 'htop') { ach.unlock('terminal'); top(); return; }
       if (c === 'scan') { ach.unlock('terminal'); scan(); return; }
@@ -1623,7 +1677,7 @@
     const img = new Image();
     img.onload = () => paint(img);
     img.onerror = () => paint(null);
-    img.src = 'assets/retrato.jpg';
+    img.src = ROOT + 'assets/retrato.jpg';
   }
 
   /* ================= Mascota «Dato» ================= */
@@ -2024,7 +2078,10 @@
   });
 
   /* ================= Arranque ================= */
-  // Sin dirección concreta se entra al inicio; el terminal queda en #terminal
-  const start = keyFromHash();
-  show(start || 'inicio');
+  // Cada página llega con su vista marcada en el HTML; se recalcula desde la dirección por si acaso.
+  // Un #antiguo (/#trayectoria) se cambia por su ruta nueva (/trayectoria/) sin recargar.
+  const start = keyFromLocation() || 'inicio';
+  $$('.view.is-active').forEach(v => v.classList.remove('is-active'));
+  if (ROUTE === 'path' && location.hash.length > 1 && views[start]) setUrl(start, true);
+  show(start);
 })();

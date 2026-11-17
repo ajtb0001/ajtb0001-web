@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Terminal · Álvaro Torres Baeza</title>
+<meta name="description" content="Meet Álvaro Torres Baeza from a terminal: type whoami, query his career with SQL or send him a message using commands.">
+<meta name="author" content="Álvaro José Torres Baeza">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0b0e0f">
+<link rel="canonical" href="https://alvarotorresbaeza.com/en/terminal/">
+<link rel="alternate" hreflang="es" href="https://alvarotorresbaeza.com/terminal/">
+<link rel="alternate" hreflang="en" href="https://alvarotorresbaeza.com/en/terminal/">
+<link rel="alternate" hreflang="x-default" href="https://alvarotorresbaeza.com/terminal/">
+<meta property="og:type" content="profile">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:site_name" content="Álvaro Torres Baeza">
+<meta property="og:url" content="https://alvarotorresbaeza.com/en/terminal/">
+<meta property="og:title" content="Terminal · Álvaro Torres Baeza">
+<meta property="og:description" content="Meet Álvaro Torres Baeza from a terminal: type whoami, query his career with SQL or send him a message using commands.">
+<meta property="og:image" content="https://alvarotorresbaeza.com/assets/og-card-en.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Álvaro Torres Baeza · Data &amp; AI: data strategy, architecture and governance">
+<meta property="profile:first_name" content="Álvaro José">
+<meta property="profile:last_name" content="Torres Baeza">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Terminal · Álvaro Torres Baeza">
+<meta name="twitter:description" content="Meet Álvaro Torres Baeza from a terminal: type whoami, query his career with SQL or send him a message using commands.">
+<meta name="twitter:image" content="https://alvarotorresbaeza.com/assets/og-card-en.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='16' height='16' fill='%23d4ec8e'/%3E%3Crect x='16' width='16' height='16' fill='%2320282c'/%3E%3Crect y='16' width='16' height='16' fill='%2320282c'/%3E%3Crect x='16' y='16' width='16' height='16' fill='%23d4ec8e'/%3E%3C/svg%3E">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://alvarotorresbaeza.com/#persona","name":"Álvaro José Torres Baeza","alternateName":"Álvaro Torres Baeza","url":"https://alvarotorresbaeza.com/","image":"https://alvarotorresbaeza.com/assets/retrato.jpg","jobTitle":"Data Engineer · Data Architecture and Governance","description":"Digital transformation with data and AI: data strategy, architecture and governance so that leadership decides with reliable data.","email":"mailto:alvarotorresbaeza@gmail.com","sameAs":["https://www.linkedin.com/in/ajtb"],"worksFor":{"@type":"Organization","name":"RNB Cosméticos"},"address":{"@type":"PostalAddress","addressLocality":"Valencia","addressCountry":"ES"},"alumniOf":[{"@type":"CollegeOrUniversity","name":"Universidad de Jaén"},{"@type":"CollegeOrUniversity","name":"Universidad de Nebrija"},{"@type":"CollegeOrUniversity","name":"Universitat Politècnica de València"}],"hasCredential":[{"@type":"EducationalOccupationalCredential","name":"Microsoft Certified: Fabric Data Engineer Associate (DP-700)"},{"@type":"EducationalOccupationalCredential","name":"MBA in Digital Transformation"}],"knowsAbout":["Data strategy","Data architecture","Data governance","Digital transformation","Applied artificial intelligence","SAP","SAP Datasphere","Microsoft Fabric","Power BI","SQL Server","Qlik Sense","Business Intelligence"]},{"@type":"WebSite","@id":"https://alvarotorresbaeza.com/#web","url":"https://alvarotorresbaeza.com/","name":"Álvaro Torres Baeza","inLanguage":["es","en"],"publisher":{"@id":"https://alvarotorresbaeza.com/#persona"}},{"@type":"WebPage","@id":"https://alvarotorresbaeza.com/en/terminal/#pagina","url":"https://alvarotorresbaeza.com/en/terminal/","name":"Terminal · Álvaro Torres Baeza","description":"Meet Álvaro Torres Baeza from a terminal: type whoami, query his career with SQL or send him a message using commands.","inLanguage":"en","isPartOf":{"@id":"https://alvarotorresbaeza.com/#web"},"mainEntity":{"@id":"https://alvarotorresbaeza.com/#persona"}}]}
+</script>
+<script>document.documentElement.classList.add('js')</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..400&family=Schibsted+Grotesk:wght@400..800&family=JetBrains+Mono:wght@400;500&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/styles.css?v=e61bbb38">
+<script src="/assets/app.en.js?v=b6d56d6b" defer></script>
+</head>
+<body>
+<a class="skip-link" href="/en/profile/">Skip to content</a>
+
+<!-- ============ BARRA SUPERIOR ============ -->
+<header class="topbar" id="topbar">
+  <a class="brand" href="/en/" aria-label="Home · Álvaro José Torres Baeza">
+    <span class="mark" aria-hidden="true"><span>A</span><span>J</span><span>T</span><span>B</span></span>
+    <span class="brand-name"><strong>Álvaro Torres Baeza</strong><small>Data &amp; AI</small></span>
+  </a>
+  <p class="clock" aria-label="Local time in Valencia"><span>Valencia, ES</span> <b id="clock">--:--:--</b> <span id="clock-tz">CET</span></p>
+  <div class="top-actions">
+    <a class="pill-btn pill-btn--lang" id="lang-switch" href="/terminal/" hreflang="es" lang="es" aria-label="Versión en español" title="Español">ES</a>
+    <a class="pill-btn pill-btn--term" href="/en/terminal/" aria-label="Open the terminal" title="Terminal">&gt;_</a>
+    <button class="pill-btn pill-btn--solid pill-btn--menu" type="button" id="menu-btn" aria-expanded="false" aria-controls="menu" aria-keyshortcuts="M"><span class="burger" aria-hidden="true"><i></i><i></i><i></i></span>Menu<kbd aria-hidden="true">M</kbd></button>
+  </div>
+</header>
+
+<!-- Índice lateral (solo escritorio, en las secciones) -->
+<nav class="rail" id="rail" aria-label="Section index">
+  <a href="/en/" data-k="inicio"><i>00</i><span>Home</span></a>
+  <a href="/en/profile/" data-k="perfil"><i>01</i><span>Profile</span></a>
+  <a href="/en/experience/" data-k="trayectoria"><i>02</i><span>Experience</span></a>
+  <a href="/en/how-i-work/" data-k="como-trabajo"><i>03</i><span>How I work</span></a>
+  <a href="/en/education/" data-k="formacion"><i>04</i><span>Education</span></a>
+  <a href="/en/projects/" data-k="proyectos"><i>05</i><span>Custom projects</span></a>
+  <a href="/en/about/" data-k="sobre-mi"><i>06</i><span>About me</span></a>
+  <a href="/en/contact/" data-k="contacto"><i>07</i><span>Contact</span></a>
+</nav>
+
+<!-- ============ INTRO · TERMINAL CRT ============ -->
+<section class="view view--intro is-active" id="intro" data-view="intro" aria-label="Welcome">
+  <div class="crt-room">
+    <div class="crt">
+      <div class="crt-screen">
+        <div class="crt-content" id="crt-content">
+          <div class="crt-hello">
+            <p class="crt-line" style="--i:0">Hello.</p>
+            <p class="crt-name" style="--i:1"><span>I'm Álvaro</span></p>
+            <ul class="crt-roles">
+              <li style="--i:2">Data &amp; AI</li>
+              <li style="--i:3">Architecture &amp; governance</li>
+              <li style="--i:4">Custom projects</li>
+            </ul>
+          </div>
+          <div class="crt-portrait-box" aria-hidden="true"><canvas class="crt-portrait" id="crt-portrait" width="132" height="160"></canvas></div>
+          <div class="crt-term">
+            <p class="crt-boot" style="--i:5">Welcome to ATB·DATA 1.0 LTS</p>
+            <p class="crt-boot" style="--i:6">&gt;&gt; Press Enter to come in or try a command:</p>
+            <p class="crt-try" style="--i:7"><button type="button" data-cmd="whoami">whoami</button> <button type="button" data-cmd="neofetch">neofetch</button> <button type="button" data-cmd="sql">sql</button> <button type="button" data-cmd="message">message</button> <button type="button" data-cmd="matrix">matrix</button> <button type="button" data-cmd="help">help</button></p>
+            <div class="crt-out" id="crt-out" aria-live="polite"></div>
+            <form class="crt-prompt" id="crt-form" style="--i:8"autocomplete="off">
+              <label for="crt-input">user:~$</label>
+              <input id="crt-input" name="cmd" type="text" spellcheck="false" autocapitalize="off" enterkeyhint="go" aria-label="Type a command">
+            </form>
+          </div>
+        </div>
+        <div class="crt-fx" aria-hidden="true"></div>
+      </div>
+      <span class="crt-led" aria-hidden="true"></span>
+    </div>
+    <div class="intro-actions">
+      <button class="intro-enter" type="button" id="enter-btn">Enter the site <span aria-hidden="true">↵</span></button>
+      <span class="intro-hint">or scroll down</span>
+      <button class="intro-ach" type="button" id="ach-toggle" aria-expanded="false" aria-controls="ach-panel">Achievements <b id="ach-count">0/8</b></button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INICIO · MOSAICO ============ -->
+<section class="view view--hub" id="inicio" data-view="inicio" aria-labelledby="hub-title">
+  <div class="me" id="me">
+    <div class="me-portrait" aria-hidden="true"><canvas id="me-canvas"></canvas></div>
+    <div class="me-text">
+      <p class="me-hello">&gt; whoami</p>
+      <h1 class="me-name" id="hub-title">Álvaro José <br>Torres Baeza</h1>
+      <p class="me-tag">Making data <em>mean</em> something.</p>
+      <ul class="me-roles">
+        <li>Data &amp; AI</li>
+        <li>Architecture &amp; governance</li>
+        <li>Custom projects</li>
+      </ul>
+      <a class="me-term" href="/en/terminal/"><span aria-hidden="true">&gt;_</span> Open the terminal</a>
+    </div>
+  </div>
+  <div class="hub" id="hub" aria-hidden="true">
+    <div class="hub-stage" id="hub-stage"></div>
+  </div>
+  <p class="hub-hint" aria-hidden="true"><span class="hint-dot"></span>Drag to explore · Tap a card</p>
+  <nav class="dock" id="dock" aria-label="Sections">
+    <a href="/en/terminal/" class="dock-term" data-i="7"><i>&gt;_</i>Terminal</a>
+    <a href="/en/profile/" data-i="0"><i>01</i>Profile</a>
+    <a href="/en/experience/" data-i="1"><i>02</i>Experience</a>
+    <a href="/en/how-i-work/" data-i="2"><i>03</i>How I work</a>
+    <a href="/en/education/" data-i="3"><i>04</i>Education</a>
+    <a href="/en/projects/" data-i="4"><i>05</i>Custom projects</a>
+    <a href="/en/about/" data-i="5"><i>06</i>About me</a>
+    <a href="/en/contact/" data-i="6"><i>07</i>Contact</a>
+  </nav>
+</section>
+
+<main id="main">
+
+<!-- ============ 01 PERFIL ============ -->
+<section class="view view--page" id="perfil" data-view="perfil" data-n="01" aria-labelledby="t-perfil">
+  <header class="page-hero wrap">
+    <p class="label" data-anim>01 / Profile</p>
+    <h2 class="page-title page-title--xl" id="t-perfil" data-anim>Making data <em>mean</em> something.</h2>
+    <div class="hero-foot">
+      <p class="lead reveal-text" data-anim>Digital transformation with data and AI. Strategy, architecture and data governance so that leadership at growing companies decides with reliable data.</p>
+      <div class="hero-ctas" data-anim>
+        <a class="btn btn--primary" href="/en/experience/">See my experience <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12 12 4M5 4h7v7"/></svg></a>
+        <a class="btn btn--ghost" href="/cv/CV-Alvaro-Torres-Baeza-EN.pdf" target="_blank" rel="noopener" data-cv>Download CV (PDF)</a>
+      </div>
+    </div>
+  </header>
+  <div class="wrap page-body">
+    <div class="rumbo" data-anim>
+      <p class="label">Direction</p>
+      <h3 class="rumbo-title">Head of Data is the next step; <em>strategy and transformation</em>, the destination.</h3>
+      <ol class="rumbo-path">
+        <li class="rumbo-step rumbo-step--now">
+          <span class="rumbo-k">Today</span>
+          <h4>Data engineering at RNB Cosméticos</h4>
+          <p>I make the calls on data architecture, define who can access each piece of information, work with directors and department heads and, when a project calls for it, coordinate other technical staff.</p>
+        </li>
+        <li class="rumbo-step">
+          <span class="rumbo-k">Next step</span>
+          <h4>Leading the data function</h4>
+          <p>Much of a Head of Data's work is already part of my day-to-day. The next step is to take it on in full: team, roadmap and budget.</p>
+        </li>
+        <li class="rumbo-step">
+          <span class="rumbo-k">Destination</span>
+          <h4>Strategy and transformation</h4>
+          <p>Data and AI that genuinely change how a company decides and how it operates.</p>
+        </li>
+      </ol>
+    </div>
+    <div class="aporto-grid">
+      <div data-anim>
+        <p class="label">What I bring</p>
+        <ul class="pillars">
+          <li><span>01</span><div><h4>Strategy</h4><p>I work with leadership to decide which business questions to answer first and which projects add the most value.</p></div></li>
+          <li><span>02</span><div><h4>Architecture</h4><p>Layered data platforms, with incremental loads and history, that bring very different sources into a single reliable model.</p></div></li>
+          <li><span>03</span><div><h4>Data governance</h4><p>Who sees each report and why, with access that can be audited.</p></div></li>
+          <li><span>04</span><div><h4>Applied AI</h4><p>Assistants that work with the company's documents and data, connected to its tools.</p></div></li>
+        </ul>
+      </div>
+      <div class="ficha" data-anim aria-label="Professional profile">
+        <div class="ficha-bar"><span>SELECT * FROM professional_profile;</span><span>1 row</span></div>
+        <dl>
+          <div><dt>name</dt><dd>Álvaro José Torres Baeza</dd></div>
+          <div><dt>role</dt><dd>Data engineering · Data architecture and governance</dd></div>
+          <div><dt>company</dt><dd>RNB Cosméticos · €301M · 1,200 people</dd></div>
+          <div><dt>based_in</dt><dd>Valencia, Spain</dd></div>
+          <div><dt>focus</dt><dd>Strategy · Architecture · Governance · AI</dd></div>
+          <div><dt>ecosystem</dt><dd>SAP · Datasphere · Microsoft Fabric · Power BI · Qlik</dd></div>
+          <div><dt>education</dt><dd>Computer Engineering · MSc Big Data &amp; BI · MBA</dd></div>
+          <div><dt>also</dt><dd><a class="ficha-link" href="/en/projects/">Custom projects: applied AI, apps and websites →</a></dd></div>
+        </dl>
+      </div>
+    </div>
+  </div>
+  <div class="next-slot" data-next="trayectoria"></div>
+</section>
+
+<!-- ============ 02 TRAYECTORIA ============ -->
+<section class="view view--page" id="trayectoria" data-view="trayectoria" data-n="02" aria-labelledby="t-trayectoria">
+  <header class="page-hero wrap">
+    <p class="label" data-anim>02 / Experience</p>
+    <h2 class="page-title" id="t-trayectoria" data-anim>From custom solutions to data <em>ecosystems</em>.</h2>
+    <p class="lead reveal-text" data-anim>Six years building databases, integrations and analytics. Today, at a fast-growing cosmetics manufacturer, my job is to make sure the company has reliable data and that it reaches leadership's decisions.</p>
+  </header>
+  <div class="wrap page-body">
+    <div class="roles">
+      <article class="role" data-anim>
+        <div class="role-when"><span>2024 — today</span><span class="pill">Current</span></div>
+        <div>
+          <h3>RNB Cosméticos</h3>
+          <p class="role-sub">Data engineering · Data architecture and governance</p>
+          <p class="role-desc">RNB is a fast-growing cosmetics manufacturer. I contribute my perspective to data architecture and BI decisions, and I take part in integrating very different sources (SAP, HR and others) and in how that data reaches decision-makers, reliable and secure.</p>
+          <p class="role-desc">I work directly with directors and department heads, turning their business questions into data models, KPIs and measurable processes. When a project requires it, I also take on technical coordination: I set the criteria and guide the work of the people involved.</p>
+        </div>
+        <div class="kpis" aria-label="RNB in figures (2025)">
+          <div class="kpi"><b>€<span data-count="301">301</span>M</b><span>Revenue 2025</span></div>
+          <div class="kpi"><b><span data-count="1200" data-fmt="miles">1,200</span></b><span>People</span></div>
+          <div class="kpi"><b>Double-digit</b><span>Annual growth</span></div>
+          <div class="kpi"><b>3INA</b><span>Among its acquisitions</span></div>
+        </div>
+        <div class="role-wide">
+          <p class="sub-label">How data reaches leadership</p>
+          <figure class="arch" aria-label="Data architecture diagram: sources, platform, decision layer and leadership, with data governance underpinning it all">
+            <div class="arch-flow">
+              <div class="arch-col">
+                <p class="arch-k">Sources</p>
+                <span class="arch-node">SAP</span><span class="arch-node">HR</span><span class="arch-node">Time tracking</span><span class="arch-node arch-node--dim">Other sources</span>
+              </div>
+              <div class="arch-link" aria-hidden="true"><i></i></div>
+              <div class="arch-col">
+                <p class="arch-k">Platform</p>
+                <span class="arch-node arch-node--hot"><b>Microsoft Fabric</b><small>Layers · incremental loads · history</small></span>
+                <span class="arch-node"><b>SAP Datasphere</b><small>Financial and operational model</small></span>
+              </div>
+              <div class="arch-link" aria-hidden="true"><i></i></div>
+              <div class="arch-col">
+                <p class="arch-k">Decision</p>
+                <span class="arch-node">Power BI</span><span class="arch-node">Qlik Cloud</span><span class="arch-node">SSRS</span>
+              </div>
+              <div class="arch-link" aria-hidden="true"><i></i></div>
+              <div class="arch-col">
+                <p class="arch-k">Who decides</p>
+                <span class="arch-node arch-node--goal"><b>Leadership</b><small>Directors and department heads</small></span>
+              </div>
+            </div>
+            <div class="arch-gov"><b>Data governance</b><span>Who sees each report and why · auditable access with history in Fabric (Power BI) and SAP</span></div>
+            <figcaption>Simplified diagram.</figcaption>
+          </figure>
+
+          <p class="sub-label">What I do</p>
+          <div class="impact">
+            <article class="impact-card" data-anim>
+              <span class="impact-n">01</span>
+              <h4>Data strategy and architecture</h4>
+              <ul class="ticks">
+                <li>Chose and designed the company's data platform on Microsoft Fabric: layered architecture, incremental loads and history, bringing very different sources into a single reliable model.</li>
+                <li>Built much of the SAP data model in SAP Datasphere, the foundation for financial and operational analysis.</li>
+                <li>Integrated sources beyond the ERP, such as the HR and time-tracking systems.</li>
+                <li>Took part in the migration from Qlik Sense to Qlik Cloud.</li>
+              </ul>
+            </article>
+            <article class="impact-card" data-anim>
+              <span class="impact-n">02</span>
+              <h4>Data governance</h4>
+              <ul class="ticks">
+                <li>Defined the information access model: who sees each report and why, in both Fabric (Power BI) and SAP.</li>
+                <li>Built a permissions dashboard with history that makes access auditable.</li>
+              </ul>
+            </article>
+            <article class="impact-card" data-anim>
+              <span class="impact-n">03</span>
+              <h4>Business and leadership</h4>
+              <ul class="ticks">
+                <li>I am the data counterpart for directors and department heads: I turn their needs into models, KPIs and reports, and prioritise projects with them.</li>
+                <li>Created a time matrix to manage, organise and plan product development projects.</li>
+              </ul>
+            </article>
+            <article class="impact-card" data-anim>
+              <span class="impact-n">04</span>
+              <h4>Leadership</h4>
+              <ul class="ticks">
+                <li>When a project requires it, I coordinate external consultants: dividing the work, setting technical criteria and reviewing.</li>
+              </ul>
+            </article>
+          </div>
+
+          <article class="project" aria-labelledby="project-budget" data-anim>
+            <div class="project-head"><span class="project-kicker">Featured project</span><span class="project-tool">End to end</span></div>
+            <h4 id="project-budget">Company-wide budget control</h4>
+            <p>I designed and led the solution end to end. Around 30 managers across 7 departments use it to track actual, committed and budgeted spend from a single data source.</p>
+            <div class="project-stats project-stats--4">
+              <div><span class="stat-n" data-count="30" data-prefix="≈">≈30</span><span class="stat-l">Managers</span></div>
+              <div><span class="stat-n" data-count="7">7</span><span class="stat-l">Departments</span></div>
+              <div><span class="stat-n" data-count="3">3</span><span class="stat-l">Control measures</span></div>
+              <div><span class="stat-n">1</span><span class="stat-l">Data source</span></div>
+            </div>
+            <div class="budget" aria-label="How to read it: actual spend, committed spend and remaining budget">
+              <div class="budget-track" aria-hidden="true"><span class="b-real"></span><span class="b-comp"></span></div>
+              <div class="budget-legend"><span class="lg-real">Actual spend</span><span class="lg-comp">Committed spend</span><span class="lg-free">Budget</span></div>
+              <p class="budget-note">Spend tracked against budget, separating what has been spent from what is committed. Illustrative diagram.</p>
+            </div>
+            <div class="chips"><span class="chip">Finance</span><span class="chip">Marketing</span><span class="chip">Operations</span><span class="chip">Product Development</span><span class="chip">Quality</span><span class="chip">HR</span><span class="chip">Health &amp; Safety</span></div>
+          </article>
+
+          <div class="chips chips--stack" aria-label="Technologies"><span class="chip">SAP</span><span class="chip">SAP Datasphere</span><span class="chip">Microsoft Fabric</span><span class="chip">SQL Server</span><span class="chip">Power BI</span><span class="chip">Qlik Sense</span><span class="chip">SSRS</span></div>
+        </div>
+      </article>
+      <article class="role" data-anim>
+        <div class="role-when"><span>2020 — 2024</span></div>
+        <div>
+          <h3>Preference</h3>
+          <p class="role-sub">Databases and custom development</p>
+          <p class="role-desc">Databases and custom projects for clients in the window and door systems sector. A decisive stage for building autonomy, technical judgement and closeness to the business.</p>
+          <div class="chips"><span class="chip">Databases</span><span class="chip">SQL</span><span class="chip">Custom development</span></div>
+        </div>
+        <ul class="ticks">
+          <li>Database design and maintenance</li>
+          <li>Custom projects from start to finish</li>
+          <li>Direct work with clients and their way of working</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+  <div class="next-slot" data-next="como-trabajo"></div>
+</section>
+
+<!-- ============ 03 CÓMO TRABAJO ============ -->
+<section class="view view--page" id="como-trabajo" data-view="como-trabajo" data-n="03" aria-labelledby="t-como">
+  <header class="page-hero wrap">
+    <p class="label" data-anim>03 / How I work</p>
+    <h2 class="page-title" id="t-como" data-anim>From problem <em>to value</em>.</h2>
+    <p class="lead reveal-text" data-anim>Always in the same order. First I understand what needs deciding and how it happens in day-to-day operations; technology comes afterwards. That way projects can be explained, measured and maintained.</p>
+  </header>
+  <div class="wrap page-body">
+    <ol class="chain" aria-label="How I work, step by step">
+      <li data-anim><span class="chain-n">01</span><h3>Problem</h3><p>What decision needs to be made, and who makes it.</p></li>
+      <li data-anim><span class="chain-n">02</span><h3>Process</h3><p>How it happens today in operations, inside and outside SAP.</p></li>
+      <li data-anim><span class="chain-n">03</span><h3>Data</h3><p>Where each piece of data originates and what its reliable source is.</p></li>
+      <li data-anim><span class="chain-n">04</span><h3>Access</h3><p>Who should see what, and why. Security by design.</p></li>
+      <li data-anim><span class="chain-n">05</span><h3>Technology</h3><p>The right architecture for the problem, no more and no less.</p></li>
+      <li data-anim><span class="chain-n">06</span><h3>Measurement</h3><p>KPIs defined with the business that can actually be checked.</p></li>
+      <li class="chain-goal" data-anim><span class="chain-n">07</span><h3>Value</h3><p>Better, faster decisions with a single version of the data.</p></li>
+    </ol>
+
+    <div class="how-block" data-anim>
+      <p class="label">In SAP environments</p>
+      <h3>From data in SAP <em>to the decision</em>.</h3>
+      <p>My day-to-day happens in SAP environments. Data originates in operations; I extract it from its reliable source, model it so every department speaks the same language, and turn it into information people can use to decide.</p>
+    </div>
+    <ol class="sap-steps">
+      <li data-anim><span class="sap-n">01</span><h3>Understand the process</h3><p>Before extracting anything, I understand how operations are recorded in SAP: modules, documents and the business logic behind each table.</p></li>
+      <li data-anim><span class="sap-n">02</span><h3>Extract with judgement</h3><p>CDS Views and BAPIs to get the data from its reliable source, without duplicating logic or relying on manual exports.</p></li>
+      <li data-anim><span class="sap-n">03</span><h3>Model in Datasphere</h3><p>Model layers in SAP Datasphere and SQL Server, with shared definitions and data quality checks.</p></li>
+      <li data-anim><span class="sap-n">04</span><h3>Bring it to the decision</h3><p>A platform such as Microsoft Fabric and dashboards in Power BI, Qlik or SSRS, with well-defined access.</p></li>
+    </ol>
+    <div class="sap-intro" data-anim>
+      <p class="label">The full flow, in 3D</p>
+      <p>This is how data travels from SAP to the decision. Rotate the model, play the flow or pick a layer to see what I do there and with which tools.</p>
+    </div>
+    <div class="stack-grid" data-anim>
+      <div class="viz" id="viz">
+        <div class="viz-stage" id="viz-stage" aria-hidden="true">
+          <div class="scene">
+            <div class="stack-pos">
+              <div class="stack" id="stack"><div class="floor"></div></div>
+            </div>
+          </div>
+          <p class="viz-hint"><b>Drag</b> in any direction to rotate · <b>Double-tap</b> to centre</p>
+          <p class="viz-readout" id="viz-readout"></p>
+        </div>
+        <div class="viz-tools" role="toolbar" aria-label="View controls">
+          <div class="tool-group" role="group" aria-label="Preset views">
+            <button class="tool-btn" type="button" data-cam="iso" aria-pressed="true">ISO</button>
+            <button class="tool-btn" type="button" data-cam="front" aria-pressed="false">Front</button>
+            <button class="tool-btn" type="button" data-cam="top" aria-pressed="false">Top</button>
+          </div>
+          <div class="tool-group" role="group" aria-label="Rotate">
+            <button class="tool-btn" type="button" data-rotate="-45" aria-label="Rotate left"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 7a5 5 0 1 1 1.5 4.2M3 3v4h4"/></svg></button>
+            <button class="tool-btn" type="button" data-rotate="45" aria-label="Rotate right"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M13 7a5 5 0 1 0-1.5 4.2M13 3v4H9"/></svg></button>
+          </div>
+          <div class="tool-group" role="group" aria-label="Zoom">
+            <button class="tool-btn" type="button" data-zoom="-1" aria-label="Zoom out"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 8h10"/></svg></button>
+            <button class="tool-btn" type="button" data-zoom="1" aria-label="Zoom in"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 8h10M8 3v10"/></svg></button>
+          </div>
+        </div>
+        <div class="layer-index" id="layer-index" aria-label="System layers">
+          <p class="layer-index-title">Data flow ↑</p>
+        </div>
+        <div class="viz-controls">
+          <button class="icon-btn" type="button" id="prev-layer" aria-label="Previous layer"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg></button>
+          <button class="icon-btn" type="button" id="next-layer" aria-label="Next layer"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m6 3 5 5-5 5"/></svg></button>
+          <button class="play-btn" type="button" id="play-tour" aria-pressed="false">
+            <svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true" id="play-icon"><path d="M2 1v10l9-5z"/></svg>
+            <span id="play-label">Play the flow</span>
+            <span class="play-bar" id="play-bar"></span>
+          </button>
+          <p class="viz-count" id="viz-count" aria-hidden="true"></p>
+        </div>
+      </div>
+      <aside class="detail" id="layer-detail" aria-live="polite">
+        <div class="detail-body" id="detail-body"></div>
+      </aside>
+    </div>
+
+    <div class="how-block how-block--why" data-anim>
+      <p class="label">Technique needs intent</p>
+      <p>Whatever the era, Big Data, AI or whatever comes next, usefulness starts with one question: what for? I'm drawn to art, philosophy and books because they help ask better questions. Building with intent is a form of engineering too.</p>
+    </div>
+    <div class="method-grid">
+      <div class="principles">
+        <div data-anim><h3>Rigour</h3><p>Processes that can be explained, repeated and audited.</p></div>
+        <div data-anim><h3>Strategy</h3><p>Every model answers a specific business question.</p></div>
+        <div data-anim><h3>Curiosity</h3><p>Understanding the context before touching a single table.</p></div>
+      </div>
+      <ol class="ladder" aria-label="From data to purpose">
+        <li class="rung" style="--i:0" data-anim><span class="rung-n">01</span><div><h3>Data</h3><p>Records of what happened. Abundant, precise and, on their own, silent.</p></div></li>
+        <li class="rung" style="--i:1" data-anim><span class="rung-n">02</span><div><h3>Information</h3><p>Data with context: who, when, where. It starts to say something.</p></div></li>
+        <li class="rung" style="--i:2" data-anim><span class="rung-n">03</span><div><h3>Knowledge</h3><p>Patterns that repeat and can be explained. They let you anticipate.</p></div></li>
+        <li class="rung rung--goal" style="--i:3" data-anim><span class="rung-n">04</span><div><h3>Purpose</h3><p>The decision that justifies everything above. The answer to "what for?"</p></div></li>
+      </ol>
+    </div>
+  </div>
+  <div class="next-slot" data-next="formacion"></div>
+</section>
+
+<!-- ============ 04 FORMACIÓN ============ -->
+<section class="view view--page" id="formacion" data-view="formacion" data-n="04" aria-labelledby="t-formacion">
+  <header class="page-hero wrap">
+    <p class="label" data-anim>04 / Education and certifications</p>
+    <h2 class="page-title" id="t-formacion" data-anim>Learning to <em>build</em> better.</h2>
+    <p class="lead reveal-text" data-anim>A software engineering foundation, a specialisation in data and a business perspective so that technology makes sense within the company.</p>
+  </header>
+  <div class="wrap page-body">
+    <div class="degrees">
+      <div class="degree" data-anim><span class="degree-type">Degree</span><h3>Computer Engineering</h3><p>Universidad de Jaén · Software Engineering</p></div>
+      <div class="degree" data-anim><span class="degree-type">Master's</span><h3>Big Data &amp; Business Intelligence</h3><p>INESEM · Universidad de Nebrija</p></div>
+      <div class="degree degree--feature" data-anim><span class="degree-type">MBA</span><h3>Digital Transformation</h3><p>Universitat Politècnica de València<span class="degree-note">The business side of transformation: strategy, organisation and change management.</span></p></div>
+    </div>
+    <div class="certs-head" data-anim><h3>Microsoft certifications</h3><p>4 certifications</p></div>
+    <div class="certs certs--v2">
+      <article class="cert cert--feature" data-anim>
+        <div class="cert-top"><span class="cert-code">DP-700</span><span class="cert-level">Associate</span></div>
+        <h4 class="cert-name">Fabric Data Engineer</h4>
+        <p class="cert-desc">End-to-end data engineering on Microsoft Fabric: ingestion and transformation with pipelines, dataflows and notebooks in Spark and SQL, lakehouse and data warehouse design, real-time processing, and monitoring, security and optimisation of workloads.</p>
+        <p class="cert-tags">Fabric · OneLake · Spark · SQL · KQL</p>
+      </article>
+      <details class="fund" data-anim>
+        <summary><span class="fund-k">Fundamentals</span><span class="fund-codes">AZ-900 · DP-900 · PL-900</span><span class="fund-ico" aria-hidden="true"></span></summary>
+        <ul>
+          <li><b>AZ-900</b><span>Azure Fundamentals</span><p>Cloud fundamentals: IaaS, PaaS and SaaS models, core Azure services, identity, security, governance and costs.</p></li>
+          <li><b>DP-900</b><span>Azure Data Fundamentals</span><p>Core data concepts: relational and non-relational data, transactional and analytical workloads, and Azure data services.</p></li>
+          <li><b>PL-900</b><span>Power Platform Fundamentals</span><p>Low-code solutions with Power Apps, Power Automate and Power BI on Dataverse.</p></li>
+        </ul>
+      </details>
+    </div>
+  </div>
+  <div class="next-slot" data-next="proyectos"></div>
+</section>
+
+<!-- ============ 05 PROYECTOS A MEDIDA ============ -->
+<section class="view view--page" id="proyectos" data-view="proyectos" data-n="05" aria-labelledby="t-proyectos">
+  <header class="page-hero wrap">
+    <p class="label" data-anim>05 / Custom projects</p>
+    <h2 class="page-title" id="t-proyectos" data-anim>Applied AI, apps and websites, <em>made to measure</em>.</h2>
+    <p class="lead reveal-text" data-anim>Alongside my work in data, I design and build custom applied-AI, app and web projects. I use the same method I apply to the data of a €300M company: understand the problem, get the architecture right and deliver something that works and can be measured.</p>
+  </header>
+  <div class="wrap page-body">
+    <div class="offers offers--v2">
+      <article class="offer offer--accent offer--ia" data-anim>
+        <span class="offer-n">A</span>
+        <p class="offer-tags">RAG · MCP · LLM</p>
+        <h3>Applied AI</h3>
+        <p>Assistants that answer using your company's documents and data (RAG) and connect to your tools through MCP servers. For example, to find similar projects in a historical archive or to prepare documentation from drawings, reports or project specifications.</p>
+        <p class="offer-status"><span class="live" aria-hidden="true"></span>I currently have a project of this kind in development.</p>
+      </article>
+      <article class="offer" data-anim>
+        <span class="offer-n">B</span>
+        <h3>Custom apps</h3>
+        <p>Applications built for a specific purpose: managing orders or bookings, capturing data, dashboards or internal tools. They run in the browser and on mobile, and connect to your data.</p>
+      </article>
+      <article class="offer" data-anim>
+        <span class="offer-n">C</span>
+        <h3>Websites and portfolios</h3>
+        <p>Websites with their own design to present you, a service or a business. Mobile-friendly, fast and built to be found.</p>
+      </article>
+      <article class="offer" data-anim>
+        <span class="offer-n">D</span>
+        <h3>Interactive experiences</h3>
+        <p>Animation, 3D and details like the ones on this site, for anyone who wants something unlike anything else. Always making sure it loads fast.</p>
+      </article>
+    </div>
+
+    <div class="svc-grid">
+      <div data-anim>
+        <p class="label">Same method, different scale</p>
+        <ol class="svc-steps">
+          <li><span>01</span><div><h4>Understand the problem</h4><p>What you need, who it is for and how we will know it works.</p></div></li>
+          <li><span>02</span><div><h4>Decide the architecture</h4><p>Just the right technology: no more complex than needed, and not too limited for what comes next.</p></div></li>
+          <li><span>03</span><div><h4>Build</h4><p>Custom code: lightweight, secure and suited to any screen.</p></div></li>
+          <li><span>04</span><div><h4>Deliver and measure</h4><p>Launch, KPIs to check it does its job, and improvements based on real data.</p></div></li>
+        </ol>
+      </div>
+      <aside class="case" data-anim>
+        <div class="case-bar"><i></i><i></i><i></i><span>alvarotorresbaeza.com</span></div>
+        <div class="case-body">
+          <p class="label">Case · this website</p>
+          <h3>Designed and coded from scratch.</h3>
+          <div class="case-stats">
+            <div><b>~150 KB</b><span>Page weight</span></div>
+            <div><b>0</b><span>External libraries</span></div>
+            <div><b>7</b><span>Sections</span></div>
+          </div>
+          <ul class="ticks">
+            <li>Entry terminal, 3D mosaic and custom transitions</li>
+            <li>Works on mobile, tablet and desktop</li>
+            <li>Ready for search engines and social media</li>
+          </ul>
+          <a class="btn btn--primary" href="/en/contact/" data-topic="proyectos">Tell me about your project <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12 12 4M5 4h7v7"/></svg></a>
+        </div>
+      </aside>
+    </div>
+  </div>
+  <div class="next-slot" data-next="sobre-mi"></div>
+</section>
+
+<!-- ============ 06 SOBRE MÍ ============ -->
+<section class="view view--page" id="sobre-mi" data-view="sobre-mi" data-n="06" aria-labelledby="t-sobre">
+  <header class="page-hero wrap">
+    <p class="label" data-anim>06 / About me</p>
+    <h2 class="page-title" id="t-sobre" data-anim>Three places. <em>One outlook.</em></h2>
+    <p class="lead reveal-text" data-anim>Each place left me a way of seeing. From the vineyards, patience with the process. From the olive groves, the calm to observe. From Valencia, the drive to build.</p>
+  </header>
+  <div class="wrap page-body">
+    <ol class="route">
+      <li class="stop" data-anim><p class="stop-meta"><span>Origin</span><span>42.47° N · 2.45° W</span></p><h3>La Rioja</h3><p>I was born among vineyards, orchards and wineries.</p></li>
+      <li class="stop" data-anim><p class="stop-meta"><span>Roots</span><span>37.78° N · 3.79° W</span></p><h3>Jaén</h3><p>I grew up among olive trees and learned to observe calmly.</p></li>
+      <li class="stop stop--now" data-anim><p class="stop-meta"><span>Present</span><span>39.47° N · 0.38° W</span></p><h3>Valencia</h3><p>I found the place to shape my career.</p></li>
+    </ol>
+    <div class="shelf-grid">
+      <div data-anim>
+        <p class="label">On my bookshelf</p>
+        <h3>Reading connects disciplines too.</h3>
+        <p>Nietzsche, Plato and the Stoics share a shelf with <em>Fundamentals of Data Engineering</em> and the DAMA-DMBOK. Philosophy helps you ask; engineering helps you answer well.</p>
+      </div>
+      <div class="shelf" id="shelf" aria-label="Books on my shelf" data-anim>
+        <span class="book" style="--h:212px;--w:46px;--c:var(--book-1)"><b>Nietzsche</b><i>Philosophy</i></span>
+        <span class="book" style="--h:188px;--w:40px;--c:var(--book-2)"><b>Plato</b><i>Philosophy</i></span>
+        <span class="book" style="--h:232px;--w:52px;--c:var(--book-5)"><b>The Stoics</b><i>Philosophy</i></span>
+        <span class="book book--light" style="--h:256px;--w:62px;--c:var(--book-4)"><b>Fundamentals of Data Engineering</b><i>Engineering</i></span>
+        <span class="book" style="--h:244px;--w:70px;--c:var(--book-3)"><b>DAMA-DMBOK</b><i>Data governance</i></span>
+        <span class="bookend" aria-hidden="true">&#x265E;&#xFE0E;</span>
+        <span class="mascot mascot--shelf" aria-hidden="true" data-mascot></span>
+      </div>
+    </div>
+  </div>
+  <div class="next-slot" data-next="contacto"></div>
+</section>
+
+<!-- ============ 07 CONTACTO ============ -->
+<section class="view view--page view--light" id="contacto" data-view="contacto" data-n="07" aria-labelledby="t-contacto">
+  <header class="page-hero wrap">
+    <p class="label" data-anim>07 / Contact</p>
+    <h2 class="page-title page-title--xl" id="t-contacto" data-anim>Two paths, <em>one conversation.</em></h2>
+    <p class="lead" data-anim>If you're looking for someone to lead or strengthen your company's data, or you have an AI, app or web project in mind, choose your path and tell me about it.</p>
+  </header>
+  <div class="wrap page-body contact-grid">
+    <form class="cform" id="cform" novalidate data-anim>
+      <div class="cform-head">
+        <p>What's next?<br>A first conversation.</p>
+      </div>
+      <fieldset class="frow paths" aria-describedby="f-path-err">
+        <legend class="frow-label">What would you like to talk about? <span class="req" aria-hidden="true">*</span></legend>
+        <div class="path-opts">
+          <label class="path-opt"><input type="radio" name="camino" value="Data opportunities and collaborations" required><span><b>Data opportunities and collaborations</b><small>Roles, consulting or collaborations in data strategy, architecture and governance.</small></span></label>
+          <label class="path-opt"><input type="radio" name="camino" value="Web, app or AI projects" data-path="proyectos"><span><b>Web, app or AI projects</b><small>A custom project for you or your company.</small></span></label>
+        </div>
+      </fieldset>
+      <div class="frow">
+        <label for="f-name">Full name <span class="req" aria-hidden="true">*</span></label>
+        <input id="f-name" name="nombre" type="text" maxlength="100" autocomplete="name" placeholder="Jane Smith" required>
+      </div>
+      <div class="frow">
+        <label for="f-org">Company or organisation</label>
+        <input id="f-org" name="empresa" type="text" maxlength="120" autocomplete="organization" placeholder="Your company">
+      </div>
+      <div class="frow">
+        <label for="f-mail">Email <span class="req" aria-hidden="true">*</span></label>
+        <input id="f-mail" name="email" type="email" maxlength="160" autocomplete="email" placeholder="jane@company.com" required>
+      </div>
+      <div class="frow">
+        <label for="f-msg">Message <span class="req" aria-hidden="true">*</span></label>
+        <textarea id="f-msg" name="mensaje" rows="5" maxlength="4000" placeholder="Briefly tell me what you need" required></textarea>
+      </div>
+      <input class="hp" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="frow frow--end">
+        <label class="consent"><input type="checkbox" id="f-ok" name="acepto" required><span>I have read and accept the <a href="/en/privacy/">privacy policy</a>. <span class="req" aria-hidden="true">*</span></span></label>
+        <button class="btn btn--ink" type="submit" id="f-send">Send message <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12 12 4M5 4h7v7"/></svg></button>
+      </div>
+      <p class="fstatus" id="f-status" role="status"></p>
+    </form>
+    <aside class="contact-side" data-anim>
+      <ul class="contact-list">
+        <li><span class="cl-k">Email</span><a class="cl-v" id="mail-addr" href="mailto:alvarotorresbaeza@gmail.com?subject=Conversation%20about%20data" data-ach="conversacion">alvarotorresbaeza@gmail.com</a><button class="cl-btn" type="button" id="copy-mail">Copy</button></li>
+        <li><span class="cl-k">LinkedIn</span><a class="cl-v" href="https://www.linkedin.com/in/ajtb" target="_blank" rel="noopener noreferrer me" data-ach="conversacion">linkedin.com/in/ajtb</a><span class="cl-arrow" aria-hidden="true">↗</span></li>
+        <li><span class="cl-k">CV</span><a class="cl-v" href="/cv/CV-Alvaro-Torres-Baeza-EN.pdf" target="_blank" rel="noopener" data-cv>Download as PDF</a><span class="cl-arrow" aria-hidden="true">↓</span></li>
+      </ul>
+      <div class="svc-box">
+        <p class="cl-k">Custom projects</p>
+        <h3>Applied AI, apps and websites.</h3>
+        <p>The same method I use with a large company's data, at the scale of your project.</p>
+        <a class="svc-link" href="/en/projects/">See custom projects →</a>
+      </div>
+    </aside>
+  </div>
+  <div class="next-slot" data-next="inicio"></div>
+</section>
+
+<!-- ============ PRIVACIDAD ============ -->
+<section class="view view--page" id="privacidad" data-view="privacidad" data-n="§" aria-labelledby="t-privacidad">
+  <header class="page-hero page-hero--short wrap">
+    <p class="label" data-anim>Privacy and cookie policy</p>
+    <h2 class="page-title" id="t-privacidad" data-anim>Your data, <em>with purpose</em> too.</h2>
+    <p class="lead" data-anim>In short: I only use the data you send me through the form, and only to reply to you.</p>
+    <p class="lead" data-anim>Last updated: 28 October 2026.</p>
+  </header>
+  <div class="wrap page-body legal">
+    <h3>Data controller</h3>
+    <p>Álvaro José Torres Baeza · Valencia, Spain · <a href="mailto:alvarotorresbaeza@gmail.com">alvarotorresbaeza@gmail.com</a>.</p>
+    <h3>Contact form</h3>
+    <p>If you write to me through the form, I process your name, email address, company (if you provide it) and message for a single purpose: to reply to you. The legal basis is your consent, which you give by ticking the box and can withdraw at any time. Messages are sent through the FormSubmit service (formsubmit.co), which forwards them to me by email. I keep the conversation for as long as the contact lasts and for no more than one year afterwards. I do not share your data with third parties or use it to send you advertising.</p>
+    <h3>Your rights</h3>
+    <p>You can request access to, rectification, erasure, objection to processing, restriction of processing or portability of your data by writing to <a href="mailto:alvarotorresbaeza@gmail.com">alvarotorresbaeza@gmail.com</a>. If you believe your rights have not been respected, you can lodge a complaint with the Spanish Data Protection Agency (aepd.es).</p>
+    <h3>Cookies and local storage</h3>
+    <p>This website does not use cookies or any analytics or advertising tools. It only stores in your own browser (local storage) the achievements you unlock in the terminal, whether you have already seen the introduction, and the time of your form submissions, to prevent repeated submissions. That information never leaves your device and you can delete it with this button:</p>
+    <p><button class="btn btn--ghost" type="button" id="clear-local">Delete my local data</button> <span class="clear-msg" id="clear-msg" role="status"></span></p>
+    <h3>Third-party services</h3>
+    <ul class="ticks">
+      <li><strong>Google Fonts:</strong> fonts are loaded from Google's servers, which receive your IP address.</li>
+      <li><strong>GitHub Pages:</strong> hosts the website and may log technical data about your visit, such as your IP address.</li>
+      <li><strong>LinkedIn:</strong> the link to my profile takes you to that platform, which applies its own policy.</li>
+    </ul>
+  </div>
+  <div class="next-slot" data-next="inicio"></div>
+</section>
+
+</main>
+
+<!-- ============ MENÚ ÍNDICE ============ -->
+<div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menu" hidden>
+  <div class="menu-top">
+    <span class="menu-brand">Index</span>
+    <p class="menu-clock" aria-hidden="true"><span>Valencia, ES</span> <b data-clock>--:--:--</b></p>
+    <button class="pill-btn pill-btn--ink" type="button" id="menu-close">Close</button>
+  </div>
+  <ol class="menu-list" id="menu-list">
+    <li><a href="/en/terminal/" data-i="-1"><i>&gt;_</i><span>Terminal</span></a></li>
+    <li><a href="/en/" data-i="-1"><i>00</i><span>Home</span></a></li>
+    <li><a href="/en/profile/" data-i="0"><i>01</i><span>Profile</span></a></li>
+    <li><a href="/en/experience/" data-i="1"><i>02</i><span>Experience</span></a></li>
+    <li><a href="/en/how-i-work/" data-i="2"><i>03</i><span>How I work</span></a></li>
+    <li><a href="/en/education/" data-i="3"><i>04</i><span>Education</span></a></li>
+    <li><a href="/en/projects/" data-i="4"><i>05</i><span>Custom projects</span></a></li>
+    <li><a href="/en/about/" data-i="5"><i>06</i><span>About me</span></a></li>
+    <li><a href="/en/contact/" data-i="6"><i>07</i><span>Contact</span></a></li>
+  </ol>
+  <div class="menu-preview" id="menu-preview" aria-hidden="true"></div>
+  <div class="menu-foot">
+    <a href="mailto:alvarotorresbaeza@gmail.com">alvarotorresbaeza@gmail.com</a>
+    <a href="https://www.linkedin.com/in/ajtb" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+    <a href="/cv/CV-Alvaro-Torres-Baeza-EN.pdf" target="_blank" rel="noopener" data-cv>CV as PDF ↓</a>
+    <a href="/en/privacy/">Privacy</a>
+  </div>
+</div>
+
+<!-- ============ LOGROS ============ -->
+<div class="ach-panel" id="ach-panel" hidden>
+  <div class="ach-head"><span>Achievements</span><b id="ach-count-2">0/8</b></div>
+  <ol class="ach-list" id="ach-list"></ol>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- ============ CAPAS DE TRANSICIÓN ============ -->
+<canvas class="particles" id="particles" aria-hidden="true"></canvas>
+<div class="curtain" id="curtain" aria-hidden="true"><div class="curtain-inner"><span class="curtain-n" id="curtain-n"></span><span class="curtain-title" id="curtain-title"></span></div></div>
+<div class="flip" id="flip" aria-hidden="true"></div>
+</body>
+</html>

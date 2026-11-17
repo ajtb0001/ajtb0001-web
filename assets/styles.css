@@ -202,6 +202,8 @@ body.tone-light .topbar .pill-btn--solid{background:var(--accent-ink);border-col
 .dock .dock-term{color:var(--accent);border-right:1px solid var(--line-strong);margin-right:4px}
 .dock .dock-term i{color:var(--accent)}
 .pill-btn--term{font-size:13px;letter-spacing:0;color:var(--accent)}
+.pill-btn--lang{letter-spacing:.08em}
+.pill-btn[hidden]{display:none}
 .dock a:hover,.dock a:focus-visible{color:var(--accent-ink);background:var(--accent)}
 .dock a:hover i,.dock a:focus-visible i{color:var(--accent-ink-2)}
 .dock a:focus-visible{outline-offset:-2px}
@@ -1109,7 +1111,7 @@ body.is-intro .ach-panel{top:auto;bottom:calc(84px + env(safe-area-inset-bottom,
   .view--page:not(.view--light) .page-hero .page-title--xl{max-width:min(13ch,var(--title-room))}
 }
 /* Tablet: el reloj de la barra no cabe junto al nombre */
-@media (min-width:761px) and (max-width:1000px){ .clock{display:none} }
+@media (min-width:761px) and (max-width:1000px){ .clock{display:none} .topbar{grid-template-columns:1fr auto} }
 /* Táctil: más zona de toque en los comandos sugeridos del terminal (sin cambiar su aspecto) y casilla de privacidad más grande */
 @media (pointer:coarse){
   .crt-try button{position:relative}

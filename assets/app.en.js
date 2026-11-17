@@ -480,7 +480,8 @@
       H = Math.round(W * 0.68);
       G = Math.round(W * (small ? 0.07 : 0.075));
       spanW = EC * (W + G); spanH = ER * (H + G);
-      tiles.forEach(t => { t.el.style.width = W + 'px'; t.el.style.height = H + 'px'; });
+      // Cada tarjeta lleva su propia perspectiva con el punto de fuga en el centro del mosaico (ver render)
+      tiles.forEach(t => { t.el.style.width = W + 'px'; t.el.style.height = H + 'px'; t.el.style.transformOrigin = `${vw / 2}px ${vh / 2}px`; });
       if (!placed) {
         ox = vw / 2 - (COLS * (W + G) - G) / 2;
         oy = vh / 2 - (ROWS * (H + G) - G) / 2;
@@ -489,6 +490,12 @@
       dirty = true;
     }
     const wrap = (v, span, center) => ((v - (center - span / 2)) % span + span) % span + (center - span / 2);
+    /* Rendimiento: antes el escenario era 3D compartido (preserve-3d) y el navegador tenía que ordenar en
+       profundidad ~40 capas en cada fotograma (de ~60 a ~20 fps mientras el mosaico se desliza).
+       Ahora cada tarjeta es plana y lleva su propia perspective(): con el origen de transformación en el
+       centro del mosaico, perspective · translate(centro tarjeta − centro mosaico) · giro · translate(inverso)
+       da exactamente la misma proyección que antes. El orden de dibujo lo marca z-index según la profundidad. */
+    const PERSP = 1100;
     function render() {
       const cx0 = vw / 2, cy0 = vh / 2, kx = 1 / (vw * 0.58), ky = 1 / (vh * 0.62);
       for (let i = 0; i < tiles.length; i++) {
@@ -500,7 +507,9 @@
         const d2 = nx * nx + ny * ny;
         if (reduce) { t.el.style.transform = `translate3d(${x}px,${y}px,0)`; continue; }
         const z = -d2 * 240, ry = clamp(nx * 22, -38, 38), rx = clamp(-ny * 16, -30, 30);
-        t.el.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,${z.toFixed(1)}px) rotateY(${ry.toFixed(2)}deg) rotateX(${rx.toFixed(2)}deg)`;
+        t.el.style.transform = `perspective(${PERSP}px) translate3d(${(t.cx - cx0).toFixed(1)}px,${(t.cy - cy0).toFixed(1)}px,${z.toFixed(1)}px) rotateY(${ry.toFixed(2)}deg) rotateX(${rx.toFixed(2)}deg) translate(${(cx0 - W / 2).toFixed(1)}px,${(cy0 - H / 2).toFixed(1)}px)`;
+        const zi = 300 + Math.round(z / 6);
+        if (t.zi !== zi) { t.zi = zi; t.el.style.zIndex = zi; }
       }
       dirty = false;
     }

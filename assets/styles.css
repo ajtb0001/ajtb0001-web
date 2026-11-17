@@ -180,15 +180,18 @@ body.tone-light .topbar .pill-btn--solid{background:var(--accent-ink);border-col
 .view--hub::before,.view--hub::after{content:"";position:absolute;left:0;right:0;z-index:3;pointer-events:none}
 .view--hub::before{top:0;height:150px;background:linear-gradient(to bottom,rgba(11,14,15,.92),rgba(11,14,15,0))}
 .view--hub::after{bottom:0;height:240px;background:linear-gradient(to top,rgba(11,14,15,.95) 20%,rgba(11,14,15,0))}
-.hub{position:absolute;inset:0;perspective:1100px;perspective-origin:50% 50%;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;--ab:0}
+.hub{position:absolute;inset:0;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;--ab:0}
 .hub.is-dragging{cursor:grabbing}
-.hub-stage{position:absolute;inset:0;transform-style:preserve-3d;pointer-events:none}
+.hub-stage{position:absolute;inset:0;pointer-events:none}
 .tile{pointer-events:auto}
-.tile{position:absolute;left:0;top:0;transform-style:preserve-3d;will-change:transform;backface-visibility:hidden}
-.tile-inner{position:absolute;inset:0;border-radius:clamp(16px,2vw,30px);overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.06),0 30px 60px -25px rgba(0,0,0,.8);transition:transform .45s var(--ease),opacity .4s,filter .4s}
+/* Cada tarjeta es una capa plana con su propia perspectiva (ver hub.render en app.js): sin preserve-3d, mucho más fluido */
+.tile{position:absolute;left:0;top:0;will-change:transform;backface-visibility:hidden;transition:opacity .4s}
+.tile-inner{position:absolute;inset:0;border-radius:clamp(16px,2vw,30px);overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.06),0 30px 60px -25px rgba(0,0,0,.8);transition:transform .45s var(--ease)}
 .tile:hover .tile-inner{transform:scale(1.035)}
 .hub.is-dragging .tile:hover .tile-inner{transform:none}
-.hub.has-hl .tile:not(.is-hl) .tile-inner{opacity:.35;filter:saturate(.4)}
+/* Al pasar por el índice de abajo se atenúan las demás tarjetas. La opacidad va en .tile (su propia capa) y sin
+   filtro de saturación: así el navegador no repinta 40 tarjetas en cada fotograma (de ~23 a ~52 fps) */
+.hub.has-hl .tile:not(.is-hl){opacity:.35}
 .hub-enter .tile-inner{animation:tile-in 1s var(--ease) both;animation-delay:var(--dl,0s)}
 @keyframes tile-in{from{opacity:0;transform:translateY(60px) scale(.9)}to{opacity:1;transform:none}}
 .hub-caption{position:absolute;left:clamp(16px,3vw,32px);bottom:calc(96px + env(safe-area-inset-bottom,0px));font-family:var(--f-display);font-size:clamp(20px,2vw,28px);line-height:1.1;max-width:16ch;pointer-events:none;z-index:4;text-shadow:0 2px 20px rgba(0,0,0,.8)}
